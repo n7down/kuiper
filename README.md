@@ -2,13 +2,13 @@
 
 ## Purpose
 1. Hardware will consist of a IOT device that send the following data
- - Location - a value
+ - Location
  - Hardware version
  - Temperature
  - Humidity
  - Battery Voltage
 2. Data will be sent to an Influx timeseries database
-3. Data will be visualized using Kibana dashboard
+3. Data will be visualized using a Kibana dashboard
 
 ## Parts
 - [ESP8266](https://learn.adafruit.com/adafruit-huzzah-esp8266-breakout)
