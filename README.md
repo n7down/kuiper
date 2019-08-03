@@ -3,7 +3,8 @@
 ## Purpose
 1. Hardware will consist of a IOT device that send the following data
  - Location - a value
- - Tempture
+ - Hardware version
+ - Temperature
  - Humidity
  - Battery Voltage
 2. Data will be sent to an Influx timeseries database
