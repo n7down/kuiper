@@ -31,3 +31,4 @@
 - [Monitoring LiPo battery voltage with Wemos D1 minibattery shield](https://arduinodiy.wordpress.com/2016/12/25/monitoring-lipo-battery-voltage-with-wemos-d1-minibattery-shield-and-thingspeak/)
 - [Arduino Battery Voltage Indicator](https://www.instructables.com/id/Arduino-Battery-Voltage-Indicator/)
 - [Photon Battery Shield Hookup Guide](https://learn.sparkfun.com/tutorials/photon-battery-shield-hookup-guide/all)
+- [ESP8266 on batteries for years](https://www.cron.dk/esp8266-on-batteries-for-years-part-1/)
