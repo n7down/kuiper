@@ -4,6 +4,7 @@
 1. Hardware will consist of a IOT device that send the following data
  - Location
  - Hardware version
+ - Device number - each device gets a number (incremented value)
  - Temperature
  - Humidity
  - Battery Voltage
