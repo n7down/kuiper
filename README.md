@@ -10,11 +10,16 @@
 2. Data will be sent to an Influx timeseries database
 3. Data will be visualized using a Kibana dashboard
 
-## Parts
+## Hardware
+### Parts
 - [ESP8266](https://learn.adafruit.com/adafruit-huzzah-esp8266-breakout)
-- [3xAA Batteries]
+- 3xAA Batteries
 - [DHT22](https://www.adafruit.com/product/385)
 - [Adafruit BMP280 I2C or SPI Barometric Pressure & Altitude Sensor](https://www.adafruit.com/product/2651?gclid=CjwKCAjwm4rqBRBUEiwAwaWjjF3XTMTRwt6PhmwsGnPRPdA7HlE_gyvQVNLfKLg5y95S2kj3FOktUxoCvwYQAvD_BwE)
+
+## Server
+- MQTT communcation
+- Sends data to influx db
 
 ## Todo
 - [ ] Wire up the DHT22 and BMP280 sensor to the ESP8266
