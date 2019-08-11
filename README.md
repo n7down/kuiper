@@ -14,24 +14,24 @@
 ## Hardware
 ### Parts
 - [ESP8266](https://learn.adafruit.com/adafruit-huzzah-esp8266-breakout)
-- 3xAA Batteries
 - [DHT22](https://www.adafruit.com/product/385)
 - [Adafruit BMP280 I2C or SPI Barometric Pressure & Altitude Sensor](https://www.adafruit.com/product/2651?gclid=CjwKCAjwm4rqBRBUEiwAwaWjjF3XTMTRwt6PhmwsGnPRPdA7HlE_gyvQVNLfKLg5y95S2kj3FOktUxoCvwYQAvD_BwE)
-
-## Server
-- MQTT communcation
-- Sends data to influx db
+- [Lithium Ion Cylindrical Battery - 3.7v 2200mAh](https://www.adafruit.com/product/1781) - not sure if this will work with the charging board
+- [D1 Mini Single Lithium Battery Charging Board](https://www.amazon.com/WINGONEER-Single-Lithium-Battery-Charging/dp/B077VNW5RP/ref=sr_1_3?keywords=d1+mini+battery+shield&qid=1565500842&s=gateway&sr=8-3)
 
 ## Todo
-- [ ] Wire up the DHT22 and BMP280 sensor to the ESP8266
+## Hardware
+- [x] Wire up the DHT22 and BMP280 sensor to the ESP8266
 - [ ] Create a voltage indicator circuit to the ESP8266
 - [ ] Build water proof case
-
-## Possible Parts
-- [Adafruit HTU21D-F Temperature & Humidity Sensor Breakout Board](https://www.adafruit.com/product/1899)
-- [Analog/Digital MUX Breakout](https://www.sparkfun.com/products/9056)
-- [Powerboost 1000c](https://learn.adafruit.com/adafruit-powerboost-1000c-load-share-usb-charge-boost/pinouts)
-- [D1 Mini Lithium Boost Shield for WeMos D1 Arduino](https://www.amazon.com/Makerfocus-Single-Lithium-Battery-Charging/dp/B074FV7BJM/ref=sr_1_2?gclid=Cj0KCQjwvo_qBRDQARIsAE-bsH8OtY69CUQRxRDTsaJO8CTOhgrQSz8vLLMh81Fa9AAYXOIlpDv2OdEaAq5REALw_wcB&hvadid=323418183824&hvdev=c&hvlocphy=9029705&hvnetw=g&hvpos=1t1&hvqmt=b&hvrand=18388238527689985942&hvtargid=kwd-376777921320&hydadcr=18913_9698568&keywords=d1+mini+battery+shield&qid=1564815681&s=gateway&sr=8-2)
+## Software
+- [ ] IOT weather stations send message to mosquitto mqtt server
+- [ ] Setup passwords on mosquitto mqtt server
+- [ ] Go app subscribes to topic and receives message and logs the data to influx database
+## Docker
+- [ ] Dockerize influx database
+- [ ] Dockerize golang app
+- [ ] Dockerize mosquitto mqtt server
 
 ## Notes
 - [A battery fed MQTT weatherstation](https://arduinodiy.wordpress.com/2018/02/04/a-battery-fed-mqtt-weatherstation/)
@@ -40,3 +40,5 @@
 - [Photon Battery Shield Hookup Guide](https://learn.sparkfun.com/tutorials/photon-battery-shield-hookup-guide/all)
 - [ESP8266 on batteries for years](https://www.cron.dk/esp8266-on-batteries-for-years-part-1/)
 - [Solar Wifi Weather Station (v2.0)](https://www.danilolarizza.com/stazione-meteo-solare-wifi-v2-0/)
+- [Mosquitto MQTT](https://www.switchdoc.com/2018/02/tutorial-installing-and-testing-mosquitto-mqtt-on-raspberry-pi/)
+- [Mosquitto Username and Password](http://www.steves-internet-guide.com/mqtt-username-password-example/)
