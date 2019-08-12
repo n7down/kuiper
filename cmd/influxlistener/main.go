@@ -14,7 +14,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type Sensor struct {
+type InfluxStore struct {
 	client          client.Client
 	sensorDataPoint SensorDataPoint
 }
@@ -101,8 +101,15 @@ var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
 	}
 }
 
-func init() {
+type InfluxListener struct {
+}
 
+func NewInfluxListener() *InfluxListener {
+	i := &InfluxListener{}
+	return i
+}
+
+func init() {
 }
 
 func main() {
