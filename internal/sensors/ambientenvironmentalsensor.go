@@ -7,7 +7,7 @@ import (
 	"github.com/n7down/iota/internal/stores"
 )
 
-type SensorDataPoint struct {
+type AmbientEnvironmentalSensor struct {
 	Location                 string `json:"location"`
 	Label                    string `json:"label"`   // label is a the label on the device
 	Version                  string `json:"version"` // version is the firmware version on the device
@@ -19,7 +19,7 @@ type SensorDataPoint struct {
 	BMP280BarometricPressure string `json:"bmp280pressure"`
 }
 
-func (s SensorDataPoint) LogSensor(store *stores.InfluxStore) error {
+func (a AmbientEnvironmentalSensor) LogSensor(store *stores.InfluxStore) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  store.Database,
 		Precision: "s",
@@ -30,19 +30,19 @@ func (s SensorDataPoint) LogSensor(store *stores.InfluxStore) error {
 
 	// indexed
 	tags := map[string]string{
-		"location": s.Location,
-		"label":    s.Label,
-		"version":  s.Version,
-		"device":   s.Device,
+		"location": a.Location,
+		"label":    a.Label,
+		"version":  a.Version,
+		"device":   a.Device,
 	}
 
 	// not indexed
 	fields := map[string]interface{}{
-		"voltage":              s.Voltage,
-		"dht22_temp":           s.DHT22Temperature,
-		"dht22_humidity":       s.DHT22Humidity,
-		"bmp280_temp":          s.BMP280Temperature,
-		"bmp280_bero_pressure": s.BMP280BarometricPressure,
+		"voltage":              a.Voltage,
+		"dht22_temp":           a.DHT22Temperature,
+		"dht22_humidity":       a.DHT22Humidity,
+		"bmp280_temp":          a.BMP280Temperature,
+		"bmp280_bero_pressure": a.BMP280BarometricPressure,
 	}
 
 	point, err := client.NewPoint(

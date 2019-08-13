@@ -11,6 +11,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+const (
+	clientID = "influx-listener"
+)
+
 type InfluxListener struct {
 	mqttOptions *mqtt.ClientOptions
 }
@@ -27,20 +31,20 @@ func NewInfluxListener(mqttUrl *url.URL, store *stores.InfluxStore) (*InfluxList
 	opts.SetUsername(mqttUrl.User.Username())
 	password, _ := mqttUrl.User.Password()
 	opts.SetPassword(password)
-	opts.SetClientID("influx-listener")
+	opts.SetClientID(clientID)
 
 	var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
 		logrus.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensorDataPoint := &sensors.SensorDataPoint{}
-		err := json.Unmarshal([]byte(msg.Payload()), sensorDataPoint)
+		sensor := &sensors.AmbientEnvironmentalSensor{}
+		err := json.Unmarshal([]byte(msg.Payload()), sensor)
 		if err != nil {
 			logrus.Error(err.Error())
 		}
 
 		if err == nil {
-			err = sensorDataPoint.LogSensor(store)
+			err = sensor.LogSensor(store)
 			if err != nil {
 				logrus.Error(err.Error())
 			}
