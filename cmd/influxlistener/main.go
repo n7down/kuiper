@@ -6,8 +6,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/n7down/IOTWeatherStation/internal/listeners"
-	"github.com/n7down/IOTWeatherStation/internal/stores"
+	"github.com/n7down/iota/internal/listeners"
+	"github.com/n7down/iota/internal/stores"
 	"github.com/sirupsen/logrus"
 )
 

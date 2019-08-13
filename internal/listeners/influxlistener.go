@@ -6,8 +6,8 @@ import (
 	"net/url"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"github.com/n7down/IOTWeatherStation/internal/sensors"
-	"github.com/n7down/IOTWeatherStation/internal/stores"
+	"github.com/n7down/iota/internal/sensors"
+	"github.com/n7down/iota/internal/stores"
 	"github.com/sirupsen/logrus"
 )
 

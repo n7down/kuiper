@@ -4,7 +4,7 @@ import (
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
-	"github.com/n7down/IOTWeatherStation/internal/stores"
+	"github.com/n7down/iota/internal/stores"
 )
 
 type SensorDataPoint struct {
