@@ -1,4 +1,4 @@
-# IOT Weather Station
+# IOTA
 
 ## Purpose
 1. Hardware will consist of a IOT device that send the following data
@@ -25,9 +25,9 @@
 - [ ] Create a voltage indicator circuit to the ESP8266
 - [ ] Build water proof case
 ## Software
-- [ ] IOT weather stations send message to mosquitto mqtt server
+- [ ] Ambient environmental sensors (AES) send message to mosquitto mqtt server
 - [ ] Setup passwords on mosquitto mqtt server
-- [ ] Go app subscribes to topic and receives message and logs the data to influx database
+- [x] Go app subscribes to topic and receives message and logs the data to influx database
 ## Docker
 - [ ] Dockerize influx database
 - [ ] Dockerize golang app

@@ -31,12 +31,14 @@ func (s SensorDataPoint) LogSensor(store *stores.InfluxStore) error {
 	// indexed
 	tags := map[string]string{
 		"location": s.Location,
+		"label":    s.Label,
 		"version":  s.Version,
 		"device":   s.Device,
 	}
 
 	// not indexed
 	fields := map[string]interface{}{
+		"voltage":              s.Voltage,
 		"dht22_temp":           s.DHT22Temperature,
 		"dht22_humidity":       s.DHT22Humidity,
 		"bmp280_temp":          s.BMP280Temperature,

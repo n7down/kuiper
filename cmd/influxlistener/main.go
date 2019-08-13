@@ -16,6 +16,8 @@ var (
 )
 
 func init() {
+	logrus.SetReportCaller(true)
+
 	mqttURL := os.Getenv("MQTT_URL")
 	mqttUrl, err := url.Parse(mqttURL)
 	if err != nil {

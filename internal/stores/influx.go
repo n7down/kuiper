@@ -1,6 +1,7 @@
 package stores
 
 import (
+	"fmt"
 	"net/url"
 
 	client "github.com/influxdata/influxdb1-client/v2"
@@ -17,7 +18,7 @@ func NewInfluxStore(url *url.URL) (*InfluxStore, error) {
 	password, _ := url.User.Password()
 
 	influxClient, err := client.NewHTTPClient(client.HTTPConfig{
-		Addr: url.Host,
+		Addr: fmt.Sprintf("%s://%s", url.Scheme, url.Host),
 		//Username: "dbuser",
 		//Password: "password",
 		Username: username,
