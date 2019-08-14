@@ -2,14 +2,17 @@ version: "3.5"
 services:
     app:
         environment:
-            MQTT_URL=http://172.28.1.2:1883/test
-            INFLUX_URL=http://dbuser:password@172.28.1.3:8086/sensors
+            MQTT_URL: http://172.28.1.3:1883/test
+            INFLUX_URL: http://dbuser:password@172.28.1.4:8086/sensors
         build:
-            context: ./build/dockerfiles/app
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./build/dockerfiles/app/Dockerfile
         depends_on:
             - mosquitto
             - influxdb
+        networks:
+            iota_net:
+                ipv4_address: 172.28.1.2
 
     mosquitto:
         image: eclipse-mosquitto
@@ -25,7 +28,7 @@ services:
             - ./build/dockerfiles/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
         networks:
             iota_net:
-                ipv4_address: 172.28.1.2
+                ipv4_address: 172.28.1.3
 
     influxdb:
         environment:
@@ -43,7 +46,7 @@ services:
             #- /tmp/influxdb:/var/lib/influxdb
         networks:
             iota_net:
-                ipv4_address: 172.28.1.3
+                ipv4_address: 172.28.1.4
 
 networks:
     iota_net:
