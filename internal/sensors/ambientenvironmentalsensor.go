@@ -15,7 +15,7 @@ type AmbientEnvironmentalSensor struct {
 	Voltage                  string `json:"voltage"`
 	DHT22Temperature         string `json:"dht22temp"`
 	DHT22Humidity            string `json:"dht22humidity"`
-	BMP280Temperature        string `json:"bmp280temperture"`
+	BMP280Temperature        string `json:"bmp280temp"`
 	BMP280BarometricPressure string `json:"bmp280pressure"`
 }
 

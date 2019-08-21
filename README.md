@@ -24,6 +24,7 @@ IOTA is used for the collection of multiple environmental sensor readings (both 
 ## Hardware
 - [x] Wire up the DHT22 and BMP280 sensor to the ESP8266
 - [ ] Build water proof case
+- [ ] [Erase memory on ESP8266](https://github.com/espressif/esptool)
 ## Software
 - [x] Ambient environmental sensors (AES) send message to mosquitto mqtt server
 - [ ] Setup passwords on mosquitto mqtt server

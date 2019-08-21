@@ -45,6 +45,7 @@ func NewInfluxListener(mqttUrl *url.URL, store *stores.InfluxStore) (*InfluxList
 
 		if err == nil {
 			err = sensor.LogSensor(store)
+			logrus.Infof("Logged sensor: %v", sensor)
 			if err != nil {
 				logrus.Error(err.Error())
 			}
