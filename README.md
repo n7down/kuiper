@@ -10,7 +10,7 @@ IOTA is used for the collection of multiple environmental sensor readings (both 
  - Humidity
  - Battery Voltage
 2. Data will be sent to an Influx timeseries database
-3. Data will be visualized using a Kibana dashboard
+3. Data will be visualized using a Grafana dashboard
 
 ## Hardware
 ### Parts
@@ -23,13 +23,13 @@ IOTA is used for the collection of multiple environmental sensor readings (both 
 ## Todo
 ## Hardware
 - [x] Wire up the DHT22 and BMP280 sensor to the ESP8266
-- [ ] Create a voltage indicator circuit to the ESP8266
 - [ ] Build water proof case
 - [ ] [Erase memory on ESP8266](https://github.com/espressif/esptool)
 ## Software
 - [x] Ambient environmental sensors (AES) send message to mosquitto mqtt server
 - [ ] Setup passwords on mosquitto mqtt server
 - [x] Go app subscribes to topic and receives message and logs the data to influx database
+- [ ] Sensors publish to mosquitto server
 ## Docker
 - [x] Dockerize influx database
 - [x] Dockerize golang app
@@ -44,3 +44,6 @@ IOTA is used for the collection of multiple environmental sensor readings (both 
 - [Solar Wifi Weather Station (v2.0)](https://www.danilolarizza.com/stazione-meteo-solare-wifi-v2-0/)
 - [Mosquitto MQTT](https://www.switchdoc.com/2018/02/tutorial-installing-and-testing-mosquitto-mqtt-on-raspberry-pi/)
 - [Mosquitto Username and Password](http://www.steves-internet-guide.com/mqtt-username-password-example/)
+- [Solar Powered WiFi Weather Station V2.0](https://www.instructables.com/id/Solar-Powered-WiFi-Weather-Station-V20/)
+- [Battery powered raspberry pi](https://github.com/NeonHorizon/lipopi)
+- [Analog Inputs for Raspberry Pi Using the MCP3008](https://learn.adafruit.com/reading-a-analog-in-and-controlling-audio-volume-with-the-raspberry-pi/overview)
