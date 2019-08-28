@@ -7,7 +7,7 @@ import (
 	"github.com/n7down/iota/internal/stores"
 )
 
-type AmbientEnvironmentalSensor struct {
+type IndoorHumiditySensors struct {
 	Label             string `json:"label"`
 	Voltage           string `json:"volt"`
 	DHT22Temperature  string `json:"dht22temp"`
@@ -15,7 +15,7 @@ type AmbientEnvironmentalSensor struct {
 	BMP280Temperature string `json:"bmp280temp"`
 }
 
-func (a AmbientEnvironmentalSensor) LogSensor(store *stores.InfluxStore) error {
+func (i IndoorHumiditySensors) LogSensor(store *stores.InfluxStore) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  store.Database,
 		Precision: "s",
@@ -26,15 +26,15 @@ func (a AmbientEnvironmentalSensor) LogSensor(store *stores.InfluxStore) error {
 
 	// indexed
 	tags := map[string]string{
-		"label": a.Label,
+		"label": i.Label,
 	}
 
 	// not indexed
 	fields := map[string]interface{}{
-		"voltage":        a.Voltage,
-		"dht22_temp":     a.DHT22Temperature,
-		"dht22_humidity": a.DHT22Humidity,
-		"bmp280_temp":    a.BMP280Temperature,
+		"voltage":        i.Voltage,
+		"dht22_temp":     i.DHT22Temperature,
+		"dht22_humidity": i.DHT22Humidity,
+		"bmp280_temp":    i.BMP280Temperature,
 	}
 
 	point, err := client.NewPoint(

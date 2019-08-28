@@ -29,7 +29,9 @@ IOTA is used for the collection of multiple environmental sensor readings (both 
 - [x] Ambient environmental sensors (AES) send message to mosquitto mqtt server
 - [ ] Setup passwords on mosquitto mqtt server
 - [x] Go app subscribes to topic and receives message and logs the data to influx database
-- [ ] Sensors publish to mosquitto server
+- [x] Sensors publish to mosquitto server
+- [ ] Setup deep sleep on the esp8266
+- [ ] Read in actual voltage readings
 ## Docker
 - [x] Dockerize influx database
 - [x] Dockerize golang app

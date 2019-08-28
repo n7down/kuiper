@@ -2,7 +2,7 @@ version: "3.5"
 services:
     app:
         environment:
-            MQTT_URL: http://172.28.1.3:1883/indoor/humidity
+            INDOOR_HUMIDITY_MQTT_URL: http://172.28.1.3:1883/indoor/humidity
             INFLUX_URL: http://dbuser:password@172.28.1.4:8086/home_sensors
         build:
             context: .

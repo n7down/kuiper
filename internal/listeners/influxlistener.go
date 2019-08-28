@@ -12,15 +12,15 @@ import (
 )
 
 const (
-	clientID = "influx-listener"
+	clientID = "indoor-humidity-listener"
 )
 
-type InfluxListener struct {
+type IndoorHumidityListener struct {
 	mqttOptions *mqtt.ClientOptions
 }
 
-func NewInfluxListener(mqttUrl *url.URL, store *stores.InfluxStore) (*InfluxListener, error) {
-	i := &InfluxListener{}
+func NewIndoorHumidityListener(mqttUrl *url.URL, store *stores.InfluxStore) (*IndoorHumidityListener, error) {
+	i := &IndoorHumidityListener{}
 
 	topic := mqttUrl.Path[1:len(mqttUrl.Path)]
 	if topic == "" {
@@ -37,7 +37,7 @@ func NewInfluxListener(mqttUrl *url.URL, store *stores.InfluxStore) (*InfluxList
 		logrus.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensor := &sensors.AmbientEnvironmentalSensor{}
+		sensor := &sensors.IndoorHumiditySensors{}
 		err := json.Unmarshal([]byte(msg.Payload()), sensor)
 		if err != nil {
 			logrus.Error(err.Error())
@@ -71,7 +71,7 @@ func NewInfluxListener(mqttUrl *url.URL, store *stores.InfluxStore) (*InfluxList
 	return i, nil
 }
 
-func (i InfluxListener) Connect() error {
+func (i IndoorHumidityListener) Connect() error {
 	mqttClient := mqtt.NewClient(i.mqttOptions)
 	if token := mqttClient.Connect(); token.Wait() && token.Error() != nil {
 		return token.Error()

@@ -14,10 +14,10 @@ import (
 )
 
 var (
-	Version        string
-	Build          string
-	showVersion    *bool
-	influxListener *listeners.InfluxListener
+	Version                string
+	Build                  string
+	showVersion            *bool
+	indoorHumidityListener *listeners.IndoorHumidityListener
 )
 
 func init() {
@@ -25,12 +25,6 @@ func init() {
 	flag.Parse()
 	if !*showVersion {
 		logrus.SetReportCaller(true)
-
-		mqttURL := os.Getenv("MQTT_URL")
-		mqttUrl, err := url.Parse(mqttURL)
-		if err != nil {
-			logrus.Fatal(err.Error())
-		}
 
 		influxURL := os.Getenv("INFLUX_URL")
 		influxUrl, err := url.Parse(influxURL)
@@ -43,7 +37,13 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
-		influxListener, err = listeners.NewInfluxListener(mqttUrl, store)
+		indoorHumidityMqttURL := os.Getenv("INDOOR_HUMIDITY_MQTT_URL")
+		indoorHumidityMqttUrl, err := url.Parse(indoorHumidityMqttURL)
+		if err != nil {
+			logrus.Fatal(err.Error())
+		}
+
+		indoorHumidityListener, err = listeners.NewIndoorHumidityListener(indoorHumidityMqttUrl, store)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
@@ -57,11 +57,11 @@ func main() {
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 
-		err := influxListener.Connect()
+		err := indoorHumidityListener.Connect()
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
-		logrus.Info("Connected to server\n")
+		logrus.Info("Indoor humidity listener connected\n")
 
 		<-c
 	}
