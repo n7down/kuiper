@@ -25,11 +25,11 @@ PubSubClient client(espClient);
 const char ssid[] = "";
 const char password[] = "";
 const char mqtt_server[] = "";
-// const char location[] = "";
 const char label[] = "1";
-// const char ver[] = "v0.1";
-// const char device[] = "bc";
-const char topic[] = "test";
+const char topic[] = "indoor/humidity";
+
+const int minutes = 1;
+const int readDelay = 1000 * 60 * minutes;
 
 void setupWifi(const char* ssid, const char* password)
 {
@@ -69,25 +69,22 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(LED_BUILTIN, LOW);
+  digitalWrite(LED_BUILTIN, HIGH);
   float h = dht22.readHumidity();
   float t = dht22.readTemperature();
   float tt = bmp280.readTemperature();
-  float p = bmp280.readPressure();
+  // float p = bmp280.readPressure();  
+
+  unsigned int batt = analogRead(A0);
+  double battV = batt * (4.2 / 1023);
 
   StaticJsonDocument<800> root;
-  
-  // FIXME: i think this cant send all of this data...
-  // may have to cut out the location, version and device and fit that all in label..
-  // then see if it will send the bmp280 data
-  // root["location"] = location;
   root["label"] = label;
-  // root["version"] = ver;
-  // root["device"] = device;
-  root["dht22humidity"] = String(h); // %
+  root["dht22hum"] = String(h); // %
   root["dht22temp"] = String(t); // in *C
-  // root["bmp280temp"] = String(tt); // in *C
-  // root["bmp280pressure"] = String(p); // in Pa
+  root["bmp280temp"] = String(tt); // in *C
+  // root["bmp280pres"] = String(p); // in Pa
+  root["volt"] = String(battV);
 
   char message[800];
   serializeJson(root, message); 
@@ -98,7 +95,7 @@ void loop() {
     Serial.print(")... ");
     // Create a random client ID
     // Attempt to connect
-    if (client.connect(location)) {
+    if (client.connect(mqtt_server)) {
       Serial.println("connected");
    
     } else {
@@ -118,13 +115,11 @@ void loop() {
 
   Serial.println("disconnecting");
   client.disconnect();
-
-  // client.loop();
  
-  delay(2000);
+  delay(readDelay);
 
-  digitalWrite(LED_BUILTIN, HIGH);  
-  delay(2000);
+  digitalWrite(LED_BUILTIN, LOW);  
+  delay(readDelay);
 
 }
   
