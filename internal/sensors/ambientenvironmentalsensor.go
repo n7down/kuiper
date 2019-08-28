@@ -8,15 +8,12 @@ import (
 )
 
 type AmbientEnvironmentalSensor struct {
-	Location                 string `json:"location"`
-	Label                    string `json:"label"`   // label is a the label on the device
-	Version                  string `json:"version"` // version is the firmware version on the device
-	Device                   string `json:"device"`  // device is determined by the hardware that makes up the device
-	Voltage                  string `json:"voltage"`
+	Label                    string `json:"label"` // label is a the label on the device
+	Voltage                  string `json:"volt"`
 	DHT22Temperature         string `json:"dht22temp"`
-	DHT22Humidity            string `json:"dht22humidity"`
+	DHT22Humidity            string `json:"dht22hum"`
 	BMP280Temperature        string `json:"bmp280temp"`
-	BMP280BarometricPressure string `json:"bmp280pressure"`
+	BMP280BarometricPressure string `json:"bmp280pres"`
 }
 
 func (a AmbientEnvironmentalSensor) LogSensor(store *stores.InfluxStore) error {
@@ -30,10 +27,7 @@ func (a AmbientEnvironmentalSensor) LogSensor(store *stores.InfluxStore) error {
 
 	// indexed
 	tags := map[string]string{
-		"location": a.Location,
-		"label":    a.Label,
-		"version":  a.Version,
-		"device":   a.Device,
+		"label": a.Label,
 	}
 
 	// not indexed
@@ -46,7 +40,7 @@ func (a AmbientEnvironmentalSensor) LogSensor(store *stores.InfluxStore) error {
 	}
 
 	point, err := client.NewPoint(
-		"sensor",
+		"indoor_humidity",
 		tags,
 		fields,
 		time.Now(),
