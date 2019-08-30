@@ -3,6 +3,7 @@ services:
     app:
         environment:
             INDOOR_HUMIDITY_MQTT_URL: http://172.28.1.3:1883/indoor/humidity
+            INDOOR_TEMPERATURE_MQTT_URL: http://172.28.1.3:1883/indoor/temp
             INFLUX_URL: http://dbuser:password@172.28.1.4:8086/home_sensors
         build:
             context: .
