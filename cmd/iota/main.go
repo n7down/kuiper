@@ -14,10 +14,11 @@ import (
 )
 
 var (
-	Version                string
-	Build                  string
-	showVersion            *bool
-	indoorHumidityListener *listeners.HumidityListener
+	Version                   string
+	Build                     string
+	showVersion               *bool
+	indoorHumidityListener    *listeners.HumidityListener
+	indoorTemperatureListener *listeners.TemperatureListener
 )
 
 func init() {
@@ -47,6 +48,17 @@ func init() {
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
+
+		indoorTemperatureMqttURL := os.Getenv("INDOOR_TEMPERATURE_MQTT_URL")
+		indoorTemperatureMqttUrl, err := url.Parse(indoorTemperatureMqttURL)
+		if err != nil {
+			logrus.Fatal(err.Error())
+		}
+
+		indoorTemperatureListener, err = listeners.NewTemperatureListener("indoor_temp", indoorTemperatureMqttUrl, store)
+		if err != nil {
+			logrus.Fatal(err.Error())
+		}
 	}
 }
 
@@ -62,6 +74,12 @@ func main() {
 			logrus.Fatal(err.Error())
 		}
 		logrus.Info("Indoor humidity listener connected\n")
+
+		err = indoorTemperatureListener.Connect()
+		if err != nil {
+			logrus.Fatal(err.Error())
+		}
+		logrus.Info("Indoor temperature listener connected\n")
 
 		<-c
 	}
