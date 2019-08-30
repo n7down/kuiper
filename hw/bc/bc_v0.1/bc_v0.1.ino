@@ -25,8 +25,11 @@ PubSubClient client(espClient);
 const char ssid[] = "";
 const char password[] = "";
 const char mqtt_server[] = "";
-const char label[] = "1";
-const char topic[] = "indoor/humidity";
+const char type[] = "bc";
+const char ver[] = "v0.1";
+const char id[] = "1";
+const char humidityTopic[] = "indoor/humidity";
+const char tempTopic[] = "indoor/temp";
 
 const int minutes = 1;
 const int readDelay = 1000 * 60 * minutes;
@@ -71,23 +74,35 @@ void setup() {
 void loop() {
   digitalWrite(LED_BUILTIN, HIGH);
   float h = dht22.readHumidity();
-  /*float t = dht22.readTemperature();*/
-  /*float tt = bmp280.readTemperature();*/
+  float t = dht22.readTemperature();
+  float tt = bmp280.readTemperature();
   // float p = bmp280.readPressure();  
 
   unsigned int batt = analogRead(A0);
   double battV = batt * (4.2 / 1023);
 
-  StaticJsonDocument<100> root;
-  root["label"] = label;
-  root["dht22hum"] = String(h); // %
-  /*root["dht22temp"] = String(t); // in *C*/
-  /*root["bmp280temp"] = String(tt); // in *C*/
-  // root["bmp280pres"] = String(p); // in Pa
-  /*root["volt"] = String(battV);*/
+  char label[10];
+  strcpy(label, id);
+  strcat(label, type);
+  strcat(label, ver);
 
-  char message[100];
-  serializeJson(root, message); 
+  StaticJsonDocument<100> humidityRoot;
+  humidityRoot["id"] = label;
+  humidityRoot["dht22hum"] = String(h); // %
+
+  char humidityMessage[100];
+  serializeJson(humidityRoot, humidityMessage); 
+  
+  StaticJsonDocument<100> tempRoot;
+  tempRoot["id"] = label;
+  // root["dht22hum"] = String(h); // %
+  tempRoot["dht22temp"] = String(t); // in *C
+  tempRoot["bmp280temp"] = String(tt); // in *C
+  // root["bmp280pres"] = String(p); // in Pa
+  // root["volt"] = String(battV);*/
+
+  char tempMessage[100];
+  serializeJson(tempRoot, tempMessage); 
   
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection (");
@@ -107,11 +122,17 @@ void loop() {
     }
   }
   
-  int result = client.publish(topic, message);
+  int humidityResult = client.publish(humidityTopic, humidityMessage);
   Serial.print("Sent message: ");
-  Serial.println(message);
-  Serial.print("Result: ");
-  Serial.println(result);
+  Serial.print(humidityMessage);
+  Serial.print(" - Result: ");
+  Serial.println(humidityResult);
+
+  int tempResult = client.publish(tempTopic, tempMessage);
+  Serial.print("Sent message: ");
+  Serial.print(tempMessage);
+  Serial.print(" - Result: ");
+  Serial.println(tempResult);
 
   Serial.println("disconnecting");
   client.disconnect();

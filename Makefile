@@ -6,7 +6,7 @@ MAKEFLAGS += --silent
 PID := /tmp/.$(PROJECTNAME).pid
 GOBASE=$(shell pwd)
 GOBIN=$(GOBASE)/bin
-GOFILES=$(GOPATH)/src/github.com/n7down/iota/cmd/influxlistener/*.go
+GOFILES=$(GOPATH)/src/github.com/n7down/iota/cmd/iota/*.go
 ALLFILES=$(shell find . -name '*.go')
 
 .PHONY: install

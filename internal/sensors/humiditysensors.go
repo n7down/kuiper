@@ -8,7 +8,7 @@ import (
 )
 
 type HumiditySensors struct {
-	Label string `json:"label"`
+	ID string `json:"id"`
 	//Voltage           string `json:"volt"`
 	//DHT22Temperature  string `json:"dht22temp"`
 	DHT22Humidity string `json:"dht22hum"`
@@ -26,7 +26,7 @@ func (i HumiditySensors) LogSensors(store *stores.InfluxStore, measurement strin
 
 	// indexed
 	tags := map[string]string{
-		"label": i.Label,
+		"id": i.ID,
 	}
 
 	// not indexed
