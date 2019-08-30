@@ -8,7 +8,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/n7down/iota/internal/listeners"
+	"github.com/n7down/iota/internal/listener"
+	"github.com/n7down/iota/internal/sensors"
 	"github.com/n7down/iota/internal/stores"
 	"github.com/sirupsen/logrus"
 )
@@ -17,7 +18,7 @@ var (
 	Version                string
 	Build                  string
 	showVersion            *bool
-	indoorHumidityListener *listeners.IndoorHumidityListener
+	indoorHumidityListener *listener.Listener
 )
 
 func init() {
@@ -43,7 +44,7 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
-		indoorHumidityListener, err = listeners.NewIndoorHumidityListener(indoorHumidityMqttUrl, store)
+		indoorHumidityListener, err = listener.NewListener("indoor_humidity", indoorHumidityMqttUrl, store, sensors.HumiditySensors{})
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}

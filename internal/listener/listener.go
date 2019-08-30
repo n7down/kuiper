@@ -1,4 +1,4 @@
-package listeners
+package listener
 
 import (
 	"encoding/json"
@@ -11,16 +11,16 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const (
-	clientID = "indoor-humidity-listener"
-)
+//const (
+//listenerName = "indoor_humidity"
+//)
 
-type IndoorHumidityListener struct {
+type Listener struct {
 	mqttOptions *mqtt.ClientOptions
 }
 
-func NewIndoorHumidityListener(mqttUrl *url.URL, store *stores.InfluxStore) (*IndoorHumidityListener, error) {
-	i := &IndoorHumidityListener{}
+func NewListener(listenerName string, mqttUrl *url.URL, store *stores.InfluxStore, sensors sensors.Sensors) (*Listener, error) {
+	i := &Listener{}
 
 	topic := mqttUrl.Path[1:len(mqttUrl.Path)]
 	if topic == "" {
@@ -31,21 +31,21 @@ func NewIndoorHumidityListener(mqttUrl *url.URL, store *stores.InfluxStore) (*In
 	opts.SetUsername(mqttUrl.User.Username())
 	password, _ := mqttUrl.User.Password()
 	opts.SetPassword(password)
-	opts.SetClientID(clientID)
+	opts.SetClientID(listenerName)
 
 	var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
 		logrus.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensor := &sensors.IndoorHumiditySensors{}
-		err := json.Unmarshal([]byte(msg.Payload()), sensor)
+		//sensor := &sensors.IndoorHumiditySensors{}
+		err := json.Unmarshal([]byte(msg.Payload()), &sensors)
 		if err != nil {
 			logrus.Error(err.Error())
 		}
 
 		if err == nil {
-			err = sensor.LogSensor(store)
-			logrus.Infof("Logged sensor: %v", sensor)
+			err = sensors.LogSensors(store, listenerName)
+			logrus.Infof("Logged sensor: %v", sensors)
 			if err != nil {
 				logrus.Error(err.Error())
 			}
@@ -71,8 +71,8 @@ func NewIndoorHumidityListener(mqttUrl *url.URL, store *stores.InfluxStore) (*In
 	return i, nil
 }
 
-func (i IndoorHumidityListener) Connect() error {
-	mqttClient := mqtt.NewClient(i.mqttOptions)
+func (l Listener) Connect() error {
+	mqttClient := mqtt.NewClient(l.mqttOptions)
 	if token := mqttClient.Connect(); token.Wait() && token.Error() != nil {
 		return token.Error()
 	}

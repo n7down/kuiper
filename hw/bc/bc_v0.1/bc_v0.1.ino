@@ -71,22 +71,22 @@ void setup() {
 void loop() {
   digitalWrite(LED_BUILTIN, HIGH);
   float h = dht22.readHumidity();
-  float t = dht22.readTemperature();
-  float tt = bmp280.readTemperature();
+  /*float t = dht22.readTemperature();*/
+  /*float tt = bmp280.readTemperature();*/
   // float p = bmp280.readPressure();  
 
   unsigned int batt = analogRead(A0);
   double battV = batt * (4.2 / 1023);
 
-  StaticJsonDocument<800> root;
+  StaticJsonDocument<100> root;
   root["label"] = label;
   root["dht22hum"] = String(h); // %
-  root["dht22temp"] = String(t); // in *C
-  root["bmp280temp"] = String(tt); // in *C
+  /*root["dht22temp"] = String(t); // in *C*/
+  /*root["bmp280temp"] = String(tt); // in *C*/
   // root["bmp280pres"] = String(p); // in Pa
-  root["volt"] = String(battV);
+  /*root["volt"] = String(battV);*/
 
-  char message[800];
+  char message[100];
   serializeJson(root, message); 
   
   while (!client.connected()) {
