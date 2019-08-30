@@ -1,4 +1,4 @@
-package listener
+package listeners
 
 import (
 	"encoding/json"
@@ -11,16 +11,12 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-//const (
-//listenerName = "indoor_humidity"
-//)
-
-type Listener struct {
+type HumidityListener struct {
 	mqttOptions *mqtt.ClientOptions
 }
 
-func NewListener(listenerName string, mqttUrl *url.URL, store *stores.InfluxStore, sensors sensors.Sensors) (*Listener, error) {
-	i := &Listener{}
+func NewHumidityListener(listenerName string, mqttUrl *url.URL, store *stores.InfluxStore) (*HumidityListener, error) {
+	i := &HumidityListener{}
 
 	topic := mqttUrl.Path[1:len(mqttUrl.Path)]
 	if topic == "" {
@@ -37,8 +33,8 @@ func NewListener(listenerName string, mqttUrl *url.URL, store *stores.InfluxStor
 		logrus.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		//sensor := &sensors.IndoorHumiditySensors{}
-		err := json.Unmarshal([]byte(msg.Payload()), &sensors)
+		sensors := &sensors.HumiditySensors{}
+		err := json.Unmarshal([]byte(msg.Payload()), sensors)
 		if err != nil {
 			logrus.Error(err.Error())
 		}
@@ -71,7 +67,7 @@ func NewListener(listenerName string, mqttUrl *url.URL, store *stores.InfluxStor
 	return i, nil
 }
 
-func (l Listener) Connect() error {
+func (l HumidityListener) Connect() error {
 	mqttClient := mqtt.NewClient(l.mqttOptions)
 	if token := mqttClient.Connect(); token.Wait() && token.Error() != nil {
 		return token.Error()
