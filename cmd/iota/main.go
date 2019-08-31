@@ -17,8 +17,10 @@ var (
 	Version                   string
 	Build                     string
 	showVersion               *bool
-	indoorHumidityListener    *listeners.HumidityListener
-	indoorTemperatureListener *listeners.TemperatureListener
+	indoorHumidityListener    *listeners.Listener
+	indoorTemperatureListener *listeners.Listener
+	indoorPressureListener    *listeners.Listener
+	indoorVoltageListener     *listeners.Listener
 )
 
 func init() {
@@ -44,7 +46,7 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
-		indoorHumidityListener, err = listeners.NewHumidityListener("indoor_humidity", indoorHumidityMqttUrl, store)
+		indoorHumidityListener, err = listeners.NewHumidityListener("humidity", indoorHumidityMqttUrl, store)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
@@ -55,7 +57,29 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
-		indoorTemperatureListener, err = listeners.NewTemperatureListener("indoor_temp", indoorTemperatureMqttUrl, store)
+		indoorTemperatureListener, err = listeners.NewTemperatureListener("temp", indoorTemperatureMqttUrl, store)
+		if err != nil {
+			logrus.Fatal(err.Error())
+		}
+
+		indoorPressureMqttURL := os.Getenv("INDOOR_PRESSURE_MQTT_URL")
+		indoorPressureMqttUrl, err := url.Parse(indoorPressureMqttURL)
+		if err != nil {
+			logrus.Fatal(err.Error())
+		}
+
+		indoorPressureListener, err = listeners.NewPressureListener("pressure", indoorPressureMqttUrl, store)
+		if err != nil {
+			logrus.Fatal(err.Error())
+		}
+
+		indoorVoltageMqttURL := os.Getenv("INDOOR_VOLTAGE_MQTT_URL")
+		indoorVoltageMqttUrl, err := url.Parse(indoorVoltageMqttURL)
+		if err != nil {
+			logrus.Fatal(err.Error())
+		}
+
+		indoorVoltageListener, err = listeners.NewVoltageListener("voltage", indoorVoltageMqttUrl, store)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
@@ -73,13 +97,21 @@ func main() {
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
-		logrus.Info("Indoor humidity listener connected\n")
 
 		err = indoorTemperatureListener.Connect()
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
-		logrus.Info("Indoor temperature listener connected\n")
+
+		err = indoorPressureListener.Connect()
+		if err != nil {
+			logrus.Fatal(err.Error())
+		}
+
+		err = indoorVoltageListener.Connect()
+		if err != nil {
+			logrus.Fatal(err.Error())
+		}
 
 		<-c
 	}

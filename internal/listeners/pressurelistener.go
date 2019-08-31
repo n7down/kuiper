@@ -11,7 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func NewTemperatureListener(listenerName string, mqttUrl *url.URL, store *stores.InfluxStore) (*Listener, error) {
+func NewPressureListener(listenerName string, mqttUrl *url.URL, store *stores.InfluxStore) (*Listener, error) {
 	i := &Listener{}
 
 	topic := mqttUrl.Path[1:len(mqttUrl.Path)]
@@ -29,7 +29,7 @@ func NewTemperatureListener(listenerName string, mqttUrl *url.URL, store *stores
 		logrus.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensors := &sensors.TemperatureSensors{}
+		sensors := &sensors.PressureSensors{}
 		err := json.Unmarshal([]byte(msg.Payload()), sensors)
 		if err != nil {
 			logrus.Error(err.Error())

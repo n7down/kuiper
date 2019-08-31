@@ -28,8 +28,8 @@ const char mqtt_server[] = "";
 const char type[] = "bc";
 const char ver[] = "v0.1";
 const char id[] = "1";
-const char humidityTopic[] = "indoor/humidity";
-const char tempTopic[] = "indoor/temp";
+const char humidityTopic[] = "humidity";
+const char tempTopic[] = "temp";
 
 const int minutes = 1;
 const int readDelay = 1000 * 60 * minutes;

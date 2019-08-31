@@ -11,12 +11,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type HumidityListener struct {
-	mqttOptions *mqtt.ClientOptions
-}
-
-func NewHumidityListener(listenerName string, mqttUrl *url.URL, store *stores.InfluxStore) (*HumidityListener, error) {
-	i := &HumidityListener{}
+func NewHumidityListener(listenerName string, mqttUrl *url.URL, store *stores.InfluxStore) (*Listener, error) {
+	i := &Listener{}
 
 	topic := mqttUrl.Path[1:len(mqttUrl.Path)]
 	if topic == "" {
@@ -63,14 +59,7 @@ func NewHumidityListener(listenerName string, mqttUrl *url.URL, store *stores.In
 	}
 
 	i.mqttOptions = opts
+	i.listenerName = listenerName
 
 	return i, nil
-}
-
-func (l HumidityListener) Connect() error {
-	mqttClient := mqtt.NewClient(l.mqttOptions)
-	if token := mqttClient.Connect(); token.Wait() && token.Error() != nil {
-		return token.Error()
-	}
-	return nil
 }
