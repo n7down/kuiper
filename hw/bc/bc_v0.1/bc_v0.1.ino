@@ -26,10 +26,12 @@ const char ssid[] = "";
 const char password[] = "";
 const char mqtt_server[] = "";
 const char type[] = "bc";
-const char ver[] = "v0.1";
+const char ver[] = "0.1";
 const char id[] = "1";
 const char humidityTopic[] = "humidity";
 const char tempTopic[] = "temp";
+const char pressureTopic[] = "pressure";
+const char voltageTopic[] = "voltage";
 
 const int minutes = 1;
 const int readDelay = 1000 * 60 * minutes;
@@ -73,37 +75,6 @@ void setup() {
 
 void loop() {
   digitalWrite(LED_BUILTIN, HIGH);
-  float h = dht22.readHumidity();
-  float t = dht22.readTemperature();
-  float tt = bmp280.readTemperature();
-  // float p = bmp280.readPressure();  
-
-  unsigned int batt = analogRead(A0);
-  double battV = batt * (4.2 / 1023);
-
-  char label[10];
-  strcpy(label, id);
-  strcat(label, type);
-  strcat(label, ver);
-
-  StaticJsonDocument<100> humidityRoot;
-  humidityRoot["id"] = label;
-  humidityRoot["dht22hum"] = String(h); // %
-
-  char humidityMessage[100];
-  serializeJson(humidityRoot, humidityMessage); 
-  
-  StaticJsonDocument<100> tempRoot;
-  tempRoot["id"] = label;
-  // root["dht22hum"] = String(h); // %
-  tempRoot["dht22temp"] = String(t); // in *C
-  tempRoot["bmp280temp"] = String(tt); // in *C
-  // root["bmp280pres"] = String(p); // in Pa
-  // root["volt"] = String(battV);*/
-
-  char tempMessage[100];
-  serializeJson(tempRoot, tempMessage); 
-  
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection (");
     Serial.print(mqtt_server);
@@ -121,18 +92,59 @@ void loop() {
       delay(5000);
     }
   }
+
+  float h = dht22.readHumidity();
+  float t = dht22.readTemperature();
+  float tt = bmp280.readTemperature();
+  float p = bmp280.readPressure();  
+
+  unsigned int batt = analogRead(A0);
+  double battV = batt * (4.2 / 1023);
+
+  char label[10];
+  strcpy(label, id);
+  strcat(label, type);
+  strcat(label, ver);
+
+  StaticJsonDocument<50> humidityRoot;
+  humidityRoot["id"] = label;
+  humidityRoot["dht22hum"] = String(h); // %
+
+  char humidityMessage[50];
+  serializeJson(humidityRoot, humidityMessage); 
   
-  int humidityResult = client.publish(humidityTopic, humidityMessage);
+  int result = client.publish(humidityTopic, humidityMessage);
   Serial.print("Sent message: ");
   Serial.print(humidityMessage);
   Serial.print(" - Result: ");
-  Serial.println(humidityResult);
+  Serial.println(result);
+  
+  StaticJsonDocument<100> tempRoot;
+  tempRoot["id"] = label;
+  tempRoot["dht22temp"] = String(t); // in *C
+  tempRoot["bmp280temp"] = String(tt); // in *C
 
-  int tempResult = client.publish(tempTopic, tempMessage);
+  char tempMessage[100];
+  serializeJson(tempRoot, tempMessage); 
+  
+  result = client.publish(tempTopic, tempMessage);
   Serial.print("Sent message: ");
-  Serial.print(tempMessage);
+  Serial.print(tempessage);
   Serial.print(" - Result: ");
-  Serial.println(tempResult);
+  Serial.println(result);
+
+  StaticJsonDocument<50> pressureRoot;
+  pressureRoot["id"] = label;
+  pressureRoot["bmp280pres"] = String(p); // in Pa
+
+  char pressureMessage[50];
+  serializeJson(pressureRoot, pressureMessage); 
+  
+  result = client.publish(pressureTopic, pressureMessage);
+  Serial.print("Sent message: ");
+  Serial.print(message);
+  Serial.print(" - Result: ");
+  Serial.println(result);
 
   Serial.println("disconnecting");
   client.disconnect();
