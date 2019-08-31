@@ -28,10 +28,10 @@ const char mqtt_server[] = "";
 const char type[] = "bc";
 const char ver[] = "0.1";
 const char id[] = "1";
-const char humidityTopic[] = "humidity";
-const char tempTopic[] = "temp";
-const char pressureTopic[] = "pressure";
-const char voltageTopic[] = "voltage";
+const char humidityTopic[] = "sensor/humidity";
+const char tempTopic[] = "sensor/temp";
+const char pressureTopic[] = "sensor/pressure";
+const char voltageTopic[] = "sensor/voltage";
 
 const int minutes = 1;
 const int readDelay = 1000 * 60 * minutes;
