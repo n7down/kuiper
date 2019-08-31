@@ -129,7 +129,7 @@ void loop() {
   
   result = client.publish(tempTopic, tempMessage);
   Serial.print("Sent message: ");
-  Serial.print(tempessage);
+  Serial.print(tempMessage);
   Serial.print(" - Result: ");
   Serial.println(result);
 
@@ -142,7 +142,20 @@ void loop() {
   
   result = client.publish(pressureTopic, pressureMessage);
   Serial.print("Sent message: ");
-  Serial.print(message);
+  Serial.print(pressureMessage);
+  Serial.print(" - Result: ");
+  Serial.println(result);
+
+  StaticJsonDocument<50> voltageRoot;
+  voltageRoot["id"] = label;
+  voltageRoot["voltage"] = String(battV);
+
+  char voltageMessage[50];
+  serializeJson(voltageRoot, voltageMessage); 
+  
+  result = client.publish(voltageTopic, voltageMessage);
+  Serial.print("Sent message: ");
+  Serial.print(voltageMessage);
   Serial.print(" - Result: ");
   Serial.println(result);
 
