@@ -40,7 +40,7 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
-		indoorHumidityMqttURL := os.Getenv("INDOOR_HUMIDITY_MQTT_URL")
+		indoorHumidityMqttURL := os.Getenv("HUMIDITY_MQTT_URL")
 		indoorHumidityMqttUrl, err := url.Parse(indoorHumidityMqttURL)
 		if err != nil {
 			logrus.Fatal(err.Error())
@@ -51,7 +51,7 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
-		indoorTemperatureMqttURL := os.Getenv("INDOOR_TEMPERATURE_MQTT_URL")
+		indoorTemperatureMqttURL := os.Getenv("TEMPERATURE_MQTT_URL")
 		indoorTemperatureMqttUrl, err := url.Parse(indoorTemperatureMqttURL)
 		if err != nil {
 			logrus.Fatal(err.Error())
@@ -62,7 +62,7 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
-		indoorPressureMqttURL := os.Getenv("INDOOR_PRESSURE_MQTT_URL")
+		indoorPressureMqttURL := os.Getenv("PRESSURE_MQTT_URL")
 		indoorPressureMqttUrl, err := url.Parse(indoorPressureMqttURL)
 		if err != nil {
 			logrus.Fatal(err.Error())
@@ -73,7 +73,7 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
-		indoorVoltageMqttURL := os.Getenv("INDOOR_VOLTAGE_MQTT_URL")
+		indoorVoltageMqttURL := os.Getenv("VOLTAGE_MQTT_URL")
 		indoorVoltageMqttUrl, err := url.Parse(indoorVoltageMqttURL)
 		if err != nil {
 			logrus.Fatal(err.Error())
