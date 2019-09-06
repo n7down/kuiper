@@ -24,14 +24,15 @@ IOTA is used for the collection of multiple environmental sensor readings (both 
 ## Hardware
 - [x] Wire up the DHT22 and BMP280 sensor to the ESP8266
 - [ ] Build water proof case
-- [ ] [Erase memory on ESP8266](https://github.com/espressif/esptool)
 ## Software
 - [x] Ambient environmental sensors (AES) send message to mosquitto mqtt server
 - [ ] Setup passwords on mosquitto mqtt server
 - [x] Go app subscribes to topic and receives message and logs the data to influx database
 - [x] Sensors publish to mosquitto server
 - [ ] Setup deep sleep on the esp8266
-- [ ] Read in actual voltage readings
+- [x] Read in actual voltage readings
+- [ ] Send sensors current time using async call 
+ - This allows sensors to take readings at a certain time of day
 ## Docker
 - [x] Dockerize influx database
 - [x] Dockerize golang app
