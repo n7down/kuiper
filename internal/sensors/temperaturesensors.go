@@ -8,10 +8,8 @@ import (
 )
 
 type TemperatureSensors struct {
-	ID string `json:"id"`
-	//Voltage           string `json:"volt"`
-	DHT22Temperature string `json:"dht22temp"`
-	//DHT22Humidity string `json:"dht22hum"`
+	ID                string `json:"id"`
+	DHT22Temperature  string `json:"dht22temp"`
 	BMP280Temperature string `json:"bmp280temp"`
 }
 
@@ -31,9 +29,7 @@ func (i TemperatureSensors) LogSensors(store *stores.InfluxStore, measurement st
 
 	// not indexed
 	fields := map[string]interface{}{
-		//"voltage":        i.Voltage,
-		"dht22_temp": i.DHT22Temperature,
-		//"dht22_humidity": i.DHT22Humidity,
+		"dht22_temp":  i.DHT22Temperature,
 		"bmp280_temp": i.BMP280Temperature,
 	}
 

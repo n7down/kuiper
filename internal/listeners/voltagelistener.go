@@ -49,7 +49,6 @@ func NewVoltageListener(listenerName string, mqttUrl *url.URL, store *stores.Inf
 	var err error = nil
 	opts.OnConnect = func(c mqtt.Client) {
 		if token := c.Subscribe(topic, 0, f); token.Wait() && token.Error() != nil {
-			//logrus.Fatal(token.Error())
 			err = token.Error()
 		}
 	}

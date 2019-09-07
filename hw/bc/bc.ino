@@ -26,7 +26,6 @@ const char ssid[] = "";
 const char password[] = "";
 const char mqtt_server[] = "";
 const char type[] = "bc";
-const char ver[] = "0.1";
 const char id[] = "1";
 const char humidityTopic[] = "sensor/humidity";
 const char tempTopic[] = "sensor/temp";
@@ -102,9 +101,8 @@ void loop() {
   double battV = batt * (4.2 / 1023);
 
   char label[10];
-  strcpy(label, id);
-  strcat(label, type);
-  strcat(label, ver);
+  strcpy(label, type);
+  strcat(label, label);
 
   StaticJsonDocument<50> humidityRoot;
   humidityRoot["id"] = label;
