@@ -67,6 +67,7 @@ func NewTimeListener(listenerName string, mqttUrl *url.URL, store *stores.Influx
 			client := connectToMQTT(clientID, mqttUrl)
 			publishTopicName := fmt.Sprintf("%s/%s", publishTopic, t.DeviceName)
 			client.Publish(publishTopicName, 0, false, currentTime.String())
+			logrus.Infof("Sending time: %v %v", publishTopicName, currentTime.String())
 			client.Disconnect(0)
 		}
 	}

@@ -21,6 +21,7 @@ var (
 	indoorTemperatureListener *listeners.Listener
 	indoorPressureListener    *listeners.Listener
 	indoorVoltageListener     *listeners.Listener
+	timeListener              *listeners.Listener
 )
 
 func init() {
@@ -83,6 +84,17 @@ func init() {
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
+
+		timeMqttURL := os.Getenv("TIME_MQTT_URL")
+		timeMqttUrl, err := url.Parse(timeMqttURL)
+		if err != nil {
+			logrus.Fatal(err.Error())
+		}
+
+		timeListener, err = listeners.NewTimeListener("time", timeMqttUrl, store)
+		if err != nil {
+			logrus.Fatal(err.Error())
+		}
 	}
 }
 
@@ -109,6 +121,11 @@ func main() {
 		}
 
 		err = indoorVoltageListener.Connect()
+		if err != nil {
+			logrus.Fatal(err.Error())
+		}
+
+		err = timeListener.Connect()
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
