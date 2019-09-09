@@ -11,10 +11,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const (
-	publishTopic = "time"
-)
-
 type Time struct {
 	DeviceName string `json:"deviceName"`
 }
@@ -65,10 +61,10 @@ func NewTimeListener(listenerName string, mqttUrl *url.URL, store *stores.Influx
 			currentTime := time.Now().UTC()
 			clientID := fmt.Sprintf("%s-%s", listenerName, t.DeviceName)
 			client := connectToMQTT(clientID, mqttUrl)
-			publishTopicName := fmt.Sprintf("%s/%s", publishTopic, t.DeviceName)
+			publishTopicName := fmt.Sprintf("%s/%s", subscribeTopic, t.DeviceName)
 			client.Publish(publishTopicName, 0, false, currentTime.String())
 			logrus.Infof("Sending time: %v %v", publishTopicName, currentTime.String())
-			client.Disconnect(0)
+			client.Disconnect(1000)
 		}
 	}
 
