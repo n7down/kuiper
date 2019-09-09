@@ -56,7 +56,7 @@ func NewTimeListener(listenerName string, mqttUrl *url.URL, store *stores.Influx
 
 		// unmashal payload
 		t := Time{}
-		err := json.Unmarshal([]byte(msg.Payload()), t)
+		err := json.Unmarshal([]byte(msg.Payload()), &t)
 		if err != nil {
 			logrus.Error(err.Error())
 		}
