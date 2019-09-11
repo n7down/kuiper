@@ -18,9 +18,7 @@ func NewInfluxStore(url *url.URL) (*InfluxStore, error) {
 	password, _ := url.User.Password()
 
 	influxClient, err := client.NewHTTPClient(client.HTTPConfig{
-		Addr: fmt.Sprintf("%s://%s", url.Scheme, url.Host),
-		//Username: "dbuser",
-		//Password: "password",
+		Addr:     fmt.Sprintf("%s://%s", url.Scheme, url.Host),
 		Username: username,
 		Password: password,
 	})

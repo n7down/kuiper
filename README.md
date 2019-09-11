@@ -37,6 +37,7 @@ IOTA is used for the collection of multiple environmental sensor readings (both 
  - This allows sensors to take readings at a certain time of day
 - [ ] Send sensor data after getting a subscription callback with the current time on the time given
 - [ ] Figure out how to mock mosquitto and influx
+ - [Test cases for mqtt library](https://github.com/micro/go-plugins/blob/master/broker/mqtt/mqtt_test.go)
 ## Docker
 - [x] Dockerize influx database
 - [x] Dockerize golang app
