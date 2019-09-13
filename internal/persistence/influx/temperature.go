@@ -1,4 +1,4 @@
-package stores
+package influx
 
 import (
 	"time"
@@ -6,7 +6,13 @@ import (
 	client "github.com/influxdata/influxdb1-client/v2"
 )
 
-func (i InfluxStore) LogHumiditySensors(measurement string, id string, humidity string) error {
+type TemperatureData struct {
+	ID                string `json:"id"`
+	DHT22Temperature  string `json:"dht22temp"`
+	BMP280Temperature string `json:"bmp280temp"`
+}
+
+func (i Influx) LogTemperature(measurement string, temperatureData TemperatureData) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",
@@ -17,12 +23,13 @@ func (i InfluxStore) LogHumiditySensors(measurement string, id string, humidity 
 
 	// indexed
 	tags := map[string]string{
-		"id": id,
+		"id": temperatureData.ID,
 	}
 
 	// not indexed
 	fields := map[string]interface{}{
-		"dht22_humidity": humidity,
+		"dht22_temp":  temperatureData.DHT22Temperature,
+		"bmp280_temp": temperatureData.BMP280Temperature,
 	}
 
 	point, err := client.NewPoint(

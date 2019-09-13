@@ -7,7 +7,6 @@ import (
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"github.com/n7down/iota/internal/stores"
 	"github.com/sirupsen/logrus"
 )
 
@@ -33,7 +32,7 @@ func connectToMQTT(clientId string, uri *url.URL) mqtt.Client {
 	return client
 }
 
-func NewTimeListener(listenerName string, mqttUrl *url.URL, store *stores.InfluxStore) (*Listener, error) {
+func (e Env) NewTimeListener(listenerName string, mqttUrl *url.URL) (*Listener, error) {
 	i := &Listener{}
 
 	subscribeTopic := mqttUrl.Path[1:len(mqttUrl.Path)]

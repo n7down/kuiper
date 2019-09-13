@@ -41,13 +41,15 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
+		env := listeners.NewEnv(store)
+
 		indoorHumidityMqttURL := os.Getenv("HUMIDITY_MQTT_URL")
 		indoorHumidityMqttUrl, err := url.Parse(indoorHumidityMqttURL)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
 
-		indoorHumidityListener, err = listeners.NewHumidityListener("humidity", indoorHumidityMqttUrl, store)
+		indoorHumidityListener, err = env.NewHumidityListener("humidity", indoorHumidityMqttUrl)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
@@ -58,7 +60,7 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
-		indoorTemperatureListener, err = listeners.NewTemperatureListener("temp", indoorTemperatureMqttUrl, store)
+		indoorTemperatureListener, err = env.NewTemperatureListener("temp", indoorTemperatureMqttUrl)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
@@ -69,7 +71,7 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
-		indoorPressureListener, err = listeners.NewPressureListener("pressure", indoorPressureMqttUrl, store)
+		indoorPressureListener, err = env.NewPressureListener("pressure", indoorPressureMqttUrl)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
@@ -80,7 +82,7 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
-		indoorVoltageListener, err = listeners.NewVoltageListener("voltage", indoorVoltageMqttUrl, store)
+		indoorVoltageListener, err = env.NewVoltageListener("voltage", indoorVoltageMqttUrl)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
@@ -91,7 +93,7 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
-		timeListener, err = listeners.NewTimeListener("time", timeMqttUrl, store)
+		timeListener, err = env.NewTimeListener("time", timeMqttUrl)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}

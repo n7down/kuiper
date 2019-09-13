@@ -7,11 +7,10 @@ import (
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/n7down/iota/internal/sensors"
-	"github.com/n7down/iota/internal/stores"
 	"github.com/sirupsen/logrus"
 )
 
-func NewTemperatureListener(listenerName string, mqttUrl *url.URL, store *stores.InfluxStore) (*Listener, error) {
+func (e Env) NewTemperatureListener(listenerName string, mqttUrl *url.URL) (*Listener, error) {
 	i := &Listener{}
 
 	topic := mqttUrl.Path[1:len(mqttUrl.Path)]
@@ -36,7 +35,7 @@ func NewTemperatureListener(listenerName string, mqttUrl *url.URL, store *stores
 		}
 
 		if err == nil {
-			err = sensors.LogSensors(store, listenerName)
+			err = sensors.LogSensors(e.store, listenerName)
 			logrus.Infof("Logged sensor: %v", sensors)
 			if err != nil {
 				logrus.Error(err.Error())
