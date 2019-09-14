@@ -1,15 +1,15 @@
 package listeners
 
 import (
-	"github.com/n7down/iota/internal/stores"
+	"github.com/n7down/iota/internal/persistence/influx"
 )
 
 type Env struct {
-	store *stores.InfluxStore
+	influxDB *influx.Influx
 }
 
-func NewEnv(store *stores.InfluxStore) *Env {
+func NewEnv(influxDB *influx.Influx) *Env {
 	return &Env{
-		store: store,
+		influxDB: influxDB,
 	}
 }

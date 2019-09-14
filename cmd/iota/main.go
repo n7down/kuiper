@@ -9,19 +9,18 @@ import (
 	"syscall"
 
 	"github.com/n7down/iota/internal/listeners"
-	"github.com/n7down/iota/internal/stores"
+	"github.com/n7down/iota/internal/persistence/influx"
 	"github.com/sirupsen/logrus"
 )
 
 var (
-	Version                   string
-	Build                     string
-	showVersion               *bool
-	indoorHumidityListener    *listeners.Listener
-	indoorTemperatureListener *listeners.Listener
-	indoorPressureListener    *listeners.Listener
-	indoorVoltageListener     *listeners.Listener
-	timeListener              *listeners.Listener
+	Version         string
+	Build           string
+	showVersion     *bool
+	bmp280Listener  *listeners.Listener
+	dht22Listener   *listeners.Listener
+	voltageListener *listeners.Listener
+	timeListener    *listeners.Listener
 )
 
 func init() {
@@ -36,53 +35,42 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
-		store, err := stores.NewInfluxStore(influxUrl)
+		influxDB, err := influx.NewInflux(influxUrl)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
 
-		env := listeners.NewEnv(store)
+		env := listeners.NewEnv(influxDB)
 
-		indoorHumidityMqttURL := os.Getenv("HUMIDITY_MQTT_URL")
-		indoorHumidityMqttUrl, err := url.Parse(indoorHumidityMqttURL)
+		dht22MqttURL := os.Getenv("dht22_MQTT_URL")
+		dht22MqttUrl, err := url.Parse(dht22MqttURL)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
 
-		indoorHumidityListener, err = env.NewHumidityListener("humidity", indoorHumidityMqttUrl)
+		dht22Listener, err = env.NewDHT22Listener("dht22_listener", dht22MqttUrl)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
 
-		indoorTemperatureMqttURL := os.Getenv("TEMPERATURE_MQTT_URL")
-		indoorTemperatureMqttUrl, err := url.Parse(indoorTemperatureMqttURL)
+		bmp280MqttURL := os.Getenv("BMP280_MQTT_URL")
+		bmp280MqttUrl, err := url.Parse(bmp280MqttURL)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
 
-		indoorTemperatureListener, err = env.NewTemperatureListener("temp", indoorTemperatureMqttUrl)
+		bmp280Listener, err = env.NewBMP280Listener("bmp280_listener", bmp280MqttUrl)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
 
-		indoorPressureMqttURL := os.Getenv("PRESSURE_MQTT_URL")
-		indoorPressureMqttUrl, err := url.Parse(indoorPressureMqttURL)
+		voltageMqttURL := os.Getenv("VOLTAGE_MQTT_URL")
+		voltageMqttUrl, err := url.Parse(voltageMqttURL)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
 
-		indoorPressureListener, err = env.NewPressureListener("pressure", indoorPressureMqttUrl)
-		if err != nil {
-			logrus.Fatal(err.Error())
-		}
-
-		indoorVoltageMqttURL := os.Getenv("VOLTAGE_MQTT_URL")
-		indoorVoltageMqttUrl, err := url.Parse(indoorVoltageMqttURL)
-		if err != nil {
-			logrus.Fatal(err.Error())
-		}
-
-		indoorVoltageListener, err = env.NewVoltageListener("voltage", indoorVoltageMqttUrl)
+		voltageListener, err = env.NewVoltageListener("voltage_listener", voltageMqttUrl)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
@@ -107,22 +95,17 @@ func main() {
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 
-		err := indoorHumidityListener.Connect()
+		err := dht22Listener.Connect()
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
 
-		err = indoorTemperatureListener.Connect()
+		err = bmp280Listener.Connect()
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
 
-		err = indoorPressureListener.Connect()
-		if err != nil {
-			logrus.Fatal(err.Error())
-		}
-
-		err = indoorVoltageListener.Connect()
+		err = voltageListener.Connect()
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}

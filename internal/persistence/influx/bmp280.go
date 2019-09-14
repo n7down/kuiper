@@ -1,20 +1,15 @@
-package sensors
+package influx
 
 import (
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
-	"github.com/n7down/iota/internal/stores"
+	"github.com/n7down/iota/internal/sensors"
 )
 
-type HumiditySensors struct {
-	ID            string `json:"id"`
-	DHT22Humidity string `json:"dht22hum"`
-}
-
-func (i HumiditySensors) LogSensors(store *stores.InfluxStore, measurement string) error {
+func (i Influx) LogBMP280(measurement string, sensors *sensors.BMP280Sensors) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
-		Database:  store.Database,
+		Database:  i.Database,
 		Precision: "s",
 	})
 	if err != nil {
@@ -23,12 +18,13 @@ func (i HumiditySensors) LogSensors(store *stores.InfluxStore, measurement strin
 
 	// indexed
 	tags := map[string]string{
-		"id": i.ID,
+		"id": sensors.ID,
 	}
 
 	// not indexed
 	fields := map[string]interface{}{
-		"dht22_humidity": i.DHT22Humidity,
+		"bmp280_pressure": sensors.BMP280Pressure,
+		"bmp280_temp":     sensors.BMP280Temperature,
 	}
 
 	point, err := client.NewPoint(
@@ -40,7 +36,7 @@ func (i HumiditySensors) LogSensors(store *stores.InfluxStore, measurement strin
 
 	bp.AddPoint(point)
 
-	err = store.Client.Write(bp)
+	err = i.Client.Write(bp)
 	if err != nil {
 		return err
 	}

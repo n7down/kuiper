@@ -4,14 +4,10 @@ import (
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
+	"github.com/n7down/iota/internal/sensors"
 )
 
-type VoltageData struct {
-	ID      string `json:"id"`
-	Voltage string `json:"voltage"`
-}
-
-func (i Influx) LogVoltage(measurement string, voltageData VoltageData) error {
+func (i Influx) LogVoltage(measurement string, voltageSensors *sensors.VoltageSensors) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",
@@ -22,12 +18,12 @@ func (i Influx) LogVoltage(measurement string, voltageData VoltageData) error {
 
 	// indexed
 	tags := map[string]string{
-		"id": voltageData.ID,
+		"id": voltageSensors.ID,
 	}
 
 	// not indexed
 	fields := map[string]interface{}{
-		"voltage": voltageData.Voltage,
+		"voltage": voltageSensors.Voltage,
 	}
 
 	point, err := client.NewPoint(

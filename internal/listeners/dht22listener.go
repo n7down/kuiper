@@ -10,7 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (e Env) NewHumidityListener(listenerName string, mqttUrl *url.URL) (*Listener, error) {
+func (e Env) NewDHT22Listener(listenerName string, mqttUrl *url.URL) (*Listener, error) {
 	i := &Listener{}
 
 	topic := mqttUrl.Path[1:len(mqttUrl.Path)]
@@ -28,14 +28,14 @@ func (e Env) NewHumidityListener(listenerName string, mqttUrl *url.URL) (*Listen
 		logrus.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensors := &sensors.HumiditySensors{}
+		sensors := &sensors.DHT22Sensors{}
 		err := json.Unmarshal([]byte(msg.Payload()), sensors)
 		if err != nil {
 			logrus.Error(err.Error())
 		}
 
 		if err == nil {
-			err = sensors.LogSensors(e.store, listenerName)
+			err = e.influxDB.LogDHT22(listenerName, sensors)
 			logrus.Infof("Logged sensor: %v", sensors)
 			if err != nil {
 				logrus.Error(err.Error())

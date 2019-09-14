@@ -2,9 +2,8 @@ version: "3.5"
 services:
     app:
         environment:
-            HUMIDITY_MQTT_URL: http://172.28.1.3:1883/sensor/humidity
-            TEMPERATURE_MQTT_URL: http://172.28.1.3:1883/sensor/temp
-            PRESSURE_MQTT_URL: http://172.28.1.3:1883/sensor/pressure
+            DHT22_MQTT_URL: http://172.28.1.3:1883/sensor/dht22
+            BMP280_MQTT_URL: http://172.28.1.3:1883/sensor/bmp280
             VOLTAGE_MQTT_URL: http://172.28.1.3:1883/sensor/voltage
             TIME_MQTT_URL: http://172.28.1.3:1883/time/utc
             INFLUX_URL: http://dbuser:password@172.28.1.4:8086/iota
