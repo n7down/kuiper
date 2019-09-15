@@ -1,6 +1,7 @@
 package main
 
 import (
+	"container/list"
 	"flag"
 	"fmt"
 	"net/url"
@@ -23,6 +24,26 @@ var (
 	timeListener    *listeners.Listener
 )
 
+type Iota struct {
+	listenerList *list.List
+}
+
+func InitIota() *Iota {
+	return &Iota{
+		listenerList: list.New(),
+	}
+}
+
+func (i Iota) AddListener(listener *listeners.Listener) {
+	i.listenerList.PushBack(listener)
+}
+
+func (i Iota) Connection() {
+	for l := i.listenerList.Front(); l != nil; l = l.Next() {
+		l.Value.(*listeners.Listener).Connect()
+	}
+}
+
 func init() {
 	showVersion = flag.Bool("v", false, "show version and build")
 	flag.Parse()
@@ -42,7 +63,7 @@ func init() {
 
 		env := listeners.NewEnv(influxDB)
 
-		dht22MqttURL := os.Getenv("dht22_MQTT_URL")
+		dht22MqttURL := os.Getenv("DHT22_MQTT_URL")
 		dht22MqttUrl, err := url.Parse(dht22MqttURL)
 		if err != nil {
 			logrus.Fatal(err.Error())
