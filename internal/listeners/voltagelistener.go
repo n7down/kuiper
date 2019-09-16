@@ -58,6 +58,7 @@ func (e Env) NewVoltageListener(listenerName string, mqttUrl *url.URL) (*Listene
 
 	i.mqttOptions = opts
 	i.listenerName = listenerName
+	i.listenerMQTTUrl = mqttUrl
 
 	return i, nil
 }

@@ -58,6 +58,7 @@ func (e Env) NewBMP280Listener(listenerName string, mqttUrl *url.URL) (*Listener
 
 	i.mqttOptions = opts
 	i.listenerName = listenerName
+	i.listenerMQTTUrl = mqttUrl
 
 	return i, nil
 }

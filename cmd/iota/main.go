@@ -102,7 +102,7 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
-		timeListener, err = env.NewTimeListener("time", timeMqttUrl)
+		timeListener, err = env.NewTimeListener("time_listener", timeMqttUrl)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
