@@ -7,7 +7,7 @@ import (
 	"github.com/n7down/iota/internal/sensors"
 )
 
-func (i Influx) LogVoltage(measurement string, voltageSensors *sensors.VoltageSensors) error {
+func (i Influx) LogVoltage(measurement string, sensor *sensors.VoltageSensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",
@@ -18,12 +18,12 @@ func (i Influx) LogVoltage(measurement string, voltageSensors *sensors.VoltageSe
 
 	// indexed
 	tags := map[string]string{
-		"id": voltageSensors.ID,
+		"id": sensor.ID,
 	}
 
 	// not indexed
 	fields := map[string]interface{}{
-		"voltage": voltageSensors.Voltage,
+		"voltage": sensor.Voltage,
 	}
 
 	point, err := client.NewPoint(

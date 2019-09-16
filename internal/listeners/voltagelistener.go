@@ -28,7 +28,7 @@ func (e Env) NewVoltageListener(listenerName string, mqttUrl *url.URL) (*Listene
 		logrus.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensors := &sensors.VoltageSensors{}
+		sensors := &sensors.VoltageSensor{}
 		err := json.Unmarshal([]byte(msg.Payload()), sensors)
 		if err != nil {
 			logrus.Error(err.Error())

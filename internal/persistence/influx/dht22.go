@@ -7,7 +7,7 @@ import (
 	"github.com/n7down/iota/internal/sensors"
 )
 
-func (i Influx) LogDHT22(measurement string, sensors *sensors.DHT22Sensors) error {
+func (i Influx) LogDHT22(measurement string, sensor *sensors.DHT22Sensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",
@@ -18,13 +18,13 @@ func (i Influx) LogDHT22(measurement string, sensors *sensors.DHT22Sensors) erro
 
 	// indexed
 	tags := map[string]string{
-		"id": sensors.ID,
+		"id": sensor.ID,
 	}
 
 	// not indexed
 	fields := map[string]interface{}{
-		"dht22_humidity": sensors.DHT22Humidity,
-		"dht22_temp":     sensors.DHT22Temperature,
+		"dht22_humidity": sensor.Humidity,
+		"dht22_temp":     sensor.Temperature,
 	}
 
 	point, err := client.NewPoint(

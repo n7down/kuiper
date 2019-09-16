@@ -28,15 +28,15 @@ func (e Env) NewDHT22Listener(listenerName string, mqttUrl *url.URL) (*Listener,
 		logrus.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensors := &sensors.DHT22Sensors{}
-		err := json.Unmarshal([]byte(msg.Payload()), sensors)
+		sensor := &sensors.DHT22Sensor{}
+		err := json.Unmarshal([]byte(msg.Payload()), sensor)
 		if err != nil {
 			logrus.Error(err.Error())
 		}
 
 		if err == nil {
-			err = e.influxDB.LogDHT22(listenerName, sensors)
-			logrus.Infof("Logged sensor: %v", sensors)
+			err = e.influxDB.LogDHT22(listenerName, sensor)
+			logrus.Infof("Logged sensor: %v", sensor)
 			if err != nil {
 				logrus.Error(err.Error())
 			}

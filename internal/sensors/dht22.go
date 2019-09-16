@@ -1,7 +1,7 @@
 package sensors
 
-type DHT22Sensors struct {
-	ID               string `json:"id"`
-	DHT22Humidity    string `json:"dht22hum"`
-	DHT22Temperature string `json:"dht22temp"`
+type DHT22Sensor struct {
+	ID          string `json:"id"`
+	Humidity    string `json:"humidity"`
+	Temperature string `json:"temp"`
 }

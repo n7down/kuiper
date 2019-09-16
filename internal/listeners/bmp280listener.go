@@ -28,15 +28,15 @@ func (e Env) NewBMP280Listener(listenerName string, mqttUrl *url.URL) (*Listener
 		logrus.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensors := &sensors.BMP280Sensors{}
-		err := json.Unmarshal([]byte(msg.Payload()), sensors)
+		sensor := &sensors.BMP280Sensor{}
+		err := json.Unmarshal([]byte(msg.Payload()), sensor)
 		if err != nil {
 			logrus.Error(err.Error())
 		}
 
 		if err == nil {
-			err = e.influxDB.LogBMP280(listenerName, sensors)
-			logrus.Infof("Logged sensor: %v", sensors)
+			err = e.influxDB.LogBMP280(listenerName, sensor)
+			logrus.Infof("Logged sensor: %v", sensor)
 			if err != nil {
 				logrus.Error(err.Error())
 			}

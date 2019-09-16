@@ -1,6 +1,6 @@
 package sensors
 
-type VoltageSensors struct {
+type VoltageSensor struct {
 	ID      string `json:"id"`
 	Voltage string `json:"voltage"`
 }

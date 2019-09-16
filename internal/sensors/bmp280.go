@@ -1,7 +1,7 @@
 package sensors
 
-type BMP280Sensors struct {
-	ID                string `json:"id"`
-	BMP280Pressure    string `json:"bmp280pres"`
-	BMP280Temperature string `json:"bmp280temp"`
+type BMP280Sensor struct {
+	ID          string `json:"id"`
+	Pressure    string `json:"pres"`
+	Temperature string `json:"temp"`
 }
