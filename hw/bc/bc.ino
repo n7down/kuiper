@@ -25,20 +25,18 @@ const char dht22Topic[] = "sensor/dht22";
 const char bmp280Topic[] = "sensor/bmp280";
 const char voltageTopic[] = "sensor/voltage";
 const char timeTopic[] = "time/utc";
-
-const int minutes = 1;
-const int readDelay = 1000 * 60 * minutes;
-bool receivedCurrentTime = false;
+const int hours = 1;
+// bool receivedCurrentTime = false;
 
 DHT dht22(DHTPIN, DHTTYPE);
 Adafruit_BMP280 bmp280;
 WiFiClient espClient;
 PubSubClient client(espClient); 
 
-void callback(char* topic, byte* payload, unsigned int length) {
-  receivedCurrentTime = true;
-  // TODO: get the current timestamp
-}
+// void callback(char* topic, byte* payload, unsigned int length) {
+// receivedCurrentTime = true;
+// TODO: get the current timestamp
+// }
 
 void setupWifi(const char* ssid, const char* password)
 {
@@ -74,7 +72,7 @@ void setup() {
   }
   setupWifi(ssid, password);
   client.setServer(mqtt_server, 1883);
-  client.setCallback(callback);
+  // client.setCallback(callback);
 
   char subscriptionTopic[20];
   strcpy(subscriptionTopic, timeTopic);
@@ -177,9 +175,8 @@ void loop() {
   Serial.println("disconnecting");
   client.disconnect();
  
-  delay(readDelay);
-
-  digitalWrite(LED_BUILTIN, LOW);  
-  delay(readDelay);
+  digitalWrite(LED_BUILTIN, LOW); 
+  
+  ESP.deepSleep(hours * 60 * 60 * 1000000);
 }
   
