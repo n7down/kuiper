@@ -15,7 +15,7 @@ func (e Env) NewVoltageListener(listenerName string, voltageMqttURL string) (*Li
 
 	mqttUrl, err := url.Parse(voltageMqttURL)
 	if err != nil {
-		return &Listener{}, err
+		return i, err
 	}
 
 	topic := mqttUrl.Path[1:len(mqttUrl.Path)]

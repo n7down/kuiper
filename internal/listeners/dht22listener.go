@@ -15,7 +15,7 @@ func (e Env) NewDHT22Listener(listenerName string, dht22MqttURL string) (*Listen
 
 	mqttUrl, err := url.Parse(dht22MqttURL)
 	if err != nil {
-		return &Listener{}, err
+		return i, err
 	}
 
 	topic := mqttUrl.Path[1:len(mqttUrl.Path)]

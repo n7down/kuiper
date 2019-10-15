@@ -37,7 +37,7 @@ func (e Env) NewTimeListener(listenerName string, timeMqttURL string) (*Listener
 
 	mqttUrl, err := url.Parse(timeMqttURL)
 	if err != nil {
-		return &Listener{}, err
+		return i, err
 	}
 
 	subscribeTopic := mqttUrl.Path[1:len(mqttUrl.Path)]

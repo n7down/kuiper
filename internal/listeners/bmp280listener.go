@@ -15,7 +15,7 @@ func (e Env) NewBMP280Listener(listenerName string, bmp280MqttURL string) (*List
 
 	mqttUrl, err := url.Parse(bmp280MqttURL)
 	if err != nil {
-		return &Listener{}, err
+		return i, err
 	}
 
 	topic := mqttUrl.Path[1:len(mqttUrl.Path)]
