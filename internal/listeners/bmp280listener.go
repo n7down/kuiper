@@ -10,8 +10,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (e Env) NewBMP280Listener(listenerName string, mqttUrl *url.URL) (*Listener, error) {
+func (e Env) NewBMP280Listener(listenerName string, bmp280MqttURL string) (*Listener, error) {
 	i := &Listener{}
+
+	mqttUrl, err := url.Parse(bmp280MqttURL)
+	if err != nil {
+		return &Listener{}, err
+	}
 
 	topic := mqttUrl.Path[1:len(mqttUrl.Path)]
 	if topic == "" {
@@ -45,7 +50,7 @@ func (e Env) NewBMP280Listener(listenerName string, mqttUrl *url.URL) (*Listener
 
 	opts.SetDefaultPublishHandler(f)
 
-	var err error = nil
+	err = nil
 	opts.OnConnect = func(c mqtt.Client) {
 		if token := c.Subscribe(topic, 0, f); token.Wait() && token.Error() != nil {
 			err = token.Error()

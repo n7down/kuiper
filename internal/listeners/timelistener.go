@@ -32,8 +32,13 @@ func connectToMQTT(clientId string, uri *url.URL) mqtt.Client {
 	return client
 }
 
-func (e Env) NewTimeListener(listenerName string, mqttUrl *url.URL) (*Listener, error) {
+func (e Env) NewTimeListener(listenerName string, timeMqttURL string) (*Listener, error) {
 	i := &Listener{}
+
+	mqttUrl, err := url.Parse(timeMqttURL)
+	if err != nil {
+		return &Listener{}, err
+	}
 
 	subscribeTopic := mqttUrl.Path[1:len(mqttUrl.Path)]
 	if subscribeTopic == "" {
@@ -69,7 +74,7 @@ func (e Env) NewTimeListener(listenerName string, mqttUrl *url.URL) (*Listener, 
 
 	opts.SetDefaultPublishHandler(f)
 
-	var err error = nil
+	err = nil
 	opts.OnConnect = func(c mqtt.Client) {
 		if token := c.Subscribe(subscribeTopic, 0, f); token.Wait() && token.Error() != nil {
 			err = token.Error()
