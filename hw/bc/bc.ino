@@ -24,7 +24,6 @@ const char id[] = "1";
 const char dht22Topic[] = "sensor/dht22";
 const char bmp280Topic[] = "sensor/bmp280";
 const char voltageTopic[] = "sensor/voltage";
-const char timeTopic[] = "time/utc";
 const int hours = 1;
 
 DHT dht22(DHTPIN, DHTTYPE);
@@ -32,9 +31,26 @@ Adafruit_BMP280 bmp280;
 WiFiClient espClient;
 PubSubClient client(espClient); 
 
+void callback(char* topic, byte* payload, unsigned int length) {
+  // TODO: parse out binary message
+  // 2 types of settings
+  // 1. how often to send data
+  // 2. how often to send heartbeat - once/twice/three/four times a day - send back the voltage with the heartbeat
+  // when done sleeping - set the setting, send back a ack
+  // send back on 'bc/ack' with the type (SUCCESS or FAILURE) the device (bc1) and the command that was sent - send that to influx
+  Serial.print("Message arrived: ");
+  Serial.print(topic);
+  Serial.print("- '");
+  for (int i=0;i<length;i++) {
+    Serial.print((char)payload[i]);
+  }
+  Serial.print("'");
+  Serial.println();
+}
+
 void setupWifi(const char* ssid, const char* password)
 {
-  Serial.println("WiFi connecting...");
+  Serial.print("WiFi connecting...");
   WiFi.begin(ssid, password);
   
   // Wait for connection
@@ -53,6 +69,29 @@ void setupWifi(const char* ssid, const char* password)
   Serial.println(WiFi.localIP());
 }
 
+void reconnect() {
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection (");
+    Serial.print(mqtt_server);
+    Serial.print(")... ");
+    // Attempt to connect
+    if (client.connect(mqtt_server)) {
+      Serial.println("connected");
+      char subscriptionTopic[20];
+      strcpy(subscriptionTopic, type);
+      strcat(subscriptionTopic, "/");  
+      strcat(subscriptionTopic, id);
+      client.subscribe(subscriptionTopic);
+    } else {
+      Serial.print("Failed: ");
+      Serial.print(client.state());
+      Serial.println(" - try again in 5 seconds");
+      // Wait 5 seconds before retrying
+      delay(5000);
+    }
+  }
+}
+
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   
@@ -65,39 +104,23 @@ void setup() {
     delay(1000);
   }
   setupWifi(ssid, password);
+  
   client.setServer(mqtt_server, 1883);
-  // client.setCallback(callback);
-
-  char subscriptionTopic[20];
-  strcpy(subscriptionTopic, timeTopic);
-  strcat(subscriptionTopic, "/");  
-  strcat(subscriptionTopic, type);
-  strcat(subscriptionTopic, id);
-  client.subscribe(subscriptionTopic);
+  client.setCallback(callback);
 }
 
 void loop() {
-
-  digitalWrite(LED_BUILTIN, HIGH);
-  while (!client.connected()) {
-		Serial.print("Attempting MQTT connection (");
-		Serial.print(mqtt_server);
-		Serial.print(")... ");
-		// Create a random client ID
-		// Attempt to connect
-		if (client.connect(mqtt_server)) {
-		  Serial.println("connected");
-	   
-		} else {
-		  Serial.print("Failed: ");
-		  Serial.print(client.state());
-		  Serial.println(" - try again in 5 seconds");
-		  // Wait 5 seconds before retrying
-		  delay(5000);
-		}
-  }
+  Serial.print("Data Send: ");
+  Serial.println((digitalRead(SENDDATAPIN) == HIGH) ? "ON" : "OFF");
 
   if (digitalRead(SENDDATAPIN) == HIGH) {
+
+    if (!client.connected()) {
+      reconnect();
+    }
+
+    // digitalWrite(LED_BUILTIN, HIGH);
+  
     char label[10];
     strcpy(label, type);
     strcat(label, id);
@@ -151,12 +174,17 @@ void loop() {
     Serial.print(" - Result: ");
     Serial.println(result);
     
-    Serial.println("disconnecting");
-    client.disconnect();
+    // Serial.println("disconnecting");
+    // client.disconnect();
    
-    digitalWrite(LED_BUILTIN, LOW); 
+    // digitalWrite(LED_BUILTIN, LOW); 
   }
-  
-  ESP.deepSleep(hours * 60 * 60 * 1000000);
+
+  // TODO: figure out how to sleep the device
+  // ESP.deepSleep(hours * 60 * 60 * 1000000);
+  // ESP.deepSleep(2 * 1000000); // 2 seconds
+  delay(10 * 1000); // 10 seconds
+
+  client.loop();
 }
   
