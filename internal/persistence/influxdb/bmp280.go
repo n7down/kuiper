@@ -1,4 +1,4 @@
-package influx
+package influxdb
 
 import (
 	"time"
@@ -7,7 +7,7 @@ import (
 	"github.com/n7down/iota/internal/sensors"
 )
 
-func (i Influx) LogBMP280(measurement string, sensor *sensors.BMP280Sensor) error {
+func (i InfluxDB) LogBMP280(measurement string, sensor *sensors.BMP280Sensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",

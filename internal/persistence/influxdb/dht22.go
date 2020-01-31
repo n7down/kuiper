@@ -1,4 +1,4 @@
-package influx
+package influxdb
 
 import (
 	"time"
@@ -7,7 +7,7 @@ import (
 	"github.com/n7down/iota/internal/sensors"
 )
 
-func (i Influx) LogDHT22(measurement string, sensor *sensors.DHT22Sensor) error {
+func (i InfluxDB) LogDHT22(measurement string, sensor *sensors.DHT22Sensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",

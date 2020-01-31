@@ -1,4 +1,4 @@
-package influx
+package influxdb
 
 import (
 	"fmt"
@@ -7,13 +7,13 @@ import (
 	client "github.com/influxdata/influxdb1-client/v2"
 )
 
-type Influx struct {
+type InfluxDB struct {
 	Client   client.Client
 	Database string
 }
 
-func NewInflux(url *url.URL) (*Influx, error) {
-	i := &Influx{}
+func NewInfluxDB(url *url.URL) (*InfluxDB, error) {
+	i := &InfluxDB{}
 	username := url.User.Username()
 	password, _ := url.User.Password()
 
@@ -32,7 +32,7 @@ func NewInflux(url *url.URL) (*Influx, error) {
 		database = "test"
 	}
 
-	i = &Influx{
+	i = &InfluxDB{
 		Client:   influxClient,
 		Database: database,
 	}

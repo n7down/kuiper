@@ -9,7 +9,7 @@ import (
 	"syscall"
 
 	"github.com/n7down/iota/internal/listeners"
-	"github.com/n7down/iota/internal/persistence/influx"
+	"github.com/n7down/iota/internal/persistence/influxdb"
 	"github.com/n7down/iota/internal/server"
 	"github.com/sirupsen/logrus"
 )
@@ -33,7 +33,7 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
-		influxDB, err := influx.NewInflux(influxUrl)
+		influxDB, err := influxdb.NewInfluxDB(influxUrl)
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
