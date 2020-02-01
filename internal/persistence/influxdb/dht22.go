@@ -18,7 +18,7 @@ func (i InfluxDB) LogDHT22(measurement string, sensor *sensors.DHT22Sensor) erro
 
 	// indexed
 	tags := map[string]string{
-		"id": sensor.ID,
+		"mac": sensor.Mac,
 	}
 
 	// not indexed

@@ -18,7 +18,7 @@ func (i InfluxDB) LogBMP280(measurement string, sensor *sensors.BMP280Sensor) er
 
 	// indexed
 	tags := map[string]string{
-		"id": sensor.ID,
+		"mac": sensor.Mac,
 	}
 
 	// not indexed

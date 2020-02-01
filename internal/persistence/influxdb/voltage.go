@@ -18,7 +18,7 @@ func (i InfluxDB) LogVoltage(measurement string, sensor *sensors.VoltageSensor) 
 
 	// indexed
 	tags := map[string]string{
-		"id": sensor.ID,
+		"mac": sensor.Mac,
 	}
 
 	// not indexed

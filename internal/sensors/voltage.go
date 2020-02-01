@@ -1,6 +1,6 @@
 package sensors
 
 type VoltageSensor struct {
-	ID      string `json:"id"`
+	Mac     string `json:"mac"`
 	Voltage string `json:"voltage"`
 }
