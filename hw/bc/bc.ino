@@ -1,4 +1,6 @@
+#include "config.h"
 #include "DHT.h"
+
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <Wire.h>
@@ -16,15 +18,12 @@
 #define BMP_MOSI 11 
 #define BMP_CS 10
 
-const char ssid[] = "";
-const char password[] = "";
-const char mqtt_server[] = "";
-const char type[] = "bc";
-const char id[] = "1";
 const char dht22Topic[] = "sensor/dht22";
 const char bmp280Topic[] = "sensor/bmp280";
 const char voltageTopic[] = "sensor/voltage";
 const int hours = 1;
+
+char mac[12];
 
 DHT dht22(DHTPIN, DHTTYPE);
 Adafruit_BMP280 bmp280;
@@ -67,6 +66,22 @@ void setupWifi(const char* ssid, const char* password)
   Serial.println(ssid);
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
+
+  String m = WiFi.macAddress();
+  String macWithOutColons;
+  for (int i = 0; i < m.length(); i++) {
+    char currentChar = m[i];
+    if (currentChar != ':') {
+      macWithOutColons += currentChar;
+    }
+  }
+
+  macWithOutColons.toLowerCase();
+  macWithOutColons.toCharArray(mac, 12);
+
+  Serial.print("MAC: ");
+  Serial.println(mac);  
+  // Serial.println(m);
 }
 
 void reconnect() {
@@ -77,11 +92,7 @@ void reconnect() {
     // Attempt to connect
     if (client.connect(mqtt_server)) {
       Serial.println("connected");
-      char subscriptionTopic[20];
-      strcpy(subscriptionTopic, type);
-      strcat(subscriptionTopic, "/");  
-      strcat(subscriptionTopic, id);
-      client.subscribe(subscriptionTopic);
+      client.subscribe(mac);
     } else {
       Serial.print("Failed: ");
       Serial.print(client.state());
@@ -120,10 +131,6 @@ void loop() {
     }
 
     // digitalWrite(LED_BUILTIN, HIGH);
-  
-    char label[10];
-    strcpy(label, type);
-    strcat(label, id);
     
     float h = dht22.readHumidity();
     float t = dht22.readTemperature();
@@ -134,7 +141,7 @@ void loop() {
     double battV = batt * (4.2 / 1023);
   
     StaticJsonDocument<100> dht22Root;
-    dht22Root["id"] = label;
+    dht22Root["mac"] = mac;
     dht22Root["humidity"] = String(h); // % 
     dht22Root["temp"] = String(t); // %
   
@@ -148,7 +155,7 @@ void loop() {
     Serial.println(result);
     
     StaticJsonDocument<100> bmp280Root;
-    bmp280Root["id"] = label;
+    bmp280Root["mac"] = mac;
     bmp280Root["temp"] = String(t); // in *C
     bmp280Root["pres"] = String(p); // in Pa
   
@@ -162,7 +169,7 @@ void loop() {
     Serial.println(result);
   
     StaticJsonDocument<50> voltageRoot;
-    voltageRoot["id"] = label;
+    voltageRoot["mac"] = mac;
     voltageRoot["voltage"] = String(battV);
   
     char voltageMessage[50];
