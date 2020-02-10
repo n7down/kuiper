@@ -80,12 +80,11 @@ void setupWifi(const char* ssid, const char* password)
   macWithOutColons.toCharArray(mac, 12);
 
   Serial.print("MAC: ");
-  Serial.println(mac);  
-  // Serial.println(m);
+  Serial.println(mac);
 }
 
 void reconnect() {
-  while (!client.connected()) {
+  while (!client.connected()) {    
     Serial.print("Attempting MQTT connection (");
     Serial.print(mqtt_server);
     Serial.print(")... ");
@@ -97,15 +96,18 @@ void reconnect() {
       Serial.print("Failed: ");
       Serial.print(client.state());
       Serial.println(" - try again in 5 seconds");
+      
       // Wait 5 seconds before retrying
       delay(5000);
     }
   }
+  digitalWrite(LED_BUILTIN, HIGH); 
 }
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   
+  digitalWrite(LED_BUILTIN, LOW);
   Serial.begin(115200);
   Serial.println("Starting serial..");
   dht22.begin();
@@ -121,71 +123,58 @@ void setup() {
 }
 
 void loop() {
-  Serial.print("Data Send: ");
-  Serial.println((digitalRead(SENDDATAPIN) == HIGH) ? "ON" : "OFF");
-
-  if (digitalRead(SENDDATAPIN) == HIGH) {
-
-    if (!client.connected()) {
-      reconnect();
-    }
-
-    // digitalWrite(LED_BUILTIN, HIGH);
-    
-    float h = dht22.readHumidity();
-    float t = dht22.readTemperature();
-    float tt = bmp280.readTemperature();
-    float p = bmp280.readPressure();  
-  
-    unsigned int batt = analogRead(A0);
-    double battV = batt * (4.2 / 1023);
-  
-    StaticJsonDocument<100> dht22Root;
-    dht22Root["mac"] = mac;
-    dht22Root["humidity"] = String(h); // % 
-    dht22Root["temp"] = String(t); // %
-  
-    char dht22Message[100];
-    serializeJson(dht22Root, dht22Message); 
-    
-    int result = client.publish(dht22Topic, dht22Message);
-    Serial.print("Sent message: ");
-    Serial.print(dht22Message);
-    Serial.print(" - Result: ");
-    Serial.println(result);
-    
-    StaticJsonDocument<100> bmp280Root;
-    bmp280Root["mac"] = mac;
-    bmp280Root["temp"] = String(t); // in *C
-    bmp280Root["pres"] = String(p); // in Pa
-  
-    char bmp280Message[100];
-    serializeJson(bmp280Root, bmp280Message); 
-    
-    result = client.publish(bmp280Topic, bmp280Message);
-    Serial.print("Sent message: ");
-    Serial.print(bmp280Message);
-    Serial.print(" - Result: ");
-    Serial.println(result);
-  
-    StaticJsonDocument<50> voltageRoot;
-    voltageRoot["mac"] = mac;
-    voltageRoot["voltage"] = String(battV);
-  
-    char voltageMessage[50];
-    serializeJson(voltageRoot, voltageMessage); 
-    
-    result = client.publish(voltageTopic, voltageMessage);
-    Serial.print("Sent message: ");
-    Serial.print(voltageMessage);
-    Serial.print(" - Result: ");
-    Serial.println(result);
-    
-    // Serial.println("disconnecting");
-    // client.disconnect();
-   
-    // digitalWrite(LED_BUILTIN, LOW); 
+  if (!client.connected()) {
+    reconnect();
   }
+
+  float h = dht22.readHumidity();
+  float t = dht22.readTemperature();
+  float tt = bmp280.readTemperature();
+  float p = bmp280.readPressure();  
+
+  unsigned int batt = analogRead(A0);
+  double battV = batt * (4.2 / 1023);
+
+  StaticJsonDocument<100> dht22Root;
+  dht22Root["mac"] = mac;
+  dht22Root["humidity"] = String(h); // % 
+  dht22Root["temp"] = String(t); // %
+
+  char dht22Message[100];
+  serializeJson(dht22Root, dht22Message); 
+  
+  int result = client.publish(dht22Topic, dht22Message);
+  Serial.print("Sent message: ");
+  Serial.print(dht22Message);
+  Serial.print(" - Result: ");
+  Serial.println(result);
+  
+  StaticJsonDocument<100> bmp280Root;
+  bmp280Root["mac"] = mac;
+  bmp280Root["temp"] = String(t); // in *C
+  bmp280Root["pres"] = String(p); // in Pa
+
+  char bmp280Message[100];
+  serializeJson(bmp280Root, bmp280Message); 
+  
+  result = client.publish(bmp280Topic, bmp280Message);
+  Serial.print("Sent message: ");
+  Serial.print(bmp280Message);
+  Serial.print(" - Result: ");
+  Serial.println(result);
+
+  StaticJsonDocument<50> voltageRoot;
+  voltageRoot["mac"] = mac;
+  voltageRoot["voltage"] = String(battV);
+
+  char voltageMessage[50];
+  serializeJson(voltageRoot, voltageMessage); 
+  
+  result = client.publish(voltageTopic, voltageMessage);
+  Serial.print("Sent message: ");
+  Serial.print(voltageMessage);
+  Serial.print(" - Result: ");
+  Serial.println(result);
 
   // TODO: figure out how to sleep the device
   // ESP.deepSleep(hours * 60 * 60 * 1000000);
