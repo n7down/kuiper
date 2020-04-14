@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/n7down/iota/internal/sensors"
@@ -40,8 +41,9 @@ func (e Env) NewDHT22Listener(listenerName string, dht22MqttURL string) (*Listen
 		}
 
 		if err == nil {
-			err = e.influxDB.LogDHT22(listenerName, sensor)
-			logrus.Infof("Logged sensor: %v", sensor)
+			currentTime := time.Now()
+			err = e.influxDB.LogDHT22(listenerName, sensor, currentTime)
+			logrus.Infof("Logged sensor: %v at %v", sensor, currentTime)
 			if err != nil {
 				logrus.Error(err.Error())
 			}
