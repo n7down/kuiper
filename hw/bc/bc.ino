@@ -150,10 +150,10 @@ void loop() {
   Serial.println(result);
 
   // TODO: figure out how to sleep the device
-  // ESP.deepSleep(hours * 60 * 60 * 1000000);
-  // ESP.deepSleep(2 * 1000000); // 2 seconds
-  delay(10 * 1000); // 10 seconds
+  ESP.deepSleep(hours * 60 * 60 * 1000000);
+  // ESP.deepSleep(5 * 1000000); // 2 seconds
+  // delay(10 * 1000); // 10 seconds
 
-  client.loop();
+  // client.loop();
 }
   
