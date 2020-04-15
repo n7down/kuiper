@@ -7,26 +7,19 @@
 #include <SPI.h>
 #include <PubSubClient.h>
 #include <Adafruit_Sensor.h>
-#include <Adafruit_BMP280.h>
 #include <ArduinoJson.h>
  
 #define DHTPIN D5
 #define SENDDATAPIN D6
 #define DHTTYPE DHT22
-#define BMP_SCK 13
-#define BMP_MISO 12
-#define BMP_MOSI 11 
-#define BMP_CS 10
 
 const char dht22Topic[] = "sensor/dht22";
-const char bmp280Topic[] = "sensor/bmp280";
 const char voltageTopic[] = "sensor/voltage";
 const int hours = 1;
 
 char mac[12];
 
 DHT dht22(DHTPIN, DHTTYPE);
-Adafruit_BMP280 bmp280;
 WiFiClient espClient;
 PubSubClient client(espClient); 
 
@@ -112,10 +105,6 @@ void setup() {
   Serial.println("Starting serial..");
   dht22.begin();
 
-  if (!bmp280.begin()) {
-    Serial.println("No BMP detected");
-    delay(1000);
-  }
   setupWifi(ssid, password);
   
   client.setServer(mqtt_server, 1883);
@@ -129,8 +118,6 @@ void loop() {
 
   float h = dht22.readHumidity();
   float t = dht22.readTemperature();
-  float tt = bmp280.readTemperature();
-  float p = bmp280.readPressure();  
 
   unsigned int batt = analogRead(A0);
   double battV = batt * (4.2 / 1023);
@@ -149,20 +136,6 @@ void loop() {
   Serial.print(" - Result: ");
   Serial.println(result);
   
-  StaticJsonDocument<100> bmp280Root;
-  bmp280Root["mac"] = mac;
-  bmp280Root["temp"] = String(t); // in *C
-  bmp280Root["pres"] = String(p); // in Pa
-
-  char bmp280Message[100];
-  serializeJson(bmp280Root, bmp280Message); 
-  
-  result = client.publish(bmp280Topic, bmp280Message);
-  Serial.print("Sent message: ");
-  Serial.print(bmp280Message);
-  Serial.print(" - Result: ");
-  Serial.println(result);
-
   StaticJsonDocument<50> voltageRoot;
   voltageRoot["mac"] = mac;
   voltageRoot["voltage"] = String(battV);

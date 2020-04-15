@@ -30,27 +30,6 @@ generate:
 .PHONY: compile
 compile: install build
 
-.PHONY: start-server
-start-server: stop-server
-	echo "starting server... \c"
-	@$(GOBIN)/$(PROJECTNAME) 2>&1 & echo $$! > $(PID)
-	echo "done"
-	cat $(PID) | sed "/^/s/^/  \>  PID: /"
-
-.PHONY: stop-server
-stop-server:
-	echo "stopping server... \c"
-	@touch $(PID)
-	@kill `cat $(PID)` 2> /dev/null || true
-	@rm $(PID)
-	echo "done"
-
-.PHONY: start
-start: compile start-server
-
-.PHONY: stop
-stop: stop-server
-
 .PHONY: test
 test:
 	@go test -short ${ALLFILES}
@@ -72,12 +51,14 @@ clean:
 	@rm -rf bin/
 	echo "done"
 
-.PHONY: update
-update:
-	@clear
-	make stop
-	git pull origin dev
-	make start
+.PHONY: docker-build
+docker-build:
+	echo "building with docker"
+	docker-compose up -d
+
+.PHONY: docker-logs-follow
+docker-logs:
+	docker-compose logs -f
 
 .PHONY: help
 help:
