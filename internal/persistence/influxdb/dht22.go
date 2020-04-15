@@ -7,7 +7,7 @@ import (
 	"github.com/n7down/iota/internal/sensors"
 )
 
-func (i InfluxDB) LogDHT22(measurement string, sensor *sensors.DHT22Sensor, currentTime time.Time) error {
+func (i InfluxDB) LogDHT22(measurement string, sensor *sensors.DHT22Sensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",
@@ -31,7 +31,7 @@ func (i InfluxDB) LogDHT22(measurement string, sensor *sensors.DHT22Sensor, curr
 		measurement,
 		tags,
 		fields,
-		currentTime,
+		time.Now().UTC(),
 	)
 
 	bp.AddPoint(point)

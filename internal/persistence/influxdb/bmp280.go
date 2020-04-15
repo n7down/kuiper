@@ -31,7 +31,7 @@ func (i InfluxDB) LogBMP280(measurement string, sensor *sensors.BMP280Sensor) er
 		measurement,
 		tags,
 		fields,
-		time.Now(),
+		time.Now().UTC(),
 	)
 
 	bp.AddPoint(point)

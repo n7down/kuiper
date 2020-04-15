@@ -30,7 +30,7 @@ func (i InfluxDB) LogVoltage(measurement string, sensor *sensors.VoltageSensor) 
 		measurement,
 		tags,
 		fields,
-		time.Now(),
+		time.Now().UTC(),
 	)
 
 	bp.AddPoint(point)
