@@ -41,7 +41,7 @@ func (e Env) NewDHT22Listener(listenerName string, dht22MqttURL string) (*Listen
 		}
 
 		if err == nil {
-			currentTime := time.Now()
+			currentTime := time.Now().UTC()
 			err = e.influxDB.LogDHT22(listenerName, sensor, currentTime)
 			logrus.Infof("Logged sensor: %v at %v", sensor, currentTime)
 			if err != nil {
