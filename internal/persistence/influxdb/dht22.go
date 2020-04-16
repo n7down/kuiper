@@ -1,6 +1,7 @@
 package influxdb
 
 import (
+	"strconv"
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
@@ -16,6 +17,16 @@ func (i InfluxDB) LogDHT22(measurement string, sensor *sensors.DHT22Sensor) erro
 		return err
 	}
 
+	humidityFloat, err := strconv.ParseFloat(sensor.Humidity, 64)
+	if err != nil {
+		return err
+	}
+
+	temperatureFloat, err := strconv.ParseFloat(sensor.Temperature, 64)
+	if err != nil {
+		return err
+	}
+
 	// indexed
 	tags := map[string]string{
 		"mac": sensor.Mac,
@@ -23,8 +34,8 @@ func (i InfluxDB) LogDHT22(measurement string, sensor *sensors.DHT22Sensor) erro
 
 	// not indexed
 	fields := map[string]interface{}{
-		"dht22_humidity": sensor.Humidity,
-		"dht22_temp":     sensor.Temperature,
+		"dht22_humidity": humidityFloat,
+		"dht22_temp":     temperatureFloat,
 	}
 
 	point, err := client.NewPoint(

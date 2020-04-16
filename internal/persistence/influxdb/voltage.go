@@ -1,6 +1,7 @@
 package influxdb
 
 import (
+	"strconv"
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
@@ -16,6 +17,11 @@ func (i InfluxDB) LogVoltage(measurement string, sensor *sensors.VoltageSensor) 
 		return err
 	}
 
+	voltageFloat, err := strconv.ParseFloat(sensor.Voltage, 64)
+	if err != nil {
+		return err
+	}
+
 	// indexed
 	tags := map[string]string{
 		"mac": sensor.Mac,
@@ -23,7 +29,7 @@ func (i InfluxDB) LogVoltage(measurement string, sensor *sensors.VoltageSensor) 
 
 	// not indexed
 	fields := map[string]interface{}{
-		"voltage": sensor.Voltage,
+		"voltage": voltageFloat,
 	}
 
 	point, err := client.NewPoint(

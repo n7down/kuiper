@@ -1,6 +1,7 @@
 package influxdb
 
 import (
+	"strconv"
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
@@ -16,6 +17,16 @@ func (i InfluxDB) LogBMP280(measurement string, sensor *sensors.BMP280Sensor) er
 		return err
 	}
 
+	pressureFloat, err := strconv.ParseFloat(sensor.Pressure, 64)
+	if err != nil {
+		return err
+	}
+
+	temperatureFloat, err := strconv.ParseFloat(sensor.Temperature, 64)
+	if err != nil {
+		return err
+	}
+
 	// indexed
 	tags := map[string]string{
 		"mac": sensor.Mac,
@@ -23,8 +34,8 @@ func (i InfluxDB) LogBMP280(measurement string, sensor *sensors.BMP280Sensor) er
 
 	// not indexed
 	fields := map[string]interface{}{
-		"bmp280_pressure": sensor.Pressure,
-		"bmp280_temp":     sensor.Temperature,
+		"bmp280_pressure": pressureFloat,
+		"bmp280_temp":     temperatureFloat,
 	}
 
 	point, err := client.NewPoint(
