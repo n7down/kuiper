@@ -54,8 +54,7 @@ services:
     grafana:
         image: grafana/grafana:latest
         volumes:
-          #- ./grafana/dashboards:/var/lib/grafana/dashboards
-          - /tmp/grafana/dashboards:/var/lib/grafana/dashboards
+          - ./grafana/dashboards:/var/lib/grafana/dashboards
         ports:
             - "3000:3000"
         networks:
