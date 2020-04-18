@@ -6,6 +6,7 @@ services:
             BMP280_MQTT_URL: http://172.28.1.3:1883/sensor/bmp280
             VOLTAGE_MQTT_URL: http://172.28.1.3:1883/sensor/voltage
             TIME_MQTT_URL: http://172.28.1.3:1883/time/utc
+            STATS_MQTT_URL: http://172.28.1.3:1883/stats
             INFLUX_URL: http://dbuser:password@172.28.1.4:8086/iota
         build:
             context: .
@@ -60,6 +61,14 @@ services:
         networks:
             iota_net:
                 ipv4_address: 172.28.1.5
+
+    smtp:
+      image: namshi/smtp:latest
+      ports:
+        - "25:25"
+      networks:
+        iota_net:
+              ipv4_address: 172.28.1.7
 
 networks:
     iota_net:

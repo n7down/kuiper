@@ -1,7 +1,6 @@
 package influxdb
 
 import (
-	"strconv"
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
@@ -17,12 +16,12 @@ func (i InfluxDB) LogBMP280(measurement string, sensor *sensors.BMP280Sensor) er
 		return err
 	}
 
-	pressureFloat, err := strconv.ParseFloat(sensor.Pressure, 64)
+	pressureFloat, err := sensor.GetPressureFloat()
 	if err != nil {
 		return err
 	}
 
-	temperatureFloat, err := strconv.ParseFloat(sensor.Temperature, 64)
+	temperatureFloat, err := sensor.GetTemperatureFloat()
 	if err != nil {
 		return err
 	}

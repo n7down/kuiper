@@ -7,21 +7,11 @@ import (
 	"github.com/n7down/iota/internal/sensors"
 )
 
-func (i InfluxDB) LogDHT22(measurement string, sensor *sensors.DHT22Sensor) error {
+func (i InfluxDB) LogStats(measurement string, sensor *sensors.StatsSensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",
 	})
-	if err != nil {
-		return err
-	}
-
-	humidityFloat, err := sensor.GetHumidityFloat()
-	if err != nil {
-		return err
-	}
-
-	temperatureFloat, err := sensor.GetTemperatureFloat()
 	if err != nil {
 		return err
 	}
@@ -31,10 +21,20 @@ func (i InfluxDB) LogDHT22(measurement string, sensor *sensors.DHT22Sensor) erro
 		"mac": sensor.Mac,
 	}
 
+	voltageFloat, err := sensor.GetVoltageFloat()
+	if err != nil {
+		return err
+	}
+
+	connectFloat, err := sensor.GetConnectFloat()
+	if err != nil {
+		return err
+	}
+
 	// not indexed
 	fields := map[string]interface{}{
-		"dht22_humidity": humidityFloat,
-		"dht22_temp":     temperatureFloat,
+		"voltage": voltageFloat,
+		"connect": connectFloat,
 	}
 
 	point, err := client.NewPoint(

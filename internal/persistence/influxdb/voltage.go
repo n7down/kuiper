@@ -1,7 +1,6 @@
 package influxdb
 
 import (
-	"strconv"
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
@@ -17,7 +16,7 @@ func (i InfluxDB) LogVoltage(measurement string, sensor *sensors.VoltageSensor) 
 		return err
 	}
 
-	voltageFloat, err := strconv.ParseFloat(sensor.Voltage, 64)
+	voltageFloat, err := sensor.GetVoltageFloat()
 	if err != nil {
 		return err
 	}

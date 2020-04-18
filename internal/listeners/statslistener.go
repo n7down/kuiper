@@ -10,17 +10,17 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (e Env) NewVoltageListener(listenerName string, statsMqttURL string) (*Listener, error) {
+func (e Env) NewStatsListener(listenerName string, voltageMqttURL string) (*Listener, error) {
 	i := &Listener{}
 
-	mqttUrl, err := url.Parse(statsMqttURL)
+	mqttUrl, err := url.Parse(voltageMqttURL)
 	if err != nil {
 		return i, err
 	}
 
 	topic := mqttUrl.Path[1:len(mqttUrl.Path)]
 	if topic == "" {
-		topic = "test"
+		topicb = "test"
 	}
 
 	opts := mqtt.NewClientOptions().AddBroker(fmt.Sprintf("tcp://%s", mqttUrl.Host))
@@ -33,14 +33,14 @@ func (e Env) NewVoltageListener(listenerName string, statsMqttURL string) (*List
 		logrus.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensors := &sensors.VoltageSensor{}
+		sensors := &sensors.StatsSensor{}
 		err := json.Unmarshal([]byte(msg.Payload()), sensors)
 		if err != nil {
 			logrus.Error(err.Error())
 		}
 
 		if err == nil {
-			err = e.influxDB.LogVoltage(listenerName, sensors)
+			err = e.influxDB.LogStats(listenerName, sensors)
 			logrus.Infof("Logged sensor: %v", sensors)
 			if err != nil {
 				logrus.Error(err.Error())

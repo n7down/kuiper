@@ -64,6 +64,12 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 		iotaServer.AddListener(timeListener)
+
+		statsListener, err := env.NewStatsListener("stats_listener", os.Getenv("STATS_MQTT_URL"))
+		if err != nil {
+			logrus.Fatal(err.Error())
+		}
+		iotaServer.AddListener(statsListener)
 	}
 }
 
