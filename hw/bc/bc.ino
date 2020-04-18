@@ -14,7 +14,7 @@
 #define DHTTYPE DHT22
 
 const char dht22Topic[] = "sensor/dht22";
-const char voltageTopic[] = "sensor/voltage";
+const char statsTopic[] = "sensor/stats";
 const int hours = 1;
 
 char mac[12];
@@ -112,9 +112,13 @@ void setup() {
 }
 
 void loop() {
+  unsigned long startTime = millis();
+
   if (!client.connected()) {
     reconnect();
   }
+
+  unsigned long elapsedTime = millis() - startTime;
 
   float h = dht22.readHumidity();
   float t = dht22.readTemperature();
@@ -136,16 +140,17 @@ void loop() {
   Serial.print(" - Result: ");
   Serial.println(result);
   
-  StaticJsonDocument<50> voltageRoot;
+  StaticJsonDocument<50> statsRoot;
   voltageRoot["mac"] = mac;
   voltageRoot["voltage"] = String(battV);
+  voltageRoot["connect"] = String(elapsedTime);
 
-  char voltageMessage[50];
-  serializeJson(voltageRoot, voltageMessage); 
+  char statsMessage[50];
+  serializeJson(statsRoot, statsMessage); 
   
-  result = client.publish(voltageTopic, voltageMessage);
+  result = client.publish(statsTopic, statsMessage);
   Serial.print("Sent message: ");
-  Serial.print(voltageMessage);
+  Serial.print(statsMessage);
   Serial.print(" - Result: ");
   Serial.println(result);
 
