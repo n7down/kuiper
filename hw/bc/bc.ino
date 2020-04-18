@@ -42,7 +42,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 void setupWifi(const char* ssid, const char* password)
 {
-  Serial.print("WiFi connecting...");
+  Serial.print("Wifi connecting...");
   WiFi.begin(ssid, password);
   
   // Wait for connection
@@ -127,9 +127,9 @@ void loop() {
   double battV = batt * (4.2 / 1023);
 
   StaticJsonDocument<100> dht22Root;
-  dht22Root["mac"] = mac;
-  dht22Root["humidity"] = String(h); // % 
-  dht22Root["temp"] = String(t); // %
+  dht22Root["m"] = mac;
+  dht22Root["h"] = String(h); // % 
+  dht22Root["t"] = String(t); // %
 
   char dht22Message[100];
   serializeJson(dht22Root, dht22Message); 
@@ -140,12 +140,17 @@ void loop() {
   Serial.print(" - Result: ");
   Serial.println(result);
   
-  StaticJsonDocument<50> statsRoot;
-  voltageRoot["mac"] = mac;
-  voltageRoot["voltage"] = String(battV);
-  voltageRoot["connect"] = String(elapsedTime);
+  char elapsedTimeString[40];
+  sprintf(elapsedTimeString, "%u", elapsedTime);
+  Serial.print("Sending stats: ");
+  Serial.println(elapsedTimeString);
+  
+  StaticJsonDocument<100> statsRoot;
+  statsRoot["m"] = mac;
+  statsRoot["v"] = String(battV);
+  statsRoot["c"] = String(elapsedTimeString);
 
-  char statsMessage[50];
+  char statsMessage[100];
   serializeJson(statsRoot, statsMessage); 
   
   result = client.publish(statsTopic, statsMessage);
