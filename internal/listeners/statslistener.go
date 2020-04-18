@@ -20,7 +20,7 @@ func (e Env) NewStatsListener(listenerName string, voltageMqttURL string) (*List
 
 	topic := mqttUrl.Path[1:len(mqttUrl.Path)]
 	if topic == "" {
-		topicb = "test"
+		topic = "test"
 	}
 
 	opts := mqtt.NewClientOptions().AddBroker(fmt.Sprintf("tcp://%s", mqttUrl.Host))
