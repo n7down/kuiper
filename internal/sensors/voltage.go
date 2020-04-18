@@ -3,8 +3,8 @@ package sensors
 import "strconv"
 
 type VoltageSensor struct {
-	Mac     string `json:"mac"`
-	Voltage string `json:"voltage"`
+	Mac     string `json:"m"`
+	Voltage string `json:"v"`
 }
 
 func (s VoltageSensor) GetVoltageFloat() (float64, error) {

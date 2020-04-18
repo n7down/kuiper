@@ -3,9 +3,9 @@ package sensors
 import "strconv"
 
 type StatsSensor struct {
-	Mac     string `json:"mac"`
-	Voltage string `json:"voltage"`
-	Connect string `json:"connect"`
+	Mac     string `json:"m"`
+	Voltage string `json:"v"`
+	Connect string `json:"c"`
 }
 
 func (s StatsSensor) GetVoltageFloat() (float64, error) {
