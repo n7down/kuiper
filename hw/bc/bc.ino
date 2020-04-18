@@ -149,17 +149,11 @@ void loop() {
   Serial.print(" - Result: ");
   Serial.println(result);
 
-  // TODO: disconnect
   Serial.println("Wifi disconnecting");
   client.disconnect();
 
-  // TODO: figure out how to sleep the device
-  // ESP.deepSleep(hours * 60 * 60 * 1000000);  
-  ESP.deepSleep(30 * 60 * 1000000); // 30 minutes
-  // ESP.deepSleep(5 * 1000000); // 5 seconds
-  // delay(10 * 1000); // 10 seconds
+  ESP.deepSleep(15 * 60 * 1000000); // 15 minutes
   // delay(5 * 60 * 1000); // 5 minutes
-
   // client.loop();
 }
   
