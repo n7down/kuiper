@@ -3,9 +3,9 @@ package sensors
 import "strconv"
 
 type BMP280Sensor struct {
-	Mac         string `json:"mac"`
-	Pressure    string `json:"pres"`
-	Temperature string `json:"temp"`
+	Mac         string `json:"m"`
+	Pressure    string `json:"p"`
+	Temperature string `json:"t"`
 }
 
 func (s BMP280Sensor) GetPressureFloat() (float64, error) {
