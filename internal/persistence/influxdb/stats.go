@@ -26,7 +26,12 @@ func (i InfluxDB) LogStats(measurement string, sensor *sensors.StatsSensor) erro
 		return err
 	}
 
-	connectFloat, err := sensor.GetConnectFloat()
+	connectionTimeFloat, err := sensor.GetConnectionTimeFloat()
+	if err != nil {
+		return err
+	}
+
+	deepSleepDelayInt, err := sensor.GetDeepSleepDelayInt()
 	if err != nil {
 		return err
 	}
@@ -34,7 +39,8 @@ func (i InfluxDB) LogStats(measurement string, sensor *sensors.StatsSensor) erro
 	// not indexed
 	fields := map[string]interface{}{
 		"voltage": voltageFloat,
-		"connect": connectFloat,
+		"connect": connectionTimeFloat,
+		"delay":   deepSleepDelayInt,
 	}
 
 	point, err := client.NewPoint(

@@ -17,6 +17,7 @@ const char dht22Topic[] = "sensor/dht22";
 const char statsTopic[] = "sensor/stats";
 
 char mac[12];
+int deepSleepDelay = 15; // in min
 
 DHT dht22(DHTPIN, DHTTYPE);
 WiFiClient espClient;
@@ -148,6 +149,7 @@ void loop() {
   statsRoot["m"] = mac;
   statsRoot["v"] = String(battV);
   statsRoot["c"] = String(elapsedTimeString);
+  statsRoot["s"] = String(deepSleepDelay)
 
   char statsMessage[100];
   serializeJson(statsRoot, statsMessage); 
@@ -161,7 +163,7 @@ void loop() {
   Serial.println("Wifi disconnecting");
   client.disconnect();
 
-  ESP.deepSleep(15 * 60 * 1000000); // 15 minutes
+  ESP.deepSleep(deepSleepDelay * 60 * 1000000);
   // delay(5 * 60 * 1000); // 5 minutes
   // client.loop();
 }

@@ -6,6 +6,7 @@ type StatsSensor struct {
 	Mac            string `json:"m"`
 	Voltage        string `json:"v"`
 	ConnectionTime string `json:"c"`
+	DeepSleepDelay string `json:"s"`
 }
 
 func (s StatsSensor) GetVoltageFloat() (float64, error) {
@@ -30,4 +31,12 @@ func (s StatsSensor) GetConnectionTimeInt() (int, error) {
 		return 0, err
 	}
 	return int(connectInt), nil
+}
+
+func (s StatsSensor) GetDeepSleepDelayInt() (int, error) {
+	deepSleepDelayInt, err := strconv.ParseInt(s.DeepSleepDelay, 10, 64)
+	if err != nil {
+		return 0, err
+	}
+	return int(deepSleepDelayInt), nil
 }
