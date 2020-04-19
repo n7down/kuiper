@@ -15,7 +15,6 @@
 
 const char dht22Topic[] = "sensor/dht22";
 const char statsTopic[] = "sensor/stats";
-const int hours = 1;
 
 char mac[12];
 
