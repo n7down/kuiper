@@ -149,7 +149,6 @@ void loop() {
   statsRoot["m"] = mac;
   statsRoot["v"] = String(battV);
   statsRoot["c"] = String(elapsedTimeString);
-  statsRoot["s"] = String(deepSleepDelay)
 
   char statsMessage[100];
   serializeJson(statsRoot, statsMessage); 
@@ -159,6 +158,9 @@ void loop() {
   Serial.print(statsMessage);
   Serial.print(" - Result: ");
   Serial.println(result);
+
+  // TODO: send settings
+  // TODO: add a delay to wait for new settings to come back
 
   Serial.println("Wifi disconnecting");
   client.disconnect();
