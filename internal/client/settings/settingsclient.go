@@ -100,7 +100,7 @@ func (client *SettingsClient) SetSettings(c *gin.Context) {
 
 	r, err := client.settingsClient.SetSettings(ctx, &settings_pb.SetSettingsRequest{
 		DeviceID:       req.DeviceID,
-		DeepSleepDelay: int32(req.DeepSleepDelay),
+		DeepSleepDelay: req.DeepSleepDelay,
 	})
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)

@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/n7down/iota/internal/apigateway"
-	"github.com/n7down/iota/internal/utils"
+	"github.com/n7down/iota/internal/client/settings"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -16,12 +17,18 @@ func init() {
 func main() {
 	log.SetReportCaller(true)
 
-	port := utils.GetEnv("PORT", "8080")
+	port := os.Getenv("PORT")
+	settingsHost := os.Getenv("SETTINGS_HOST")
 
-	apiGateway := apigateway.NewAPIGateway()
+	settingsClient, err := settings.NewSettingsClient(settingsHost)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	apiGateway := apigateway.NewAPIGateway(settingsClient)
 	router := gin.Default()
 
-	err := apiGateway.InitV1Routes(router)
+	err = apiGateway.InitV1Routes(router)
 	if err != nil {
 		log.Fatal(err)
 	}
