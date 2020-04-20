@@ -4,26 +4,26 @@ option go_package = ".;settings_pb";
 
 package settings_pb;
 
-message GetSettingsRequest {
+message GetBatCaveSettingsRequest {
     string DeviceID = 1;
 }
 
-message GetSettingsResponse {
-    string DeviceID = 1;
-    int32 DeepSleepDelay = 2;
-}
-
-message SetSettingsRequest {
+message GetBatCaveSettingsResponse {
     string DeviceID = 1;
     int32 DeepSleepDelay = 2;
 }
 
-message SetSettingsResponse {
+message SetBatCaveSettingsRequest {
+    string DeviceID = 1;
+    int32 DeepSleepDelay = 2;
+}
+
+message SetBatCaveSettingsResponse {
     string DeviceID = 1;
     int32 DeepSleepDelay = 2;
 }
 
 service SettingsService {
-   rpc GetSettings(GetSettingsRequest) returns (GetSettingsResponse);
-   rpc SetSettings(SetSettingsRequest) returns (SetSettingsResponse);
+   rpc GetBatCaveSettings(GetBatCaveSettingsRequest) returns (GetBatCaveSettingsResponse);
+   rpc SetBatCaveSettings(SetBatCaveSettingsRequest) returns (SetBatCaveSettingsResponse);
 }

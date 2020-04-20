@@ -10,7 +10,7 @@ import (
 
 	"github.com/n7down/iota/internal/listeners"
 	"github.com/n7down/iota/internal/persistence/influxdb"
-	"github.com/n7down/iota/internal/server"
+	"github.com/n7down/iota/internal/servers"
 	"github.com/sirupsen/logrus"
 )
 
@@ -18,7 +18,7 @@ var (
 	Version     string
 	Build       string
 	showVersion *bool
-	iotaServer  *server.IotaServer
+	iotaServer  *servers.IotaServer
 )
 
 func init() {
@@ -38,7 +38,7 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
-		iotaServer = server.NewIotaServer()
+		iotaServer = servers.NewIotaServer()
 		env := listeners.NewEnv(influxDB)
 
 		dht22Listener, err := env.NewDHT22Listener("dht22_listener", os.Getenv("DHT22_MQTT_URL"))

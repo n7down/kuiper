@@ -2,7 +2,6 @@ package settings
 
 import (
 	"context"
-	"crypto/tls"
 	"net/http"
 	"time"
 
@@ -10,7 +9,6 @@ import (
 	"github.com/n7down/iota/internal/client/settings/request"
 	"github.com/n7down/iota/internal/client/settings/response"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 
 	settings_pb "github.com/n7down/iota/internal/pb/settings"
 )
@@ -24,11 +22,7 @@ type SettingsClient struct {
 }
 
 func NewSettingsClient(serverEnv string) (*SettingsClient, error) {
-	config := &tls.Config{
-		InsecureSkipVerify: true,
-	}
-
-	settingsConn, err := grpc.Dial(serverEnv, grpc.WithTransportCredentials(credentials.NewTLS(config)))
+	settingsConn, err := grpc.Dial(serverEnv, grpc.WithInsecure())
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +53,7 @@ func (client *SettingsClient) GetSettings(c *gin.Context) {
 		return
 	}
 
-	r, err := client.settingsClient.GetSettings(ctx, &settings_pb.GetSettingsRequest{DeviceID: req.DeviceID})
+	r, err := client.settingsClient.GetBatCaveSettings(ctx, &settings_pb.GetBatCaveSettingsRequest{DeviceID: req.DeviceID})
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		return
@@ -98,7 +92,7 @@ func (client *SettingsClient) SetSettings(c *gin.Context) {
 		return
 	}
 
-	r, err := client.settingsClient.SetSettings(ctx, &settings_pb.SetSettingsRequest{
+	r, err := client.settingsClient.SetBatCaveSettings(ctx, &settings_pb.SetBatCaveSettingsRequest{
 		DeviceID:       req.DeviceID,
 		DeepSleepDelay: req.DeepSleepDelay,
 	})
