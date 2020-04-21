@@ -3,6 +3,7 @@ package mysql
 import (
 	"database/sql"
 	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/n7down/iota/internal/persistence"
@@ -12,9 +13,35 @@ type SettingsMySqlDB struct {
 	db *sql.DB
 }
 
-func NewSettingsMySqlDB(dbUser, dbPass, dbSocket, dbHost, dbName string) (*SettingsMySqlDB, error) {
-	dbInfo := fmt.Sprintf("%s:%s@%s(%s)/%s", dbUser, dbPass, dbSocket, dbHost, dbName)
-	db, err := sql.Open("mysql", dbInfo)
+func NewSettingsMySqlDB(dbConn string) (*SettingsMySqlDB, error) {
+	db, err := sql.Open("mysql", dbConn)
+	if err != nil {
+		return &SettingsMySqlDB{}, err
+	}
+
+	err = db.Ping()
+	if err != nil {
+		return &SettingsMySqlDB{}, err
+	}
+
+	return &SettingsMySqlDB{
+		db: db,
+	}, nil
+}
+
+// FIXME: this is untested
+func NewSettingsMySqlDBWithURL(url *url.URL) (*SettingsMySqlDB, error) {
+	dbUser := url.User.Username()
+	dbPass, _ := url.User.Password()
+
+	dbName := url.Path[1:len(url.Path)]
+	if dbName == "" {
+		dbName = "test"
+	}
+
+	dbConn := fmt.Sprintf("%s:%s@%s(%s)/%s", dbUser, dbPass, url.Scheme, url.Host, dbName)
+
+	db, err := sql.Open("mysql", dbConn)
 	if err != nil {
 		return &SettingsMySqlDB{}, err
 	}
@@ -30,7 +57,6 @@ func NewSettingsMySqlDB(dbUser, dbPass, dbSocket, dbHost, dbName string) (*Setti
 }
 
 func (s *SettingsMySqlDB) UpdateBatCaveSettings(deviceID string, settings persistence.UpdateBatCaveSettings) error {
-	// query := `INSERT INTO settings SET device_id=?, deep_sleep_delay=?, updated=? ON DUPLICATE UPDATE settings SET deep_sleep_delay=?, updated=? WHERE device_id=?`
 	query := `INSERT INTO bat_cave_settings (device_id, deep_sleep_delay, updated) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE SET deep_sleep_delay=? updated=? WHERE device_id=?`
 	_, err := s.db.Exec(query, deviceID, settings.DeepSleepDelay, time.Now(), settings.DeepSleepDelay, time.Now(), deviceID)
 	if err != nil {
