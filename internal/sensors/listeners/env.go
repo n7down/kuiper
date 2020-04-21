@@ -1,7 +1,7 @@
 package listeners
 
 import (
-	"github.com/n7down/iota/internal/persistence/influxdb"
+	"github.com/n7down/iota/internal/sensors/persistence/influxdb"
 )
 
 type Env struct {

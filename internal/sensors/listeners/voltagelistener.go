@@ -6,14 +6,14 @@ import (
 	"net/url"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"github.com/n7down/iota/internal/sensors"
+	sensors "github.com/n7down/iota/internal/sensors/devicesensors"
 	"github.com/sirupsen/logrus"
 )
 
-func (e Env) NewStatsListener(listenerName string, voltageMqttURL string) (*Listener, error) {
+func (e Env) NewVoltageListener(listenerName string, statsMqttURL string) (*Listener, error) {
 	i := &Listener{}
 
-	mqttUrl, err := url.Parse(voltageMqttURL)
+	mqttUrl, err := url.Parse(statsMqttURL)
 	if err != nil {
 		return i, err
 	}
@@ -33,14 +33,14 @@ func (e Env) NewStatsListener(listenerName string, voltageMqttURL string) (*List
 		logrus.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensors := &sensors.StatsSensor{}
+		sensors := &sensors.VoltageSensor{}
 		err := json.Unmarshal([]byte(msg.Payload()), sensors)
 		if err != nil {
 			logrus.Error(err.Error())
 		}
 
 		if err == nil {
-			err = e.influxDB.LogStats(listenerName, sensors)
+			err = e.influxDB.LogVoltage(listenerName, sensors)
 			logrus.Infof("Logged sensor: %v", sensors)
 			if err != nil {
 				logrus.Error(err.Error())

@@ -6,14 +6,14 @@ import (
 	"net/url"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"github.com/n7down/iota/internal/sensors"
+	sensors "github.com/n7down/iota/internal/sensors/devicesensors"
 	"github.com/sirupsen/logrus"
 )
 
-func (e Env) NewDHT22Listener(listenerName string, dht22MqttURL string) (*Listener, error) {
+func (e Env) NewStatsListener(listenerName string, voltageMqttURL string) (*Listener, error) {
 	i := &Listener{}
 
-	mqttUrl, err := url.Parse(dht22MqttURL)
+	mqttUrl, err := url.Parse(voltageMqttURL)
 	if err != nil {
 		return i, err
 	}
@@ -33,15 +33,15 @@ func (e Env) NewDHT22Listener(listenerName string, dht22MqttURL string) (*Listen
 		logrus.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensor := &sensors.DHT22Sensor{}
-		err := json.Unmarshal([]byte(msg.Payload()), sensor)
+		sensors := &sensors.StatsSensor{}
+		err := json.Unmarshal([]byte(msg.Payload()), sensors)
 		if err != nil {
 			logrus.Error(err.Error())
 		}
 
 		if err == nil {
-			err = e.influxDB.LogDHT22(listenerName, sensor)
-			logrus.Infof("Logged sensor: %v", sensor)
+			err = e.influxDB.LogStats(listenerName, sensors)
+			logrus.Infof("Logged sensor: %v", sensors)
 			if err != nil {
 				logrus.Error(err.Error())
 			}

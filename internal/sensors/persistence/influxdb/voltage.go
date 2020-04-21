@@ -4,10 +4,10 @@ import (
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
-	"github.com/n7down/iota/internal/sensors"
+	sensors "github.com/n7down/iota/internal/sensors/devicesensors"
 )
 
-func (i InfluxDB) LogBMP280(measurement string, sensor *sensors.BMP280Sensor) error {
+func (i InfluxDB) LogVoltage(measurement string, sensor *sensors.VoltageSensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",
@@ -16,12 +16,7 @@ func (i InfluxDB) LogBMP280(measurement string, sensor *sensors.BMP280Sensor) er
 		return err
 	}
 
-	pressureFloat, err := sensor.GetPressureFloat()
-	if err != nil {
-		return err
-	}
-
-	temperatureFloat, err := sensor.GetTemperatureFloat()
+	voltageFloat, err := sensor.GetVoltageFloat()
 	if err != nil {
 		return err
 	}
@@ -33,8 +28,7 @@ func (i InfluxDB) LogBMP280(measurement string, sensor *sensors.BMP280Sensor) er
 
 	// not indexed
 	fields := map[string]interface{}{
-		"bmp280_pressure": pressureFloat,
-		"bmp280_temp":     temperatureFloat,
+		"voltage": voltageFloat,
 	}
 
 	point, err := client.NewPoint(

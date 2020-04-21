@@ -6,14 +6,14 @@ import (
 	"net/url"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"github.com/n7down/iota/internal/sensors"
+	sensors "github.com/n7down/iota/internal/sensors/devicesensors"
 	"github.com/sirupsen/logrus"
 )
 
-func (e Env) NewVoltageListener(listenerName string, statsMqttURL string) (*Listener, error) {
+func (e Env) NewBMP280Listener(listenerName string, bmp280MqttURL string) (*Listener, error) {
 	i := &Listener{}
 
-	mqttUrl, err := url.Parse(statsMqttURL)
+	mqttUrl, err := url.Parse(bmp280MqttURL)
 	if err != nil {
 		return i, err
 	}
@@ -33,15 +33,15 @@ func (e Env) NewVoltageListener(listenerName string, statsMqttURL string) (*List
 		logrus.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensors := &sensors.VoltageSensor{}
-		err := json.Unmarshal([]byte(msg.Payload()), sensors)
+		sensor := &sensors.BMP280Sensor{}
+		err := json.Unmarshal([]byte(msg.Payload()), sensor)
 		if err != nil {
 			logrus.Error(err.Error())
 		}
 
 		if err == nil {
-			err = e.influxDB.LogVoltage(listenerName, sensors)
-			logrus.Infof("Logged sensor: %v", sensors)
+			err = e.influxDB.LogBMP280(listenerName, sensor)
+			logrus.Infof("Logged sensor: %v", sensor)
 			if err != nil {
 				logrus.Error(err.Error())
 			}

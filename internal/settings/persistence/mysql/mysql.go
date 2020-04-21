@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/n7down/iota/internal/persistence"
+	"github.com/n7down/iota/internal/settings/persistence"
 )
 
 type SettingsMySqlDB struct {
@@ -67,9 +67,9 @@ func (s *SettingsMySqlDB) UpdateBatCaveSettings(deviceID string, settings persis
 
 func (s *SettingsMySqlDB) GetBatCaveSettings(deviceID string) (persistence.GetBatCaveSettings, error) {
 	settings := persistence.GetBatCaveSettings{}
-	query := `SELECT deep_sleep_delay, updated FROM bat_cave_settings WHERE device_id=?`
+	query := `SELECT deep_sleep_delay FROM bat_cave_settings WHERE device_id=?`
 	row := s.db.QueryRow(query)
-	err := row.Scan(&settings.DeepSleepDelay, &settings.Updated)
+	err := row.Scan(&settings.DeepSleepDelay)
 	if err != nil {
 		return settings, err
 	}

@@ -6,14 +6,14 @@ import (
 	"net/url"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"github.com/n7down/iota/internal/sensors"
+	sensors "github.com/n7down/iota/internal/sensors/devicesensors"
 	"github.com/sirupsen/logrus"
 )
 
-func (e Env) NewBMP280Listener(listenerName string, bmp280MqttURL string) (*Listener, error) {
+func (e Env) NewDHT22Listener(listenerName string, dht22MqttURL string) (*Listener, error) {
 	i := &Listener{}
 
-	mqttUrl, err := url.Parse(bmp280MqttURL)
+	mqttUrl, err := url.Parse(dht22MqttURL)
 	if err != nil {
 		return i, err
 	}
@@ -33,14 +33,14 @@ func (e Env) NewBMP280Listener(listenerName string, bmp280MqttURL string) (*List
 		logrus.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensor := &sensors.BMP280Sensor{}
+		sensor := &sensors.DHT22Sensor{}
 		err := json.Unmarshal([]byte(msg.Payload()), sensor)
 		if err != nil {
 			logrus.Error(err.Error())
 		}
 
 		if err == nil {
-			err = e.influxDB.LogBMP280(listenerName, sensor)
+			err = e.influxDB.LogDHT22(listenerName, sensor)
 			logrus.Infof("Logged sensor: %v", sensor)
 			if err != nil {
 				logrus.Error(err.Error())

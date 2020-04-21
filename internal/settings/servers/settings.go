@@ -6,8 +6,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	settings_pb "github.com/n7down/iota/internal/pb/settings"
-	"github.com/n7down/iota/internal/persistence"
-	"github.com/n7down/iota/internal/persistence/mysql"
+	"github.com/n7down/iota/internal/settings/persistence"
+	"github.com/n7down/iota/internal/settings/persistence/mysql"
 )
 
 type SettingsServer struct {

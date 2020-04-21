@@ -4,14 +4,24 @@ import (
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
-	"github.com/n7down/iota/internal/sensors"
+	sensors "github.com/n7down/iota/internal/sensors/devicesensors"
 )
 
-func (i InfluxDB) LogStats(measurement string, sensor *sensors.StatsSensor) error {
+func (i InfluxDB) LogDHT22(measurement string, sensor *sensors.DHT22Sensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",
 	})
+	if err != nil {
+		return err
+	}
+
+	humidityFloat, err := sensor.GetHumidityFloat()
+	if err != nil {
+		return err
+	}
+
+	temperatureFloat, err := sensor.GetTemperatureFloat()
 	if err != nil {
 		return err
 	}
@@ -21,26 +31,10 @@ func (i InfluxDB) LogStats(measurement string, sensor *sensors.StatsSensor) erro
 		"mac": sensor.Mac,
 	}
 
-	voltageFloat, err := sensor.GetVoltageFloat()
-	if err != nil {
-		return err
-	}
-
-	connectionTimeFloat, err := sensor.GetConnectionTimeFloat()
-	if err != nil {
-		return err
-	}
-
-	deepSleepDelayInt, err := sensor.GetDeepSleepDelayInt()
-	if err != nil {
-		return err
-	}
-
 	// not indexed
 	fields := map[string]interface{}{
-		"voltage": voltageFloat,
-		"connect": connectionTimeFloat,
-		"delay":   deepSleepDelayInt,
+		"dht22_humidity": humidityFloat,
+		"dht22_temp":     temperatureFloat,
 	}
 
 	point, err := client.NewPoint(

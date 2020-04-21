@@ -3,25 +3,25 @@ package servers
 import (
 	"container/list"
 
-	"github.com/n7down/iota/internal/listeners"
+	"github.com/n7down/iota/internal/settings/listeners"
 	"github.com/sirupsen/logrus"
 )
 
-type SensorsServer struct {
+type ListenersServer struct {
 	listenerList *list.List
 }
 
-func NewSensorsServer() *SensorsServer {
-	return &SensorsServer{
+func NewListenersServer() *ListenersServer {
+	return &ListenersServer{
 		listenerList: list.New(),
 	}
 }
 
-func (i SensorsServer) AddListener(listener *listeners.Listener) {
+func (i *ListenersServer) AddListener(listener *listeners.Listener) {
 	i.listenerList.PushBack(listener)
 }
 
-func (i SensorsServer) Connect() {
+func (i *ListenersServer) Connect() {
 	for l := i.listenerList.Front(); l != nil; l = l.Next() {
 		err := l.Value.(*listeners.Listener).Connect()
 		if err != nil {
