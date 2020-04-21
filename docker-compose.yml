@@ -55,7 +55,7 @@ services:
     grafana:
         image: grafana/grafana:latest
         volumes:
-            - /var/grafana/dashboards:/var/lib/grafana/dashboards
+            - /tmp/grafana/dashboards:/var/lib/grafana/dashboards
         ports:
             - "3000:3000"
         networks:
@@ -73,7 +73,7 @@ services:
     mysql:
       build:
           context: ./build/dockerfiles/db
-          dockerfile: ./build/dockerfiles/db/Dockerfile
+          dockerfile: ./Dockerfile
       ports:
           - "3306:3306"
       networks:
