@@ -51,7 +51,7 @@ func main() {
 		listenersServer := servers.NewListenersServer()
 		batCaveListener, err := env.NewBatCaveSettingsListener("bat_cave_listener", batCaveMQTTURL)
 		if err != nil {
-			log.Fatal(err.Error())
+			log.Fatal(err)
 		}
 		listenersServer.AddListener(batCaveListener)
 		listenersServer.Connect()
