@@ -1,6 +1,6 @@
 version: "3.5"
 services:
-    app:
+    sensors:
         environment:
             DHT22_MQTT_URL: http://172.28.1.3:1883/sensor/dht22
             BMP280_MQTT_URL: http://172.28.1.3:1883/sensor/bmp280
@@ -10,7 +10,7 @@ services:
             INFLUX_URL: http://dbuser:password@172.28.1.4:8086/iota
         build:
             context: .
-            dockerfile: ./build/dockerfiles/app/Dockerfile
+            dockerfile: ./build/dockerfiles/sensors/Dockerfile
         depends_on:
             - mosquitto
             - influxdb
