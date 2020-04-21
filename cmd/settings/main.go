@@ -7,9 +7,11 @@ import (
 
 	"github.com/n7down/iota/internal/persistence/mysql"
 	"github.com/n7down/iota/internal/servers"
+	"github.com/n7down/iota/internal/servers/listeners"
 	"google.golang.org/grpc"
 
 	settings_pb "github.com/n7down/iota/internal/pb/settings"
+	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -18,24 +20,27 @@ func main() {
 
 	port := os.Getenv("PORT")
 	dbConn := os.Getenv("DB_CONN")
+	batCaveMQTTURL := os.Getenv("BAT_CAVE_MQTT_URL")
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// TODO: updating settings on device
-	// 1. device wakes up and send message to settings service with all set settings
-	// - sends message to /device/settings
-	// - sends deviceID and all settings
-	// 2. settings service checks for differences in database
-	// 3. if there is a difference in the settings for the device - it sends the difference to the device
-
 	settingsDB, err := mysql.NewSettingsMySqlDB(dbConn)
 	if err != nil {
 		log.Fatal(err)
 	}
 	settingsServer := servers.NewSettingsServer(settingsDB)
+
+	env := listeners.NewEnv(settingsDB)
+	listenersServer := servers.NewListenersServer()
+	batCaveListener, err := env.NewBatCaveSettingsListener("bat_cave_listener", batCaveMQTTURL)
+	if err != nil {
+		logrus.Fatal(err.Error())
+	}
+	listenersServer.AddListener(batCaveListener)
+	listenersServer.Connect()
 
 	log.Infof("Listening on port: %s\n", port)
 	grpcServer := grpc.NewServer()

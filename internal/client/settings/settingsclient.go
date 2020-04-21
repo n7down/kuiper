@@ -33,13 +33,13 @@ func NewSettingsClient(serverEnv string) (*SettingsClient, error) {
 	return client, nil
 }
 
-func (client *SettingsClient) GetSettings(c *gin.Context) {
+func (client *SettingsClient) GetBatCaveSettings(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c, FIVE_MINUTES)
 	defer cancel()
 
 	var (
-		req request.GetSettingsRequest
-		res response.GetSettingsResponse
+		req request.GetBatCaveSettingsRequest
+		res response.GetBatCaveSettingsResponse
 	)
 
 	if err := c.BindJSON(&req); err != nil {
@@ -64,7 +64,7 @@ func (client *SettingsClient) GetSettings(c *gin.Context) {
 		return
 	}
 
-	res = response.GetSettingsResponse{
+	res = response.GetBatCaveSettingsResponse{
 		DeviceID:       r.DeviceID,
 		DeepSleepDelay: r.DeepSleepDelay,
 	}
@@ -72,13 +72,13 @@ func (client *SettingsClient) GetSettings(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-func (client *SettingsClient) SetSettings(c *gin.Context) {
+func (client *SettingsClient) SetBatCaveSettings(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c, FIVE_MINUTES)
 	defer cancel()
 
 	var (
-		req request.SetSettingsRequest
-		res response.SetSettingsResponse
+		req request.SetBatCaveSettingsRequest
+		res response.SetBatCaveSettingsResponse
 	)
 
 	if err := c.BindJSON(&req); err != nil {
@@ -106,7 +106,7 @@ func (client *SettingsClient) SetSettings(c *gin.Context) {
 		return
 	}
 
-	res = response.SetSettingsResponse{
+	res = response.SetBatCaveSettingsResponse{
 		DeviceID:       r.DeviceID,
 		DeepSleepDelay: r.DeepSleepDelay,
 	}

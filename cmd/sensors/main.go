@@ -15,10 +15,10 @@ import (
 )
 
 var (
-	Version     string
-	Build       string
-	showVersion *bool
-	iotaServer  *servers.IotaServer
+	Version       string
+	Build         string
+	showVersion   *bool
+	sensorsServer *servers.SensorsServer
 )
 
 func init() {
@@ -38,38 +38,38 @@ func init() {
 			logrus.Fatal(err.Error())
 		}
 
-		iotaServer = servers.NewIotaServer()
+		sensorsServer = servers.NewSensorsServer()
 		env := listeners.NewEnv(influxDB)
 
 		dht22Listener, err := env.NewDHT22Listener("dht22_listener", os.Getenv("DHT22_MQTT_URL"))
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
-		iotaServer.AddListener(dht22Listener)
+		sensorsServer.AddListener(dht22Listener)
 
 		bmp280Listener, err := env.NewBMP280Listener("bmp280_listener", os.Getenv("BMP280_MQTT_URL"))
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
-		iotaServer.AddListener(bmp280Listener)
+		sensorsServer.AddListener(bmp280Listener)
 
 		voltageListener, err := env.NewVoltageListener("voltage_listener", os.Getenv("VOLTAGE_MQTT_URL"))
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
-		iotaServer.AddListener(voltageListener)
+		sensorsServer.AddListener(voltageListener)
 
 		timeListener, err := env.NewTimeListener("time_listener", os.Getenv("TIME_MQTT_URL"))
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
-		iotaServer.AddListener(timeListener)
+		sensorsServer.AddListener(timeListener)
 
 		statsListener, err := env.NewStatsListener("stats_listener", os.Getenv("STATS_MQTT_URL"))
 		if err != nil {
 			logrus.Fatal(err.Error())
 		}
-		iotaServer.AddListener(statsListener)
+		sensorsServer.AddListener(statsListener)
 	}
 }
 
@@ -80,7 +80,7 @@ func main() {
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 
-		iotaServer.Connect()
+		sensorsServer.Connect()
 
 		<-c
 	}

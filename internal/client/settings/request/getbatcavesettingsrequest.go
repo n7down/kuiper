@@ -4,11 +4,11 @@ import (
 	"net/url"
 )
 
-type GetSettingsRequest struct {
+type GetBatCaveSettingsRequest struct {
 	DeviceID string `json:"deviceID" binding:"required"`
 }
 
-func (r *GetSettingsRequest) Validate() url.Values {
+func (r *GetBatCaveSettingsRequest) Validate() url.Values {
 	errs := url.Values{}
 
 	if r.DeviceID == "" {

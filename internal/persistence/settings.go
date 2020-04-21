@@ -8,5 +8,5 @@ type GetBatCaveSettings struct {
 }
 
 type UpdateBatCaveSettings struct {
-	DeepSleepDelay int32
+	DeepSleepDelay int32 `json:"deepSleepDelay"`
 }

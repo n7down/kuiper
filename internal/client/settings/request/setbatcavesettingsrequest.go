@@ -4,12 +4,12 @@ import (
 	"net/url"
 )
 
-type SetSettingsRequest struct {
+type SetBatCaveSettingsRequest struct {
 	DeviceID       string `json:"deviceID" binding:"required"`
 	DeepSleepDelay int32  `json:"deepSleepDelay" binding:"required"`
 }
 
-func (r *SetSettingsRequest) Validate() url.Values {
+func (r *SetBatCaveSettingsRequest) Validate() url.Values {
 	errs := url.Values{}
 
 	if r.DeviceID == "" {

@@ -4,10 +4,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"github.com/n7down/iota/internal/persistence"
 	"github.com/n7down/iota/internal/persistence/mysql"
 	"github.com/sirupsen/logrus"
+)
+
+const (
+	ONE_MINUTE = 1 * time.Minute
 )
 
 type BatCaveSettings struct {
@@ -48,7 +54,6 @@ func (e Env) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*L
 		logrus.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		// sensor := &sensors.BMP280Sensor{}
 		settings := &BatCaveSettings{}
 		err := json.Unmarshal([]byte(msg.Payload()), settings)
 		if err != nil {
@@ -56,25 +61,39 @@ func (e Env) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*L
 		}
 
 		if err == nil {
-			// err = e.influxDB.LogBMP280(listenerName, sensor)
-			// logrus.Infof("Logged sensor: %v", sensor)
-			// if err != nil {
-			// 	logrus.Error(err.Error())
-			// }
-
-			// TODO: updating settings on device
-			// 1. device wakes up and send message to settings service with all set settings
-			// - sends message to /device/settings
-			// - sends deviceID and all settings
-			// 2. settings service checks for differences in database
-			// 3. if there is a difference in the settings for the device - it sends the difference to the device
 
 			// get the settings
-			_, err := e.db.GetSettings(settings.DeviceID)
+			currentSettings, err := e.db.GetBatCaveSettings(settings.DeviceID)
 			if err != nil {
 				logrus.Error(err)
 			} else {
-				// TODO: check for the differences in the settings
+
+				// check for the differences in the settings
+				if settings.DeepSleepDelay != currentSettings.DeepSleepDelay {
+
+					// update the database with the new settings
+					newSettings := persistence.UpdateBatCaveSettings{
+						DeepSleepDelay: settings.DeepSleepDelay,
+					}
+
+					// marshal new settings and publish it
+					jsonData, err := json.Marshal(newSettings)
+					if err != nil {
+						logrus.Error(err)
+					} else {
+
+						// send back to the device the new settings
+						deviceTopic := fmt.Sprintf("devices/%s", settings.DeviceID)
+						token := client.Publish(deviceTopic, 0, false, jsonData)
+						token.WaitTimeout(ONE_MINUTE)
+
+						// update the database with the new settings
+						err := e.db.UpdateBatCaveSettings(settings.DeviceID, newSettings)
+						if err != nil {
+							logrus.Error(err)
+						}
+					}
+				}
 			}
 		}
 	}

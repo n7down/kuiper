@@ -7,21 +7,21 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type IotaServer struct {
+type SensorsServer struct {
 	listenerList *list.List
 }
 
-func NewIotaServer() *IotaServer {
-	return &IotaServer{
+func NewSensorsServer() *SensorsServer {
+	return &SensorsServer{
 		listenerList: list.New(),
 	}
 }
 
-func (i IotaServer) AddListener(listener *listeners.Listener) {
+func (i SensorsServer) AddListener(listener *listeners.Listener) {
 	i.listenerList.PushBack(listener)
 }
 
-func (i IotaServer) Connect() {
+func (i SensorsServer) Connect() {
 	for l := i.listenerList.Front(); l != nil; l = l.Next() {
 		err := l.Value.(*listeners.Listener).Connect()
 		if err != nil {
