@@ -1,15 +1,18 @@
 package listeners
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/url"
 	"time"
 
-	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/n7down/iota/internal/settings/persistence"
 	"github.com/n7down/iota/internal/settings/persistence/mysql"
+
+	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -62,19 +65,30 @@ func (e Env) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*L
 	opts.SetClientID(listenerName)
 
 	var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
-		logrus.Infof("Received message: %s\n", msg.Payload())
+		log.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
 		req := &BatCaveSettingsRequest{}
 		err := json.Unmarshal([]byte(msg.Payload()), req)
 		if err != nil {
-			logrus.Error(err)
+			log.Error(err)
 		} else {
 
 			// get the settings
 			settingsInPersistence, err := e.db.GetBatCaveSettings(req.DeviceID)
-			if err != nil {
-				logrus.Error(err)
+			if err == sql.ErrNoRows {
+
+				newSettings := persistence.UpdateBatCaveSettings{
+					DeepSleepDelay: req.DeepSleepDelay,
+				}
+
+				// insert the data into the database
+				err := e.db.UpdateBatCaveSettings(req.DeviceID, newSettings)
+				if err != nil {
+					log.Error(err)
+				}
+			} else if err != nil {
+				log.Error(err)
 			} else {
 
 				// check for the differences in the settings
