@@ -89,7 +89,7 @@ services:
           context: .
           dockerfile: ./build/dockerfiles/settings/Dockerfile
       depends_on:
-          mysql
+          - mysql
       ports:
           - "8080:8080"
       networks:
