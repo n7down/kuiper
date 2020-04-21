@@ -55,7 +55,7 @@ services:
     grafana:
         image: grafana/grafana:latest
         volumes:
-          - ./grafana/dashboards:/var/lib/grafana/dashboards
+            - ./grafana/dashboards:/var/lib/grafana/dashboards
         ports:
             - "3000:3000"
         networks:
@@ -65,10 +65,35 @@ services:
     smtp:
       image: namshi/smtp:latest
       ports:
-        - "25:25"
+          - "25:25"
       networks:
         iota_net:
               ipv4_address: 172.28.1.7
+
+    mysql:
+      build:
+          context: ./build/dockerfiles/db
+          dockerfile: ./build/dockerfiles/db/Dockerfile
+      ports:
+          - "3306:3306"
+      networks:
+          iota_net:
+              ipv4_address: 172.28.1.8
+
+    settings:
+      environment:
+          PORT: 8080
+          DB_CONN: root:password@tcp(172.28.1.8)/settings
+      build:
+          context: .
+          dockerfile: ./build/dockerfiles/settings/Dockerfile
+      depends_on:
+          mysql
+      ports:
+          - "8080:8080"
+      networks:
+          iota_net:
+              ipv4_address: 172.28.1.9
 
 networks:
     iota_net:

@@ -17,11 +17,7 @@ func main() {
 	log.SetReportCaller(true)
 
 	port := os.Getenv("PORT")
-	dbUser := os.Getenv("DB_USER")
-	dbPass := os.Getenv("DB_PASS")
-	dbSocket := os.Getenv("DB_SOCKET")
-	dbHost := os.Getenv("DB_HOST")
-	dbName := os.Getenv("DB_NAME")
+	dbConn := os.Getenv("DB_CONN")
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
 	if err != nil {
@@ -35,7 +31,7 @@ func main() {
 	// 2. settings service checks for differences in database
 	// 3. if there is a difference in the settings for the device - it sends the difference to the device
 
-	settingsDB, err := mysql.NewSettingsMySqlDB(dbUser, dbPass, dbSocket, dbHost, dbName)
+	settingsDB, err := mysql.NewSettingsMySqlDB(dbConn)
 	if err != nil {
 		log.Fatal(err)
 	}
