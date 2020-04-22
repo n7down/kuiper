@@ -72,7 +72,7 @@ services:
 
     mysql:
       build:
-          context: ./build/dockerfiles/db
+          context: ./build/dockerfiles/db/.
           dockerfile: ./Dockerfile
       ports:
           - "3306:3306"
