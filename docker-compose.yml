@@ -28,6 +28,8 @@ services:
         ports:
             - "1883:1883"
             - "9001:9001"
+        depends_on:
+            - smtp
         volumes:
             - ./build/dockerfiles/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
         networks:
@@ -58,6 +60,8 @@ services:
             - /tmp/grafana/dashboards:/var/lib/grafana/dashboards
         ports:
             - "3000:3000"
+        depends_on:
+            - influxdb
         networks:
             iota_net:
                 ipv4_address: 172.28.1.5
@@ -90,6 +94,7 @@ services:
           dockerfile: ./build/dockerfiles/settings/Dockerfile
       depends_on:
           - mysql
+          - mosquitto
       ports:
           - "8080:8080"
       networks:
