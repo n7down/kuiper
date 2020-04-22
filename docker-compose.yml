@@ -67,39 +67,44 @@ services:
                 ipv4_address: 172.28.1.5
 
     smtp:
-      image: namshi/smtp:latest
-      ports:
-          - "25:25"
-      networks:
-          iota_net:
-              ipv4_address: 172.28.1.7
+        image: namshi/smtp:latest
+        ports:
+            - "25:25"
+        networks:
+            iota_net:
+                ipv4_address: 172.28.1.7
 
     mysql:
-      build:
-          context: ./build/dockerfiles/db/.
-          dockerfile: ./Dockerfile
-      ports:
-          - "3306:3306"
-      networks:
-          iota_net:
-              ipv4_address: 172.28.1.8
+        build:
+            context: ./build/dockerfiles/db/.
+            dockerfile: ./Dockerfile
+        ports:
+            - "3306:3306"
+        networks:
+            iota_net:
+                ipv4_address: 172.28.1.8
 
     settings:
-      environment:
-          PORT: 8080
-          DB_CONN: "root:password@tcp(172.28.1.8)/device_settings"
-          BAT_CAVE_MQTT_URL: http://172.28.1.3:1883/bc/settings
-      build:
-          context: .
-          dockerfile: ./build/dockerfiles/settings/Dockerfile
-      depends_on:
-          - mosquitto
-          - mysql
-      ports:
-          - "8080:8080"
-      networks:
-          iota_net:
-              ipv4_address: 172.28.1.9
+        environment:
+            PORT: 8080
+            DB_CONN: "root:password@tcp(172.28.1.8)/device_settings"
+            BAT_CAVE_MQTT_URL: "http://172.28.1.3:1883/bc/settings"
+            WAIT_HOSTS: "mysql:3306"
+            WAIT_HOSTS_TIMEOUT: "300"
+            WAIT_SLEEP_INTERVAL: "30"
+            WAIT_HOST_CONNECT_TIMEOUT: "30"
+        build:
+            context: .
+            dockerfile: ./build/dockerfiles/settings/Dockerfile
+        depends_on:
+            - mosquitto
+            - mysql
+        command: sh -c "/wait"
+        ports:
+            - "8080:8080"
+        networks:
+            iota_net:
+                ipv4_address: 172.28.1.9
 
 networks:
     iota_net:
