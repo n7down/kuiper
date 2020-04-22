@@ -71,7 +71,7 @@ services:
       ports:
           - "25:25"
       networks:
-        iota_net:
+          iota_net:
               ipv4_address: 172.28.1.7
 
     mysql:
@@ -93,8 +93,8 @@ services:
           context: .
           dockerfile: ./build/dockerfiles/settings/Dockerfile
       depends_on:
-          - mysql
           - mosquitto
+          - mysql
       ports:
           - "8080:8080"
       networks:
