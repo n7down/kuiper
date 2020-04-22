@@ -16,8 +16,11 @@
 
 const char dht22Topic[] = "sensor/dht22";
 const char statsTopic[] = "sensor/stats";
+const char settingsTopic[] = "bc/settings";
 
 char mac[12];
+
+// settings
 int deepSleepDelay = 15; // in min
 
 DHT dht22(DHTPIN, DHTTYPE);
@@ -99,7 +102,9 @@ void reconnect() {
 #ifndef DEBUG
       Serial.println("connected");
 #endif
-      client.subscribe(mac);
+      String deviceTopic = "devices/"
+      deviceTopic += mac
+      client.subscribe(deviceTopic);
     } else {
 #ifndef DEBUG
       Serial.print("Failed: ");
