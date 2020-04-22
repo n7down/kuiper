@@ -2,4 +2,4 @@
 *.swo
 /bin
 
-hw/bc/config.h
+firmware/bat-cave/config.h
