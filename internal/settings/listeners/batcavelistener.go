@@ -20,8 +20,8 @@ const (
 )
 
 type BatCaveSettingsRequest struct {
-	DeviceID       string `json:"deviceID"`
-	DeepSleepDelay int32  `json:"deepSleepDelay"`
+	DeviceID       string `json:"m"`
+	DeepSleepDelay int32  `json:"s"`
 }
 
 func (s *BatCaveSettingsRequest) IsEqual(settings persistence.GetBatCaveSettings) bool {
@@ -32,7 +32,7 @@ func (s *BatCaveSettingsRequest) IsEqual(settings persistence.GetBatCaveSettings
 }
 
 type BatCaveSettingsResponse struct {
-	DeepSleepDelay int32 `json:"deepSleepDelay"`
+	DeepSleepDelay int32 `json:"s"`
 }
 
 type Env struct {
