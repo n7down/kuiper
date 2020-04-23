@@ -68,7 +68,7 @@ func (s *SettingsMySqlDB) UpdateBatCaveSettings(deviceID string, settings persis
 func (s *SettingsMySqlDB) GetBatCaveSettings(deviceID string) (persistence.GetBatCaveSettings, error) {
 	settings := persistence.GetBatCaveSettings{}
 	query := `SELECT deep_sleep_delay FROM bat_cave_settings WHERE device_id=?`
-	row := s.db.QueryRow(query)
+	row := s.db.QueryRow(query, deviceID)
 	err := row.Scan(&settings.DeepSleepDelay)
 	if err != nil {
 		return settings, err
