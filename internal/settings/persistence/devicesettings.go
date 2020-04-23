@@ -1,9 +1,9 @@
 package persistence
 
-type GetBatCaveSettings struct {
-	DeepSleepDelay int32
-}
+import "time"
 
-type UpdateBatCaveSettings struct {
+type BatCaveSettings struct {
+	DeviceID       string
 	DeepSleepDelay int32
+	Updated        time.Time
 }

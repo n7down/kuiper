@@ -33,6 +33,10 @@ func NewSettingsClient(serverEnv string) (*SettingsClient, error) {
 	return client, nil
 }
 
+func (client *SettingsClient) CreateBatCaveSettings(c *gin.Context) {
+	c.JSON(http.StatusOK, nil)
+}
+
 func (client *SettingsClient) GetBatCaveSettings(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c, FIVE_MINUTES)
 	defer cancel()
@@ -72,7 +76,7 @@ func (client *SettingsClient) GetBatCaveSettings(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-func (client *SettingsClient) SetBatCaveSettings(c *gin.Context) {
+func (client *SettingsClient) UpdateBatCaveSettings(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c, FIVE_MINUTES)
 	defer cancel()
 
@@ -92,7 +96,7 @@ func (client *SettingsClient) SetBatCaveSettings(c *gin.Context) {
 		return
 	}
 
-	r, err := client.settingsClient.SetBatCaveSettings(ctx, &settings_pb.SetBatCaveSettingsRequest{
+	r, err := client.settingsClient.UpdateBatCaveSettings(ctx, &settings_pb.UpdateBatCaveSettingsRequest{
 		DeviceID:       req.DeviceID,
 		DeepSleepDelay: req.DeepSleepDelay,
 	})

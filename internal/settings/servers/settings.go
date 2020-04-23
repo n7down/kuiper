@@ -3,8 +3,6 @@ package servers
 import (
 	"context"
 
-	_ "github.com/go-sql-driver/mysql"
-
 	settings_pb "github.com/n7down/iota/internal/pb/settings"
 	"github.com/n7down/iota/internal/settings/persistence"
 	"github.com/n7down/iota/internal/settings/persistence/mysql"
@@ -20,17 +18,19 @@ func NewSettingsServer(db *mysql.SettingsMySqlDB) *SettingsServer {
 	}
 }
 
-func (s *SettingsServer) SetBatCaveSettings(ctx context.Context, req *settings_pb.SetBatCaveSettingsRequest) (*settings_pb.SetBatCaveSettingsResponse, error) {
-	settings := persistence.UpdateBatCaveSettings{
+func (s *SettingsServer) CreateBatCaveSettings(ctx context.Context, req *settings_pb.CreateBatCaveSettingsRequest) (*settings_pb.CreateBatCaveSettingsResponse, error) {
+	return &settings_pb.CreateBatCaveSettingsResponse{}, nil
+}
+
+func (s *SettingsServer) UpdateBatCaveSettings(ctx context.Context, req *settings_pb.UpdateBatCaveSettingsRequest) (*settings_pb.UpdateBatCaveSettingsResponse, error) {
+	settings := persistence.BatCaveSettings{
+		DeviceID:       req.DeviceID,
 		DeepSleepDelay: req.DeepSleepDelay,
 	}
 
-	err := s.db.UpdateBatCaveSettings(req.DeviceID, settings)
-	if err != nil {
-		return &settings_pb.SetBatCaveSettingsResponse{}, err
-	}
+	s.db.UpdateBatCaveSettings(settings)
 
-	return &settings_pb.SetBatCaveSettingsResponse{
+	return &settings_pb.UpdateBatCaveSettingsResponse{
 		DeviceID:       req.DeviceID,
 		DeepSleepDelay: req.DeepSleepDelay,
 	}, nil
@@ -43,7 +43,7 @@ func (s *SettingsServer) GetBatCaveSettings(ctx context.Context, req *settings_p
 	}
 
 	return &settings_pb.GetBatCaveSettingsResponse{
-		DeviceID:       req.DeviceID,
+		DeviceID:       settings.DeviceID,
 		DeepSleepDelay: settings.DeepSleepDelay,
 	}, nil
 }

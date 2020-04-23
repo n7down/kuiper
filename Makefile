@@ -3,7 +3,6 @@ BUILD := $(shell git rev-parse --short HEAD)
 PROJECTNAME := $(shell basename "$(PWD)")
 LDFLAGS=-ldflags "-X=main.Version=$(VERSION) -X=main.Build=$(BUILD)"
 MAKEFLAGS += --silent
-PID := /tmp/.$(PROJECTNAME).pid
 GOBASE=$(shell pwd)
 GOBIN=$(GOBASE)/bin
 GOFILES=$(GOPATH)/src/github.com/n7down/iota/cmd/iota/*.go
@@ -24,6 +23,7 @@ build: clean
 .PHONY: generate
 generate:
 	echo "generating dependency files... \c"
+	@protoc --go_out=plugins=grpc:internal/pb/settings internal/pb/settings/settings.proto
 	@GOBIN=$(GOBIN) go generate ./...
 	echo "done"
 

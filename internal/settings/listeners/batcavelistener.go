@@ -24,7 +24,7 @@ type BatCaveSettingsRequest struct {
 	DeepSleepDelay int32  `json:"s"`
 }
 
-func (s *BatCaveSettingsRequest) IsEqual(settings persistence.GetBatCaveSettings) bool {
+func (s *BatCaveSettingsRequest) IsEqual(settings persistence.BatCaveSettings) bool {
 	if s.DeepSleepDelay == settings.DeepSleepDelay {
 		return true
 	}
@@ -78,15 +78,13 @@ func (e Env) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*L
 			settingsInPersistence, err := e.db.GetBatCaveSettings(req.DeviceID)
 			if err == sql.ErrNoRows {
 
-				newSettings := persistence.UpdateBatCaveSettings{
+				newSettings := persistence.BatCaveSettings{
+					DeviceID:       req.DeviceID,
 					DeepSleepDelay: req.DeepSleepDelay,
 				}
 
 				// insert the data into the database
-				err := e.db.UpdateBatCaveSettings(req.DeviceID, newSettings)
-				if err != nil {
-					log.Error(err)
-				}
+				e.db.UpdateBatCaveSettings(newSettings)
 			} else if err != nil {
 				log.Error(err)
 			} else {

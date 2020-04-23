@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.21.0-devel
 // 	protoc        v3.11.4
-// source: settings.proto
+// source: internal/pb/settings/settings.proto
 
 package settings_pb
 
@@ -29,6 +29,116 @@ const (
 // of the legacy proto package is being used.
 const _ = proto.ProtoPackageIsVersion4
 
+type CreateBatCaveSettingsRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	DeviceID       string `protobuf:"bytes,1,opt,name=DeviceID,proto3" json:"DeviceID,omitempty"`
+	DeepSleepDelay int32  `protobuf:"varint,2,opt,name=DeepSleepDelay,proto3" json:"DeepSleepDelay,omitempty"`
+}
+
+func (x *CreateBatCaveSettingsRequest) Reset() {
+	*x = CreateBatCaveSettingsRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_internal_pb_settings_settings_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CreateBatCaveSettingsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateBatCaveSettingsRequest) ProtoMessage() {}
+
+func (x *CreateBatCaveSettingsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_pb_settings_settings_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateBatCaveSettingsRequest.ProtoReflect.Descriptor instead.
+func (*CreateBatCaveSettingsRequest) Descriptor() ([]byte, []int) {
+	return file_internal_pb_settings_settings_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *CreateBatCaveSettingsRequest) GetDeviceID() string {
+	if x != nil {
+		return x.DeviceID
+	}
+	return ""
+}
+
+func (x *CreateBatCaveSettingsRequest) GetDeepSleepDelay() int32 {
+	if x != nil {
+		return x.DeepSleepDelay
+	}
+	return 0
+}
+
+type CreateBatCaveSettingsResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	DeviceID       string `protobuf:"bytes,1,opt,name=DeviceID,proto3" json:"DeviceID,omitempty"`
+	DeepSleepDelay int32  `protobuf:"varint,2,opt,name=DeepSleepDelay,proto3" json:"DeepSleepDelay,omitempty"`
+}
+
+func (x *CreateBatCaveSettingsResponse) Reset() {
+	*x = CreateBatCaveSettingsResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_internal_pb_settings_settings_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CreateBatCaveSettingsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateBatCaveSettingsResponse) ProtoMessage() {}
+
+func (x *CreateBatCaveSettingsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_pb_settings_settings_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateBatCaveSettingsResponse.ProtoReflect.Descriptor instead.
+func (*CreateBatCaveSettingsResponse) Descriptor() ([]byte, []int) {
+	return file_internal_pb_settings_settings_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *CreateBatCaveSettingsResponse) GetDeviceID() string {
+	if x != nil {
+		return x.DeviceID
+	}
+	return ""
+}
+
+func (x *CreateBatCaveSettingsResponse) GetDeepSleepDelay() int32 {
+	if x != nil {
+		return x.DeepSleepDelay
+	}
+	return 0
+}
+
 type GetBatCaveSettingsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -40,7 +150,7 @@ type GetBatCaveSettingsRequest struct {
 func (x *GetBatCaveSettingsRequest) Reset() {
 	*x = GetBatCaveSettingsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_settings_proto_msgTypes[0]
+		mi := &file_internal_pb_settings_settings_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -53,7 +163,7 @@ func (x *GetBatCaveSettingsRequest) String() string {
 func (*GetBatCaveSettingsRequest) ProtoMessage() {}
 
 func (x *GetBatCaveSettingsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_settings_proto_msgTypes[0]
+	mi := &file_internal_pb_settings_settings_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -66,7 +176,7 @@ func (x *GetBatCaveSettingsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetBatCaveSettingsRequest.ProtoReflect.Descriptor instead.
 func (*GetBatCaveSettingsRequest) Descriptor() ([]byte, []int) {
-	return file_settings_proto_rawDescGZIP(), []int{0}
+	return file_internal_pb_settings_settings_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetBatCaveSettingsRequest) GetDeviceID() string {
@@ -88,7 +198,7 @@ type GetBatCaveSettingsResponse struct {
 func (x *GetBatCaveSettingsResponse) Reset() {
 	*x = GetBatCaveSettingsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_settings_proto_msgTypes[1]
+		mi := &file_internal_pb_settings_settings_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -101,7 +211,7 @@ func (x *GetBatCaveSettingsResponse) String() string {
 func (*GetBatCaveSettingsResponse) ProtoMessage() {}
 
 func (x *GetBatCaveSettingsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_settings_proto_msgTypes[1]
+	mi := &file_internal_pb_settings_settings_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -114,7 +224,7 @@ func (x *GetBatCaveSettingsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetBatCaveSettingsResponse.ProtoReflect.Descriptor instead.
 func (*GetBatCaveSettingsResponse) Descriptor() ([]byte, []int) {
-	return file_settings_proto_rawDescGZIP(), []int{1}
+	return file_internal_pb_settings_settings_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetBatCaveSettingsResponse) GetDeviceID() string {
@@ -131,7 +241,7 @@ func (x *GetBatCaveSettingsResponse) GetDeepSleepDelay() int32 {
 	return 0
 }
 
-type SetBatCaveSettingsRequest struct {
+type UpdateBatCaveSettingsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -140,23 +250,23 @@ type SetBatCaveSettingsRequest struct {
 	DeepSleepDelay int32  `protobuf:"varint,2,opt,name=DeepSleepDelay,proto3" json:"DeepSleepDelay,omitempty"`
 }
 
-func (x *SetBatCaveSettingsRequest) Reset() {
-	*x = SetBatCaveSettingsRequest{}
+func (x *UpdateBatCaveSettingsRequest) Reset() {
+	*x = UpdateBatCaveSettingsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_settings_proto_msgTypes[2]
+		mi := &file_internal_pb_settings_settings_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *SetBatCaveSettingsRequest) String() string {
+func (x *UpdateBatCaveSettingsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SetBatCaveSettingsRequest) ProtoMessage() {}
+func (*UpdateBatCaveSettingsRequest) ProtoMessage() {}
 
-func (x *SetBatCaveSettingsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_settings_proto_msgTypes[2]
+func (x *UpdateBatCaveSettingsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_pb_settings_settings_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -167,26 +277,26 @@ func (x *SetBatCaveSettingsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SetBatCaveSettingsRequest.ProtoReflect.Descriptor instead.
-func (*SetBatCaveSettingsRequest) Descriptor() ([]byte, []int) {
-	return file_settings_proto_rawDescGZIP(), []int{2}
+// Deprecated: Use UpdateBatCaveSettingsRequest.ProtoReflect.Descriptor instead.
+func (*UpdateBatCaveSettingsRequest) Descriptor() ([]byte, []int) {
+	return file_internal_pb_settings_settings_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *SetBatCaveSettingsRequest) GetDeviceID() string {
+func (x *UpdateBatCaveSettingsRequest) GetDeviceID() string {
 	if x != nil {
 		return x.DeviceID
 	}
 	return ""
 }
 
-func (x *SetBatCaveSettingsRequest) GetDeepSleepDelay() int32 {
+func (x *UpdateBatCaveSettingsRequest) GetDeepSleepDelay() int32 {
 	if x != nil {
 		return x.DeepSleepDelay
 	}
 	return 0
 }
 
-type SetBatCaveSettingsResponse struct {
+type UpdateBatCaveSettingsResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -195,23 +305,23 @@ type SetBatCaveSettingsResponse struct {
 	DeepSleepDelay int32  `protobuf:"varint,2,opt,name=DeepSleepDelay,proto3" json:"DeepSleepDelay,omitempty"`
 }
 
-func (x *SetBatCaveSettingsResponse) Reset() {
-	*x = SetBatCaveSettingsResponse{}
+func (x *UpdateBatCaveSettingsResponse) Reset() {
+	*x = UpdateBatCaveSettingsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_settings_proto_msgTypes[3]
+		mi := &file_internal_pb_settings_settings_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *SetBatCaveSettingsResponse) String() string {
+func (x *UpdateBatCaveSettingsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SetBatCaveSettingsResponse) ProtoMessage() {}
+func (*UpdateBatCaveSettingsResponse) ProtoMessage() {}
 
-func (x *SetBatCaveSettingsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_settings_proto_msgTypes[3]
+func (x *UpdateBatCaveSettingsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_pb_settings_settings_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -222,108 +332,158 @@ func (x *SetBatCaveSettingsResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SetBatCaveSettingsResponse.ProtoReflect.Descriptor instead.
-func (*SetBatCaveSettingsResponse) Descriptor() ([]byte, []int) {
-	return file_settings_proto_rawDescGZIP(), []int{3}
+// Deprecated: Use UpdateBatCaveSettingsResponse.ProtoReflect.Descriptor instead.
+func (*UpdateBatCaveSettingsResponse) Descriptor() ([]byte, []int) {
+	return file_internal_pb_settings_settings_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *SetBatCaveSettingsResponse) GetDeviceID() string {
+func (x *UpdateBatCaveSettingsResponse) GetDeviceID() string {
 	if x != nil {
 		return x.DeviceID
 	}
 	return ""
 }
 
-func (x *SetBatCaveSettingsResponse) GetDeepSleepDelay() int32 {
+func (x *UpdateBatCaveSettingsResponse) GetDeepSleepDelay() int32 {
 	if x != nil {
 		return x.DeepSleepDelay
 	}
 	return 0
 }
 
-var File_settings_proto protoreflect.FileDescriptor
+var File_internal_pb_settings_settings_proto protoreflect.FileDescriptor
 
-var file_settings_proto_rawDesc = []byte{
-	0x0a, 0x0e, 0x73, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x12, 0x0b, 0x73, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x5f, 0x70, 0x62, 0x22, 0x37, 0x0a,
-	0x19, 0x47, 0x65, 0x74, 0x42, 0x61, 0x74, 0x43, 0x61, 0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69,
-	0x6e, 0x67, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x44, 0x65,
-	0x76, 0x69, 0x63, 0x65, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x44, 0x65,
-	0x76, 0x69, 0x63, 0x65, 0x49, 0x44, 0x22, 0x60, 0x0a, 0x1a, 0x47, 0x65, 0x74, 0x42, 0x61, 0x74,
-	0x43, 0x61, 0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x49, 0x44,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x49, 0x44,
-	0x12, 0x26, 0x0a, 0x0e, 0x44, 0x65, 0x65, 0x70, 0x53, 0x6c, 0x65, 0x65, 0x70, 0x44, 0x65, 0x6c,
-	0x61, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0e, 0x44, 0x65, 0x65, 0x70, 0x53, 0x6c,
-	0x65, 0x65, 0x70, 0x44, 0x65, 0x6c, 0x61, 0x79, 0x22, 0x5f, 0x0a, 0x19, 0x53, 0x65, 0x74, 0x42,
-	0x61, 0x74, 0x43, 0x61, 0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x49,
-	0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x49,
-	0x44, 0x12, 0x26, 0x0a, 0x0e, 0x44, 0x65, 0x65, 0x70, 0x53, 0x6c, 0x65, 0x65, 0x70, 0x44, 0x65,
-	0x6c, 0x61, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0e, 0x44, 0x65, 0x65, 0x70, 0x53,
-	0x6c, 0x65, 0x65, 0x70, 0x44, 0x65, 0x6c, 0x61, 0x79, 0x22, 0x60, 0x0a, 0x1a, 0x53, 0x65, 0x74,
+var file_internal_pb_settings_settings_proto_rawDesc = []byte{
+	0x0a, 0x23, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x70, 0x62, 0x2f, 0x73, 0x65,
+	0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x2f, 0x73, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0b, 0x73, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x5f,
+	0x70, 0x62, 0x22, 0x62, 0x0a, 0x1c, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x42, 0x61, 0x74, 0x43,
+	0x61, 0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x49, 0x44, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x49, 0x44, 0x12, 0x26,
+	0x0a, 0x0e, 0x44, 0x65, 0x65, 0x70, 0x53, 0x6c, 0x65, 0x65, 0x70, 0x44, 0x65, 0x6c, 0x61, 0x79,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0e, 0x44, 0x65, 0x65, 0x70, 0x53, 0x6c, 0x65, 0x65,
+	0x70, 0x44, 0x65, 0x6c, 0x61, 0x79, 0x22, 0x63, 0x0a, 0x1d, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
 	0x42, 0x61, 0x74, 0x43, 0x61, 0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x52,
 	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x44, 0x65, 0x76, 0x69, 0x63,
 	0x65, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x44, 0x65, 0x76, 0x69, 0x63,
 	0x65, 0x49, 0x44, 0x12, 0x26, 0x0a, 0x0e, 0x44, 0x65, 0x65, 0x70, 0x53, 0x6c, 0x65, 0x65, 0x70,
 	0x44, 0x65, 0x6c, 0x61, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0e, 0x44, 0x65, 0x65,
-	0x70, 0x53, 0x6c, 0x65, 0x65, 0x70, 0x44, 0x65, 0x6c, 0x61, 0x79, 0x32, 0xdf, 0x01, 0x0a, 0x0f,
-	0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12,
-	0x65, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x42, 0x61, 0x74, 0x43, 0x61, 0x76, 0x65, 0x53, 0x65, 0x74,
-	0x74, 0x69, 0x6e, 0x67, 0x73, 0x12, 0x26, 0x2e, 0x73, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73,
-	0x5f, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x42, 0x61, 0x74, 0x43, 0x61, 0x76, 0x65, 0x53, 0x65,
-	0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x27, 0x2e,
-	0x73, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x5f, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x42,
-	0x61, 0x74, 0x43, 0x61, 0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x65, 0x0a, 0x12, 0x53, 0x65, 0x74, 0x42, 0x61, 0x74,
-	0x43, 0x61, 0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x12, 0x26, 0x2e, 0x73,
-	0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x5f, 0x70, 0x62, 0x2e, 0x53, 0x65, 0x74, 0x42, 0x61,
-	0x74, 0x43, 0x61, 0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x52, 0x65, 0x71,
-	0x75, 0x65, 0x73, 0x74, 0x1a, 0x27, 0x2e, 0x73, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x5f,
-	0x70, 0x62, 0x2e, 0x53, 0x65, 0x74, 0x42, 0x61, 0x74, 0x43, 0x61, 0x76, 0x65, 0x53, 0x65, 0x74,
-	0x74, 0x69, 0x6e, 0x67, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x0f, 0x5a,
-	0x0d, 0x2e, 0x3b, 0x73, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x5f, 0x70, 0x62, 0x62, 0x06,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x70, 0x53, 0x6c, 0x65, 0x65, 0x70, 0x44, 0x65, 0x6c, 0x61, 0x79, 0x22, 0x37, 0x0a, 0x19, 0x47,
+	0x65, 0x74, 0x42, 0x61, 0x74, 0x43, 0x61, 0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67,
+	0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x44, 0x65, 0x76, 0x69,
+	0x63, 0x65, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x44, 0x65, 0x76, 0x69,
+	0x63, 0x65, 0x49, 0x44, 0x22, 0x60, 0x0a, 0x1a, 0x47, 0x65, 0x74, 0x42, 0x61, 0x74, 0x43, 0x61,
+	0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x49, 0x44, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x49, 0x44, 0x12, 0x26,
+	0x0a, 0x0e, 0x44, 0x65, 0x65, 0x70, 0x53, 0x6c, 0x65, 0x65, 0x70, 0x44, 0x65, 0x6c, 0x61, 0x79,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0e, 0x44, 0x65, 0x65, 0x70, 0x53, 0x6c, 0x65, 0x65,
+	0x70, 0x44, 0x65, 0x6c, 0x61, 0x79, 0x22, 0x62, 0x0a, 0x1c, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
+	0x42, 0x61, 0x74, 0x43, 0x61, 0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65,
+	0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65,
+	0x49, 0x44, 0x12, 0x26, 0x0a, 0x0e, 0x44, 0x65, 0x65, 0x70, 0x53, 0x6c, 0x65, 0x65, 0x70, 0x44,
+	0x65, 0x6c, 0x61, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0e, 0x44, 0x65, 0x65, 0x70,
+	0x53, 0x6c, 0x65, 0x65, 0x70, 0x44, 0x65, 0x6c, 0x61, 0x79, 0x22, 0x63, 0x0a, 0x1d, 0x55, 0x70,
+	0x64, 0x61, 0x74, 0x65, 0x42, 0x61, 0x74, 0x43, 0x61, 0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69,
+	0x6e, 0x67, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x44,
+	0x65, 0x76, 0x69, 0x63, 0x65, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x44,
+	0x65, 0x76, 0x69, 0x63, 0x65, 0x49, 0x44, 0x12, 0x26, 0x0a, 0x0e, 0x44, 0x65, 0x65, 0x70, 0x53,
+	0x6c, 0x65, 0x65, 0x70, 0x44, 0x65, 0x6c, 0x61, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52,
+	0x0e, 0x44, 0x65, 0x65, 0x70, 0x53, 0x6c, 0x65, 0x65, 0x70, 0x44, 0x65, 0x6c, 0x61, 0x79, 0x32,
+	0xd8, 0x02, 0x0a, 0x0f, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x53, 0x65, 0x72, 0x76,
+	0x69, 0x63, 0x65, 0x12, 0x6e, 0x0a, 0x15, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x42, 0x61, 0x74,
+	0x43, 0x61, 0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x12, 0x29, 0x2e, 0x73,
+	0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x5f, 0x70, 0x62, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74,
+	0x65, 0x42, 0x61, 0x74, 0x43, 0x61, 0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2a, 0x2e, 0x73, 0x65, 0x74, 0x74, 0x69, 0x6e,
+	0x67, 0x73, 0x5f, 0x70, 0x62, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x42, 0x61, 0x74, 0x43,
+	0x61, 0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x12, 0x65, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x42, 0x61, 0x74, 0x43, 0x61, 0x76,
+	0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x12, 0x26, 0x2e, 0x73, 0x65, 0x74, 0x74,
+	0x69, 0x6e, 0x67, 0x73, 0x5f, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x42, 0x61, 0x74, 0x43, 0x61,
+	0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x1a, 0x27, 0x2e, 0x73, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x5f, 0x70, 0x62, 0x2e,
+	0x47, 0x65, 0x74, 0x42, 0x61, 0x74, 0x43, 0x61, 0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e,
+	0x67, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x6e, 0x0a, 0x15, 0x55, 0x70,
+	0x64, 0x61, 0x74, 0x65, 0x42, 0x61, 0x74, 0x43, 0x61, 0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69,
+	0x6e, 0x67, 0x73, 0x12, 0x29, 0x2e, 0x73, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x5f, 0x70,
+	0x62, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x42, 0x61, 0x74, 0x43, 0x61, 0x76, 0x65, 0x53,
+	0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2a,
+	0x2e, 0x73, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x5f, 0x70, 0x62, 0x2e, 0x55, 0x70, 0x64,
+	0x61, 0x74, 0x65, 0x42, 0x61, 0x74, 0x43, 0x61, 0x76, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e,
+	0x67, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x0f, 0x5a, 0x0d, 0x2e, 0x3b,
+	0x73, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x5f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
-	file_settings_proto_rawDescOnce sync.Once
-	file_settings_proto_rawDescData = file_settings_proto_rawDesc
+	file_internal_pb_settings_settings_proto_rawDescOnce sync.Once
+	file_internal_pb_settings_settings_proto_rawDescData = file_internal_pb_settings_settings_proto_rawDesc
 )
 
-func file_settings_proto_rawDescGZIP() []byte {
-	file_settings_proto_rawDescOnce.Do(func() {
-		file_settings_proto_rawDescData = protoimpl.X.CompressGZIP(file_settings_proto_rawDescData)
+func file_internal_pb_settings_settings_proto_rawDescGZIP() []byte {
+	file_internal_pb_settings_settings_proto_rawDescOnce.Do(func() {
+		file_internal_pb_settings_settings_proto_rawDescData = protoimpl.X.CompressGZIP(file_internal_pb_settings_settings_proto_rawDescData)
 	})
-	return file_settings_proto_rawDescData
+	return file_internal_pb_settings_settings_proto_rawDescData
 }
 
-var file_settings_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-var file_settings_proto_goTypes = []interface{}{
-	(*GetBatCaveSettingsRequest)(nil),  // 0: settings_pb.GetBatCaveSettingsRequest
-	(*GetBatCaveSettingsResponse)(nil), // 1: settings_pb.GetBatCaveSettingsResponse
-	(*SetBatCaveSettingsRequest)(nil),  // 2: settings_pb.SetBatCaveSettingsRequest
-	(*SetBatCaveSettingsResponse)(nil), // 3: settings_pb.SetBatCaveSettingsResponse
+var file_internal_pb_settings_settings_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_internal_pb_settings_settings_proto_goTypes = []interface{}{
+	(*CreateBatCaveSettingsRequest)(nil),  // 0: settings_pb.CreateBatCaveSettingsRequest
+	(*CreateBatCaveSettingsResponse)(nil), // 1: settings_pb.CreateBatCaveSettingsResponse
+	(*GetBatCaveSettingsRequest)(nil),     // 2: settings_pb.GetBatCaveSettingsRequest
+	(*GetBatCaveSettingsResponse)(nil),    // 3: settings_pb.GetBatCaveSettingsResponse
+	(*UpdateBatCaveSettingsRequest)(nil),  // 4: settings_pb.UpdateBatCaveSettingsRequest
+	(*UpdateBatCaveSettingsResponse)(nil), // 5: settings_pb.UpdateBatCaveSettingsResponse
 }
-var file_settings_proto_depIdxs = []int32{
-	0, // 0: settings_pb.SettingsService.GetBatCaveSettings:input_type -> settings_pb.GetBatCaveSettingsRequest
-	2, // 1: settings_pb.SettingsService.SetBatCaveSettings:input_type -> settings_pb.SetBatCaveSettingsRequest
-	1, // 2: settings_pb.SettingsService.GetBatCaveSettings:output_type -> settings_pb.GetBatCaveSettingsResponse
-	3, // 3: settings_pb.SettingsService.SetBatCaveSettings:output_type -> settings_pb.SetBatCaveSettingsResponse
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+var file_internal_pb_settings_settings_proto_depIdxs = []int32{
+	0, // 0: settings_pb.SettingsService.CreateBatCaveSettings:input_type -> settings_pb.CreateBatCaveSettingsRequest
+	2, // 1: settings_pb.SettingsService.GetBatCaveSettings:input_type -> settings_pb.GetBatCaveSettingsRequest
+	4, // 2: settings_pb.SettingsService.UpdateBatCaveSettings:input_type -> settings_pb.UpdateBatCaveSettingsRequest
+	1, // 3: settings_pb.SettingsService.CreateBatCaveSettings:output_type -> settings_pb.CreateBatCaveSettingsResponse
+	3, // 4: settings_pb.SettingsService.GetBatCaveSettings:output_type -> settings_pb.GetBatCaveSettingsResponse
+	5, // 5: settings_pb.SettingsService.UpdateBatCaveSettings:output_type -> settings_pb.UpdateBatCaveSettingsResponse
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_settings_proto_init() }
-func file_settings_proto_init() {
-	if File_settings_proto != nil {
+func init() { file_internal_pb_settings_settings_proto_init() }
+func file_internal_pb_settings_settings_proto_init() {
+	if File_internal_pb_settings_settings_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_settings_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_pb_settings_settings_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CreateBatCaveSettingsRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_internal_pb_settings_settings_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CreateBatCaveSettingsResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_internal_pb_settings_settings_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetBatCaveSettingsRequest); i {
 			case 0:
 				return &v.state
@@ -335,7 +495,7 @@ func file_settings_proto_init() {
 				return nil
 			}
 		}
-		file_settings_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_internal_pb_settings_settings_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetBatCaveSettingsResponse); i {
 			case 0:
 				return &v.state
@@ -347,8 +507,8 @@ func file_settings_proto_init() {
 				return nil
 			}
 		}
-		file_settings_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SetBatCaveSettingsRequest); i {
+		file_internal_pb_settings_settings_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UpdateBatCaveSettingsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -359,8 +519,8 @@ func file_settings_proto_init() {
 				return nil
 			}
 		}
-		file_settings_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SetBatCaveSettingsResponse); i {
+		file_internal_pb_settings_settings_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UpdateBatCaveSettingsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -376,20 +536,20 @@ func file_settings_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_settings_proto_rawDesc,
+			RawDescriptor: file_internal_pb_settings_settings_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_settings_proto_goTypes,
-		DependencyIndexes: file_settings_proto_depIdxs,
-		MessageInfos:      file_settings_proto_msgTypes,
+		GoTypes:           file_internal_pb_settings_settings_proto_goTypes,
+		DependencyIndexes: file_internal_pb_settings_settings_proto_depIdxs,
+		MessageInfos:      file_internal_pb_settings_settings_proto_msgTypes,
 	}.Build()
-	File_settings_proto = out.File
-	file_settings_proto_rawDesc = nil
-	file_settings_proto_goTypes = nil
-	file_settings_proto_depIdxs = nil
+	File_internal_pb_settings_settings_proto = out.File
+	file_internal_pb_settings_settings_proto_rawDesc = nil
+	file_internal_pb_settings_settings_proto_goTypes = nil
+	file_internal_pb_settings_settings_proto_depIdxs = nil
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -404,8 +564,9 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type SettingsServiceClient interface {
+	CreateBatCaveSettings(ctx context.Context, in *CreateBatCaveSettingsRequest, opts ...grpc.CallOption) (*CreateBatCaveSettingsResponse, error)
 	GetBatCaveSettings(ctx context.Context, in *GetBatCaveSettingsRequest, opts ...grpc.CallOption) (*GetBatCaveSettingsResponse, error)
-	SetBatCaveSettings(ctx context.Context, in *SetBatCaveSettingsRequest, opts ...grpc.CallOption) (*SetBatCaveSettingsResponse, error)
+	UpdateBatCaveSettings(ctx context.Context, in *UpdateBatCaveSettingsRequest, opts ...grpc.CallOption) (*UpdateBatCaveSettingsResponse, error)
 }
 
 type settingsServiceClient struct {
@@ -414,6 +575,15 @@ type settingsServiceClient struct {
 
 func NewSettingsServiceClient(cc grpc.ClientConnInterface) SettingsServiceClient {
 	return &settingsServiceClient{cc}
+}
+
+func (c *settingsServiceClient) CreateBatCaveSettings(ctx context.Context, in *CreateBatCaveSettingsRequest, opts ...grpc.CallOption) (*CreateBatCaveSettingsResponse, error) {
+	out := new(CreateBatCaveSettingsResponse)
+	err := c.cc.Invoke(ctx, "/settings_pb.SettingsService/CreateBatCaveSettings", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *settingsServiceClient) GetBatCaveSettings(ctx context.Context, in *GetBatCaveSettingsRequest, opts ...grpc.CallOption) (*GetBatCaveSettingsResponse, error) {
@@ -425,9 +595,9 @@ func (c *settingsServiceClient) GetBatCaveSettings(ctx context.Context, in *GetB
 	return out, nil
 }
 
-func (c *settingsServiceClient) SetBatCaveSettings(ctx context.Context, in *SetBatCaveSettingsRequest, opts ...grpc.CallOption) (*SetBatCaveSettingsResponse, error) {
-	out := new(SetBatCaveSettingsResponse)
-	err := c.cc.Invoke(ctx, "/settings_pb.SettingsService/SetBatCaveSettings", in, out, opts...)
+func (c *settingsServiceClient) UpdateBatCaveSettings(ctx context.Context, in *UpdateBatCaveSettingsRequest, opts ...grpc.CallOption) (*UpdateBatCaveSettingsResponse, error) {
+	out := new(UpdateBatCaveSettingsResponse)
+	err := c.cc.Invoke(ctx, "/settings_pb.SettingsService/UpdateBatCaveSettings", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -436,23 +606,45 @@ func (c *settingsServiceClient) SetBatCaveSettings(ctx context.Context, in *SetB
 
 // SettingsServiceServer is the server API for SettingsService service.
 type SettingsServiceServer interface {
+	CreateBatCaveSettings(context.Context, *CreateBatCaveSettingsRequest) (*CreateBatCaveSettingsResponse, error)
 	GetBatCaveSettings(context.Context, *GetBatCaveSettingsRequest) (*GetBatCaveSettingsResponse, error)
-	SetBatCaveSettings(context.Context, *SetBatCaveSettingsRequest) (*SetBatCaveSettingsResponse, error)
+	UpdateBatCaveSettings(context.Context, *UpdateBatCaveSettingsRequest) (*UpdateBatCaveSettingsResponse, error)
 }
 
 // UnimplementedSettingsServiceServer can be embedded to have forward compatible implementations.
 type UnimplementedSettingsServiceServer struct {
 }
 
+func (*UnimplementedSettingsServiceServer) CreateBatCaveSettings(context.Context, *CreateBatCaveSettingsRequest) (*CreateBatCaveSettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateBatCaveSettings not implemented")
+}
 func (*UnimplementedSettingsServiceServer) GetBatCaveSettings(context.Context, *GetBatCaveSettingsRequest) (*GetBatCaveSettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBatCaveSettings not implemented")
 }
-func (*UnimplementedSettingsServiceServer) SetBatCaveSettings(context.Context, *SetBatCaveSettingsRequest) (*SetBatCaveSettingsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetBatCaveSettings not implemented")
+func (*UnimplementedSettingsServiceServer) UpdateBatCaveSettings(context.Context, *UpdateBatCaveSettingsRequest) (*UpdateBatCaveSettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateBatCaveSettings not implemented")
 }
 
 func RegisterSettingsServiceServer(s *grpc.Server, srv SettingsServiceServer) {
 	s.RegisterService(&_SettingsService_serviceDesc, srv)
+}
+
+func _SettingsService_CreateBatCaveSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateBatCaveSettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingsServiceServer).CreateBatCaveSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/settings_pb.SettingsService/CreateBatCaveSettings",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingsServiceServer).CreateBatCaveSettings(ctx, req.(*CreateBatCaveSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _SettingsService_GetBatCaveSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -473,20 +665,20 @@ func _SettingsService_GetBatCaveSettings_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SettingsService_SetBatCaveSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetBatCaveSettingsRequest)
+func _SettingsService_UpdateBatCaveSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateBatCaveSettingsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SettingsServiceServer).SetBatCaveSettings(ctx, in)
+		return srv.(SettingsServiceServer).UpdateBatCaveSettings(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/settings_pb.SettingsService/SetBatCaveSettings",
+		FullMethod: "/settings_pb.SettingsService/UpdateBatCaveSettings",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SettingsServiceServer).SetBatCaveSettings(ctx, req.(*SetBatCaveSettingsRequest))
+		return srv.(SettingsServiceServer).UpdateBatCaveSettings(ctx, req.(*UpdateBatCaveSettingsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -496,14 +688,18 @@ var _SettingsService_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*SettingsServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "CreateBatCaveSettings",
+			Handler:    _SettingsService_CreateBatCaveSettings_Handler,
+		},
+		{
 			MethodName: "GetBatCaveSettings",
 			Handler:    _SettingsService_GetBatCaveSettings_Handler,
 		},
 		{
-			MethodName: "SetBatCaveSettings",
-			Handler:    _SettingsService_SetBatCaveSettings_Handler,
+			MethodName: "UpdateBatCaveSettings",
+			Handler:    _SettingsService_UpdateBatCaveSettings_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "settings.proto",
+	Metadata: "internal/pb/settings/settings.proto",
 }
