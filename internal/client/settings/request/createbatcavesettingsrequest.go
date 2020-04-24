@@ -18,10 +18,10 @@ func (r *CreateBatCaveSettingsRequest) Validate() url.Values {
 	}
 
 	if len(r.DeviceID) != 12 {
-		errs.Add("deviceID", "The deviceID field needs to be a valid mac!")
+		errs.Add("deviceID", "The deviceID field needs to be a valid mac with 12 characters!")
 	}
 
-	regex, _ := regexp.Compile("[a-fA-F0-9]{12}")
+	regex, _ := regexp.Compile("[a-f0-9]{12}")
 	isMacAddress := regex.MatchString(r.DeviceID)
 	if !isMacAddress {
 		errs.Add("deviceID", "The deviceID field needs to be a valid mac!")

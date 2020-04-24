@@ -6,11 +6,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateBatCaveSettingsRequestValidateWhenDeviceIDIsValid(t *testing.T) {
+func TestCreateBatCaveSettingsRequestValidate(t *testing.T) {
 	testCases := []CreateBatCaveSettingsRequest{
 		CreateBatCaveSettingsRequest{
 			DeviceID:       "34ee5c9a4411",
 			DeepSleepDelay: 10,
+		},
+		CreateBatCaveSettingsRequest{
+			DeviceID:       "44cba9be2e4f",
+			DeepSleepDelay: 15,
+		},
+		CreateBatCaveSettingsRequest{
+			DeviceID:       "c0b3a5ee334b",
+			DeepSleepDelay: 15,
 		},
 	}
 
