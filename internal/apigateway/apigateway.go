@@ -19,13 +19,14 @@ func NewAPIGateway(s *settings.SettingsClient) *APIGateway {
 
 func (g *APIGateway) InitV1Routes(r *gin.Engine) error {
 	v1 := r.Group("/api/v1")
-	batCaveGroup := v1.Group("/bc")
+	deviceGroup := v1.Group("/settings")
 	{
 		// FIXME: get :id in business logic
 		// FIXME: for example - deviceGroup.POST("/:id", g.settingsClient.SetSettings)
 		// FIXME: and - deviceGroup.GET("/:id", g.settingsClient.SetSettings)
-		batCaveGroup.POST("/update", g.settingsClient.UpdateBatCaveSettings)
-		batCaveGroup.POST("/get", g.settingsClient.GetBatCaveSettings)
+		deviceGroup.POST("/bc", g.settingsClient.CreateBatCaveSettings)
+		deviceGroup.GET("/bc/:device_id", g.settingsClient.GetBatCaveSettings)
+		deviceGroup.PUT("/bc/:device_id", g.settingsClient.UpdateBatCaveSettings)
 	}
 	return nil
 }

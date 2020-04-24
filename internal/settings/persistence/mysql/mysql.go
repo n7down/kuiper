@@ -3,7 +3,6 @@ package mysql
 import (
 	"fmt"
 	"net/url"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	grom "github.com/jinzhu/gorm"
@@ -110,17 +109,19 @@ func NewSettingsMySqlDBWithURL(url *url.URL) (*SettingsMySqlDB, error) {
 	}, nil
 }
 
-func (s *SettingsMySqlDB) UpdateBatCaveSettings(settings persistence.BatCaveSettings) persistence.BatCaveSettings {
-	var newSettings persistence.BatCaveSettings
-	s.db.Where(persistence.BatCaveSettings{DeviceID: settings.DeviceID}).Assign(persistence.BatCaveSettings{DeepSleepDelay: settings.DeepSleepDelay, Updated: time.Now()}).FirstOrCreate(&newSettings)
-	return newSettings
+func (s *SettingsMySqlDB) CreateBatCaveSettings(settings persistence.BatCaveSettings) error {
+	s.db.Create(settings)
+	return nil
 }
 
 func (s *SettingsMySqlDB) GetBatCaveSettings(deviceID string) (persistence.BatCaveSettings, error) {
 	var settings persistence.BatCaveSettings
-	_, err := s.db.Where("device_id=?", deviceID).First(&settings).Rows()
-	if err != nil {
-		return settings, err
-	}
+	s.db.Where("device_id=?", deviceID).First(&settings)
 	return settings, nil
+}
+
+func (s *SettingsMySqlDB) UpdateBatCaveSettings(settings persistence.BatCaveSettings) persistence.BatCaveSettings {
+	var newSettings persistence.BatCaveSettings
+	s.db.Save(&settings)
+	return newSettings
 }

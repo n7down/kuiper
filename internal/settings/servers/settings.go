@@ -2,6 +2,7 @@ package servers
 
 import (
 	"context"
+	"time"
 
 	settings_pb "github.com/n7down/iota/internal/pb/settings"
 	"github.com/n7down/iota/internal/settings/persistence"
@@ -19,6 +20,17 @@ func NewSettingsServer(db *mysql.SettingsMySqlDB) *SettingsServer {
 }
 
 func (s *SettingsServer) CreateBatCaveSettings(ctx context.Context, req *settings_pb.CreateBatCaveSettingsRequest) (*settings_pb.CreateBatCaveSettingsResponse, error) {
+	settings := persistence.BatCaveSettings{
+		DeviceID:       req.DeviceID,
+		DeepSleepDelay: req.DeepSleepDelay,
+		Updated:        time.Now(),
+	}
+
+	err := s.db.CreateBatCaveSettings(settings)
+	if err != nil {
+		return &settings_pb.CreateBatCaveSettingsResponse{}, err
+	}
+
 	return &settings_pb.CreateBatCaveSettingsResponse{}, nil
 }
 
@@ -26,6 +38,7 @@ func (s *SettingsServer) UpdateBatCaveSettings(ctx context.Context, req *setting
 	settings := persistence.BatCaveSettings{
 		DeviceID:       req.DeviceID,
 		DeepSleepDelay: req.DeepSleepDelay,
+		Updated:        time.Now(),
 	}
 
 	s.db.UpdateBatCaveSettings(settings)

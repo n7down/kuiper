@@ -5,11 +5,12 @@ import (
 	"regexp"
 )
 
-type GetBatCaveSettingsRequest struct {
-	DeviceID string `json:"-"`
+type CreateBatCaveSettingsRequest struct {
+	DeviceID       string `json:"deviceID" binding:"required"`
+	DeepSleepDelay int32  `json:"deepSleepDelay" binding:"required"`
 }
 
-func (r *GetBatCaveSettingsRequest) Validate() url.Values {
+func (r *CreateBatCaveSettingsRequest) Validate() url.Values {
 	errs := url.Values{}
 
 	if r.DeviceID == "" {
@@ -24,6 +25,10 @@ func (r *GetBatCaveSettingsRequest) Validate() url.Values {
 	isMacAddress := regex.MatchString(r.DeviceID)
 	if !isMacAddress {
 		errs.Add("deviceID", "The deviceID field needs to be a valid mac!")
+	}
+
+	if r.DeepSleepDelay < 1 {
+		errs.Add("deepSleepDelay", "The deepSleepDelay field is required!")
 	}
 
 	return errs
