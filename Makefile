@@ -32,7 +32,7 @@ compile: install build
 
 .PHONY: test
 test:
-	@go test -short ${ALLFILES}
+	go test -v ./...
 
 .PHONY: vet
 vet:

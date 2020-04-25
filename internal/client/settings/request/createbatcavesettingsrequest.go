@@ -13,14 +13,6 @@ type CreateBatCaveSettingsRequest struct {
 func (r *CreateBatCaveSettingsRequest) Validate() url.Values {
 	errs := url.Values{}
 
-	if r.DeviceID == "" {
-		errs.Add("deviceID", "The deviceID field is required!")
-	}
-
-	if len(r.DeviceID) != 12 {
-		errs.Add("deviceID", "The deviceID field needs to be a valid mac with 12 characters!")
-	}
-
 	regex, _ := regexp.Compile("[a-f0-9]{12}")
 	isMacAddress := regex.MatchString(r.DeviceID)
 	if !isMacAddress {
@@ -28,7 +20,7 @@ func (r *CreateBatCaveSettingsRequest) Validate() url.Values {
 	}
 
 	if r.DeepSleepDelay < 1 {
-		errs.Add("deepSleepDelay", "The deepSleepDelay field is required!")
+		errs.Add("deepSleepDelay", "The deepSleepDelay field should be a positive non-zero value!")
 	}
 
 	return errs
