@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/n7down/iota/internal/apigateway"
-	"github.com/n7down/iota/internal/client/settings"
+	"github.com/n7down/kuiper/internal/apigateway"
+	"github.com/n7down/kuiper/internal/client/settings"
 
 	log "github.com/sirupsen/logrus"
 )

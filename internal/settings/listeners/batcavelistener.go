@@ -7,8 +7,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/n7down/iota/internal/settings/persistence"
-	"github.com/n7down/iota/internal/settings/persistence/mysql"
+	"github.com/n7down/kuiper/internal/settings/persistence"
+	"github.com/n7down/kuiper/internal/settings/persistence/mysql"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/sirupsen/logrus"

@@ -3,7 +3,7 @@ package servers
 import (
 	"container/list"
 
-	"github.com/n7down/iota/internal/sensors/listeners"
+	"github.com/n7down/kuiper/internal/sensors/listeners"
 	"github.com/sirupsen/logrus"
 )
 

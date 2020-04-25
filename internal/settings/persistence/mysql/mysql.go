@@ -7,7 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	grom "github.com/jinzhu/gorm"
 
-	"github.com/n7down/iota/internal/settings/persistence"
+	"github.com/n7down/kuiper/internal/settings/persistence"
 )
 
 type SettingsMySqlDB struct {

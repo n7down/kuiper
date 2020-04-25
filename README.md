@@ -1,5 +1,5 @@
-# IOTA
-IOTA is used for the collection of multiple environmental sensor readings (both indoors or outdoors) for visualization purposes. This can include detecting for mold using a collection of humidity sensors indoors, or collecting sensor data from a outdoor weather station.
+# Kuiper
+Kuiper is a project built for the collection and interaction of IOT devices.
 
 ## Purpose
 1. Hardware will consist of a IOT device that send the following data

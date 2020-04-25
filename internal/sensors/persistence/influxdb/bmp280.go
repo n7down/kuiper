@@ -4,7 +4,7 @@ import (
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
-	sensors "github.com/n7down/iota/internal/sensors/devicesensors"
+	sensors "github.com/n7down/kuiper/internal/sensors/devicesensors"
 )
 
 func (i InfluxDB) LogBMP280(measurement string, sensor *sensors.BMP280Sensor) error {

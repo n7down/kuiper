@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/n7down/iota/internal/client/settings"
+	"github.com/n7down/kuiper/internal/client/settings"
 )
 
 type APIGateway struct {

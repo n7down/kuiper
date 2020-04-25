@@ -8,9 +8,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/n7down/iota/internal/sensors/listeners"
-	"github.com/n7down/iota/internal/sensors/persistence/influxdb"
-	"github.com/n7down/iota/internal/sensors/servers"
+	"github.com/n7down/kuiper/internal/sensors/listeners"
+	"github.com/n7down/kuiper/internal/sensors/persistence/influxdb"
+	"github.com/n7down/kuiper/internal/sensors/servers"
 
 	log "github.com/sirupsen/logrus"
 )

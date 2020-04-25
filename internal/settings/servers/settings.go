@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	settings_pb "github.com/n7down/iota/internal/pb/settings"
-	"github.com/n7down/iota/internal/settings/persistence"
-	"github.com/n7down/iota/internal/settings/persistence/mysql"
+	settings_pb "github.com/n7down/kuiper/internal/pb/settings"
+	"github.com/n7down/kuiper/internal/settings/persistence"
+	"github.com/n7down/kuiper/internal/settings/persistence/mysql"
 )
 
 type SettingsServer struct {

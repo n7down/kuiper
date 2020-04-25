@@ -6,7 +6,7 @@ import (
 	"net/url"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	sensors "github.com/n7down/iota/internal/sensors/devicesensors"
+	sensors "github.com/n7down/kuiper/internal/sensors/devicesensors"
 	"github.com/sirupsen/logrus"
 )
 

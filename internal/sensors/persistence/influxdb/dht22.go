@@ -4,7 +4,7 @@ import (
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
-	sensors "github.com/n7down/iota/internal/sensors/devicesensors"
+	sensors "github.com/n7down/kuiper/internal/sensors/devicesensors"
 )
 
 func (i InfluxDB) LogDHT22(measurement string, sensor *sensors.DHT22Sensor) error {

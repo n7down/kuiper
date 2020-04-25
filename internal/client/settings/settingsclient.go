@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/n7down/iota/internal/client/settings/request"
-	"github.com/n7down/iota/internal/client/settings/response"
+	"github.com/n7down/kuiper/internal/client/settings/request"
+	"github.com/n7down/kuiper/internal/client/settings/response"
 	"google.golang.org/grpc"
 
-	settings_pb "github.com/n7down/iota/internal/pb/settings"
+	settings_pb "github.com/n7down/kuiper/internal/pb/settings"
 )
 
 const (

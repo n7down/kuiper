@@ -6,12 +6,12 @@ import (
 	"net"
 	"os"
 
-	"github.com/n7down/iota/internal/settings/listeners"
-	"github.com/n7down/iota/internal/settings/persistence/mysql"
-	"github.com/n7down/iota/internal/settings/servers"
+	"github.com/n7down/kuiper/internal/settings/listeners"
+	"github.com/n7down/kuiper/internal/settings/persistence/mysql"
+	"github.com/n7down/kuiper/internal/settings/servers"
 	"google.golang.org/grpc"
 
-	settings_pb "github.com/n7down/iota/internal/pb/settings"
+	settings_pb "github.com/n7down/kuiper/internal/pb/settings"
 	log "github.com/sirupsen/logrus"
 )
 
