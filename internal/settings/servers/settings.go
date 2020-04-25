@@ -31,7 +31,10 @@ func (s *SettingsServer) CreateBatCaveSettings(ctx context.Context, req *setting
 		return &settings_pb.CreateBatCaveSettingsResponse{}, err
 	}
 
-	return &settings_pb.CreateBatCaveSettingsResponse{}, nil
+	return &settings_pb.CreateBatCaveSettingsResponse{
+		DeviceID:       req.DeviceID,
+		DeepSleepDelay: req.DeepSleepDelay,
+	}, nil
 }
 
 func (s *SettingsServer) UpdateBatCaveSettings(ctx context.Context, req *settings_pb.UpdateBatCaveSettingsRequest) (*settings_pb.UpdateBatCaveSettingsResponse, error) {
@@ -50,6 +53,8 @@ func (s *SettingsServer) UpdateBatCaveSettings(ctx context.Context, req *setting
 }
 
 func (s *SettingsServer) GetBatCaveSettings(ctx context.Context, req *settings_pb.GetBatCaveSettingsRequest) (*settings_pb.GetBatCaveSettingsResponse, error) {
+
+	// FIXME: getting a error getting the updated field as a time.Time
 	settings, err := s.db.GetBatCaveSettings(req.DeviceID)
 	if err != nil {
 		return &settings_pb.GetBatCaveSettingsResponse{}, err

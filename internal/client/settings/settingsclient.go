@@ -129,7 +129,8 @@ func (client *SettingsClient) UpdateBatCaveSettings(c *gin.Context) {
 	deviceID := c.Params.ByName("device_id")
 
 	req = request.UpdateBatCaveSettingsRequest{
-		DeviceID: deviceID,
+		DeviceID:       deviceID,
+		DeepSleepDelay: req.DeepSleepDelay,
 	}
 
 	req.DeviceID = strings.ToLower(req.DeviceID)

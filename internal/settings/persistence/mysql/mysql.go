@@ -121,7 +121,6 @@ func (s *SettingsMySqlDB) GetBatCaveSettings(deviceID string) (persistence.BatCa
 }
 
 func (s *SettingsMySqlDB) UpdateBatCaveSettings(settings persistence.BatCaveSettings) persistence.BatCaveSettings {
-	var newSettings persistence.BatCaveSettings
-	s.db.Save(&settings)
-	return newSettings
+	s.db.Model(&settings).Where("device_id = ?", settings.DeviceID).Updates(persistence.BatCaveSettings{DeepSleepDelay: settings.DeepSleepDelay, Updated: settings.Updated})
+	return settings
 }

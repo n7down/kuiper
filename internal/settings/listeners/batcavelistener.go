@@ -83,8 +83,8 @@ func (e Env) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*L
 					DeepSleepDelay: req.DeepSleepDelay,
 				}
 
-				// insert the data into the database
-				e.db.UpdateBatCaveSettings(newSettings)
+				// create the new setting
+				e.db.CreateBatCaveSettings(newSettings)
 			} else if err != nil {
 				log.Error(err)
 			} else {
