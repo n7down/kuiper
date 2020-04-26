@@ -2,66 +2,61 @@ package servers
 
 import (
 	"context"
-	"time"
 
 	settings_pb "github.com/n7down/kuiper/internal/pb/settings"
 	"github.com/n7down/kuiper/internal/settings/persistence"
 	"github.com/n7down/kuiper/internal/settings/persistence/mysql"
 )
 
-type SettingsServer struct {
+type SettingServer struct {
 	db *mysql.SettingsMySqlDB
 }
 
-func NewSettingsServer(db *mysql.SettingsMySqlDB) *SettingsServer {
-	return &SettingsServer{
+func NewSettingsServer(db *mysql.SettingsMySqlDB) *SettingServer {
+	return &SettingServer{
 		db: db,
 	}
 }
 
-func (s *SettingsServer) CreateBatCaveSettings(ctx context.Context, req *settings_pb.CreateBatCaveSettingsRequest) (*settings_pb.CreateBatCaveSettingsResponse, error) {
-	settings := persistence.BatCaveSettings{
+func (s *SettingServer) CreateBatCaveSetting(ctx context.Context, req *settings_pb.CreateBatCaveSettingRequest) (*settings_pb.CreateBatCaveSettingResponse, error) {
+	settings := persistence.BatCaveSetting{
 		DeviceID:       req.DeviceID,
 		DeepSleepDelay: req.DeepSleepDelay,
-		Updated:        time.Now(),
 	}
 
-	err := s.db.CreateBatCaveSettings(settings)
+	err := s.db.CreateBatCaveSetting(settings)
 	if err != nil {
-		return &settings_pb.CreateBatCaveSettingsResponse{}, err
+		return &settings_pb.CreateBatCaveSettingResponse{}, err
 	}
 
-	return &settings_pb.CreateBatCaveSettingsResponse{
+	return &settings_pb.CreateBatCaveSettingResponse{
 		DeviceID:       req.DeviceID,
 		DeepSleepDelay: req.DeepSleepDelay,
 	}, nil
 }
 
-func (s *SettingsServer) UpdateBatCaveSettings(ctx context.Context, req *settings_pb.UpdateBatCaveSettingsRequest) (*settings_pb.UpdateBatCaveSettingsResponse, error) {
-	settings := persistence.BatCaveSettings{
+func (s *SettingServer) UpdateBatCaveSetting(ctx context.Context, req *settings_pb.UpdateBatCaveSettingRequest) (*settings_pb.UpdateBatCaveSettingResponse, error) {
+	setting := persistence.BatCaveSetting{
 		DeviceID:       req.DeviceID,
 		DeepSleepDelay: req.DeepSleepDelay,
-		Updated:        time.Now(),
 	}
 
-	s.db.UpdateBatCaveSettings(settings)
+	s.db.UpdateBatCaveSetting(setting)
 
-	return &settings_pb.UpdateBatCaveSettingsResponse{
-		DeviceID:       req.DeviceID,
-		DeepSleepDelay: req.DeepSleepDelay,
+	return &settings_pb.UpdateBatCaveSettingResponse{
+		DeviceID:       setting.DeviceID,
+		DeepSleepDelay: setting.DeepSleepDelay,
 	}, nil
 }
 
-func (s *SettingsServer) GetBatCaveSettings(ctx context.Context, req *settings_pb.GetBatCaveSettingsRequest) (*settings_pb.GetBatCaveSettingsResponse, error) {
-
-	// FIXME: getting a error getting the updated field as a time.Time
-	settings, err := s.db.GetBatCaveSettings(req.DeviceID)
+func (s *SettingServer) GetBatCaveSetting(ctx context.Context, req *settings_pb.GetBatCaveSettingRequest) (*settings_pb.GetBatCaveSettingResponse, error) {
+	setting, err := s.db.GetBatCaveSetting(req.DeviceID)
 	if err != nil {
-		return &settings_pb.GetBatCaveSettingsResponse{}, err
+		return &settings_pb.GetBatCaveSettingResponse{}, err
 	}
 
-	return &settings_pb.GetBatCaveSettingsResponse{
-		DeviceID:       settings.DeviceID,
-		DeepSleepDelay: settings.DeepSleepDelay,
+	return &settings_pb.GetBatCaveSettingResponse{
+		DeviceID:       setting.DeviceID,
+		DeepSleepDelay: setting.DeepSleepDelay,
 	}, nil
 }

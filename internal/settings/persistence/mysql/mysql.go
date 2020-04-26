@@ -109,18 +109,18 @@ func NewSettingsMySqlDBWithURL(url *url.URL) (*SettingsMySqlDB, error) {
 	}, nil
 }
 
-func (s *SettingsMySqlDB) CreateBatCaveSettings(settings persistence.BatCaveSettings) error {
+func (s *SettingsMySqlDB) CreateBatCaveSetting(settings persistence.BatCaveSetting) error {
 	s.db.Create(settings)
 	return nil
 }
 
-func (s *SettingsMySqlDB) GetBatCaveSettings(deviceID string) (persistence.BatCaveSettings, error) {
-	var settings persistence.BatCaveSettings
+func (s *SettingsMySqlDB) GetBatCaveSetting(deviceID string) (persistence.BatCaveSetting, error) {
+	var settings persistence.BatCaveSetting
 	s.db.Where("device_id=?", deviceID).First(&settings)
 	return settings, nil
 }
 
-func (s *SettingsMySqlDB) UpdateBatCaveSettings(settings persistence.BatCaveSettings) persistence.BatCaveSettings {
-	s.db.Model(&settings).Where("device_id = ?", settings.DeviceID).Updates(persistence.BatCaveSettings{DeepSleepDelay: settings.DeepSleepDelay, Updated: settings.Updated})
+func (s *SettingsMySqlDB) UpdateBatCaveSetting(settings persistence.BatCaveSetting) persistence.BatCaveSetting {
+	s.db.Model(&settings).Where("device_id = ?", settings.DeviceID).Updates(persistence.BatCaveSetting{DeepSleepDelay: settings.DeepSleepDelay})
 	return settings
 }

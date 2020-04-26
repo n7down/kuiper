@@ -5,12 +5,12 @@ import (
 	"regexp"
 )
 
-type CreateBatCaveSettingsRequest struct {
+type CreateBatCaveSettingRequest struct {
 	DeviceID       string `json:"deviceID" binding:"required"`
 	DeepSleepDelay int32  `json:"deepSleepDelay" binding:"required"`
 }
 
-func (r *CreateBatCaveSettingsRequest) Validate() url.Values {
+func (r *CreateBatCaveSettingRequest) Validate() url.Values {
 	errs := url.Values{}
 
 	regex, _ := regexp.Compile("[a-f0-9]{12}")

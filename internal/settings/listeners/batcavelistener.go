@@ -19,19 +19,19 @@ const (
 	ONE_MINUTE = 1 * time.Minute
 )
 
-type BatCaveSettingsRequest struct {
+type BatCaveSettingRequest struct {
 	DeviceID       string `json:"m"`
 	DeepSleepDelay int32  `json:"s"`
 }
 
-func (s *BatCaveSettingsRequest) IsEqual(settings persistence.BatCaveSettings) bool {
+func (s *BatCaveSettingRequest) IsEqual(settings persistence.BatCaveSetting) bool {
 	if s.DeepSleepDelay == settings.DeepSleepDelay {
 		return true
 	}
 	return false
 }
 
-type BatCaveSettingsResponse struct {
+type BatCaveSettingResponse struct {
 	DeepSleepDelay int32 `json:"s"`
 }
 
@@ -68,32 +68,32 @@ func (e Env) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*L
 		log.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		req := &BatCaveSettingsRequest{}
+		req := &BatCaveSettingRequest{}
 		err := json.Unmarshal([]byte(msg.Payload()), req)
 		if err != nil {
 			log.Error(err)
 		} else {
 
 			// get the settings
-			settingsInPersistence, err := e.db.GetBatCaveSettings(req.DeviceID)
+			settingInPersistence, err := e.db.GetBatCaveSetting(req.DeviceID)
 			if err == sql.ErrNoRows {
 
-				newSettings := persistence.BatCaveSettings{
+				newSetting := persistence.BatCaveSetting{
 					DeviceID:       req.DeviceID,
 					DeepSleepDelay: req.DeepSleepDelay,
 				}
 
 				// create the new setting
-				e.db.CreateBatCaveSettings(newSettings)
+				e.db.CreateBatCaveSetting(newSetting)
 			} else if err != nil {
 				log.Error(err)
 			} else {
 
 				// check for the differences in the settings
-				if !req.IsEqual(settingsInPersistence) {
+				if !req.IsEqual(settingInPersistence) {
 
-					settingsToSendToDevice := BatCaveSettingsResponse{
-						DeepSleepDelay: settingsInPersistence.DeepSleepDelay,
+					settingsToSendToDevice := BatCaveSettingResponse{
+						DeepSleepDelay: settingInPersistence.DeepSleepDelay,
 					}
 
 					// marshal data to send back to the device

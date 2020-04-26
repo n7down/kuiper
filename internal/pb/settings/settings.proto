@@ -4,37 +4,37 @@ option go_package = ".;settings_pb";
 
 package settings_pb;
 
-message CreateBatCaveSettingsRequest {
+message CreateBatCaveSettingRequest {
     string DeviceID = 1;
     int32 DeepSleepDelay = 2;
 }
 
-message CreateBatCaveSettingsResponse {
+message CreateBatCaveSettingResponse {
     string DeviceID = 1;
     int32 DeepSleepDelay = 2;
 }
 
-message GetBatCaveSettingsRequest {
+message GetBatCaveSettingRequest {
     string DeviceID = 1;
 }
 
-message GetBatCaveSettingsResponse {
-    string DeviceID = 1;
-    int32 DeepSleepDelay = 2;
-}
-
-message UpdateBatCaveSettingsRequest {
+message GetBatCaveSettingResponse {
     string DeviceID = 1;
     int32 DeepSleepDelay = 2;
 }
 
-message UpdateBatCaveSettingsResponse {
+message UpdateBatCaveSettingRequest {
+    string DeviceID = 1;
+    int32 DeepSleepDelay = 2;
+}
+
+message UpdateBatCaveSettingResponse {
     string DeviceID = 1;
     int32 DeepSleepDelay = 2;
 }
 
 service SettingsService {
-   rpc CreateBatCaveSettings(CreateBatCaveSettingsRequest) returns (CreateBatCaveSettingsResponse);
-   rpc GetBatCaveSettings(GetBatCaveSettingsRequest) returns (GetBatCaveSettingsResponse);
-   rpc UpdateBatCaveSettings(UpdateBatCaveSettingsRequest) returns (UpdateBatCaveSettingsResponse);
+   rpc CreateBatCaveSetting(CreateBatCaveSettingRequest) returns (CreateBatCaveSettingResponse);
+   rpc GetBatCaveSetting(GetBatCaveSettingRequest) returns (GetBatCaveSettingResponse);
+   rpc UpdateBatCaveSetting(UpdateBatCaveSettingRequest) returns (UpdateBatCaveSettingResponse);
 }

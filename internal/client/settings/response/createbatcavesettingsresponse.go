@@ -1,6 +1,6 @@
 package response
 
-type CreateBatCaveSettingsResponse struct {
+type CreateBatCaveSettingResponse struct {
 	DeviceID       string `json:"deviceID"`
 	DeepSleepDelay int32  `json:"deepSleepDelay"`
 }

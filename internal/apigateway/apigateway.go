@@ -21,12 +21,9 @@ func (g *APIGateway) InitV1Routes(r *gin.Engine) error {
 	v1 := r.Group("/api/v1")
 	deviceGroup := v1.Group("/settings")
 	{
-		// FIXME: get :id in business logic
-		// FIXME: for example - deviceGroup.POST("/:id", g.settingsClient.SetSettings)
-		// FIXME: and - deviceGroup.GET("/:id", g.settingsClient.SetSettings)
-		deviceGroup.POST("/bc", g.settingsClient.CreateBatCaveSettings)
-		deviceGroup.GET("/bc/:device_id", g.settingsClient.GetBatCaveSettings)
-		deviceGroup.PUT("/bc/:device_id", g.settingsClient.UpdateBatCaveSettings)
+		deviceGroup.POST("/bc", g.settingsClient.CreateBatCaveSetting)
+		deviceGroup.GET("/bc/:device_id", g.settingsClient.GetBatCaveSetting)
+		deviceGroup.PUT("/bc/:device_id", g.settingsClient.UpdateBatCaveSetting)
 	}
 	return nil
 }

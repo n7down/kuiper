@@ -34,13 +34,13 @@ func NewSettingsClient(serverEnv string) (*SettingsClient, error) {
 	return client, nil
 }
 
-func (client *SettingsClient) CreateBatCaveSettings(c *gin.Context) {
+func (client *SettingsClient) CreateBatCaveSetting(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c, FIVE_MINUTES)
 	defer cancel()
 
 	var (
-		req request.CreateBatCaveSettingsRequest
-		res response.CreateBatCaveSettingsResponse
+		req request.CreateBatCaveSettingRequest
+		res response.CreateBatCaveSettingResponse
 	)
 
 	if err := c.BindJSON(&req); err != nil {
@@ -56,13 +56,13 @@ func (client *SettingsClient) CreateBatCaveSettings(c *gin.Context) {
 		return
 	}
 
-	r, err := client.settingsClient.CreateBatCaveSettings(ctx, &settings_pb.CreateBatCaveSettingsRequest{DeviceID: req.DeviceID, DeepSleepDelay: req.DeepSleepDelay})
+	r, err := client.settingsClient.CreateBatCaveSetting(ctx, &settings_pb.CreateBatCaveSettingRequest{DeviceID: req.DeviceID, DeepSleepDelay: req.DeepSleepDelay})
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
 
-	res = response.CreateBatCaveSettingsResponse{
+	res = response.CreateBatCaveSettingResponse{
 		DeviceID:       r.DeviceID,
 		DeepSleepDelay: r.DeepSleepDelay,
 	}
@@ -70,18 +70,18 @@ func (client *SettingsClient) CreateBatCaveSettings(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-func (client *SettingsClient) GetBatCaveSettings(c *gin.Context) {
+func (client *SettingsClient) GetBatCaveSetting(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c, FIVE_MINUTES)
 	defer cancel()
 
 	var (
-		req request.GetBatCaveSettingsRequest
-		res response.GetBatCaveSettingsResponse
+		req request.GetBatCaveSettingRequest
+		res response.GetBatCaveSettingResponse
 	)
 
 	deviceID := c.Params.ByName("device_id")
 
-	req = request.GetBatCaveSettingsRequest{
+	req = request.GetBatCaveSettingRequest{
 		DeviceID: deviceID,
 	}
 
@@ -93,7 +93,7 @@ func (client *SettingsClient) GetBatCaveSettings(c *gin.Context) {
 		return
 	}
 
-	r, err := client.settingsClient.GetBatCaveSettings(ctx, &settings_pb.GetBatCaveSettingsRequest{DeviceID: deviceID})
+	r, err := client.settingsClient.GetBatCaveSetting(ctx, &settings_pb.GetBatCaveSettingRequest{DeviceID: deviceID})
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		return
@@ -104,7 +104,7 @@ func (client *SettingsClient) GetBatCaveSettings(c *gin.Context) {
 		return
 	}
 
-	res = response.GetBatCaveSettingsResponse{
+	res = response.GetBatCaveSettingResponse{
 		DeviceID:       r.DeviceID,
 		DeepSleepDelay: r.DeepSleepDelay,
 	}
@@ -112,13 +112,13 @@ func (client *SettingsClient) GetBatCaveSettings(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-func (client *SettingsClient) UpdateBatCaveSettings(c *gin.Context) {
+func (client *SettingsClient) UpdateBatCaveSetting(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c, FIVE_MINUTES)
 	defer cancel()
 
 	var (
-		req request.UpdateBatCaveSettingsRequest
-		res response.UpdateBatCaveSettingsResponse
+		req request.UpdateBatCaveSettingRequest
+		res response.UpdateBatCaveSettingResponse
 	)
 
 	if err := c.BindJSON(&req); err != nil {
@@ -128,7 +128,7 @@ func (client *SettingsClient) UpdateBatCaveSettings(c *gin.Context) {
 
 	deviceID := c.Params.ByName("device_id")
 
-	req = request.UpdateBatCaveSettingsRequest{
+	req = request.UpdateBatCaveSettingRequest{
 		DeviceID:       deviceID,
 		DeepSleepDelay: req.DeepSleepDelay,
 	}
@@ -141,7 +141,7 @@ func (client *SettingsClient) UpdateBatCaveSettings(c *gin.Context) {
 		return
 	}
 
-	r, err := client.settingsClient.UpdateBatCaveSettings(ctx, &settings_pb.UpdateBatCaveSettingsRequest{
+	r, err := client.settingsClient.UpdateBatCaveSetting(ctx, &settings_pb.UpdateBatCaveSettingRequest{
 		DeviceID:       req.DeviceID,
 		DeepSleepDelay: req.DeepSleepDelay,
 	})
@@ -155,7 +155,7 @@ func (client *SettingsClient) UpdateBatCaveSettings(c *gin.Context) {
 		return
 	}
 
-	res = response.UpdateBatCaveSettingsResponse{
+	res = response.UpdateBatCaveSettingResponse{
 		DeviceID:       r.DeviceID,
 		DeepSleepDelay: r.DeepSleepDelay,
 	}

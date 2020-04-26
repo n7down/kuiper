@@ -8,15 +8,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Update_Bat_Cave_Settings_Request_Validate(t *testing.T) {
+func Test_Update_Bat_Cave_Setting_Request_Validate(t *testing.T) {
 	testCases := []struct {
 		name           string
-		req            UpdateBatCaveSettingsRequest
+		req            UpdateBatCaveSettingRequest
 		expectedErrors int
 	}{
 		{
 			name: "Valid_Fields_In_Request",
-			req: UpdateBatCaveSettingsRequest{
+			req: UpdateBatCaveSettingRequest{
 				DeviceID:       "34ee5c9a4411",
 				DeepSleepDelay: 10,
 			},
@@ -24,7 +24,7 @@ func Test_Update_Bat_Cave_Settings_Request_Validate(t *testing.T) {
 		},
 		{
 			name: "Deep_Sleep_Is_Fields_Is_1",
-			req: UpdateBatCaveSettingsRequest{
+			req: UpdateBatCaveSettingRequest{
 				DeviceID:       "34ee5c9a4411",
 				DeepSleepDelay: 1,
 			},
@@ -42,15 +42,15 @@ func Test_Update_Bat_Cave_Settings_Request_Validate(t *testing.T) {
 	}
 }
 
-func Test_Update_Bat_Cave_Settings_Request_Validate_When_Device_ID_Is_Not_Valid(t *testing.T) {
+func Test_Update_Bat_Cave_Setting_Request_Validate_When_Device_ID_Is_Not_Valid(t *testing.T) {
 	testCases := []struct {
 		name           string
-		req            UpdateBatCaveSettingsRequest
+		req            UpdateBatCaveSettingRequest
 		expectedErrors map[string]interface{}
 	}{
 		{
 			name: "DeviceID_Length_Is_Not_12_Characters_Long",
-			req: UpdateBatCaveSettingsRequest{
+			req: UpdateBatCaveSettingRequest{
 				DeviceID:       "34e5c9a4411",
 				DeepSleepDelay: 10,
 			},
@@ -64,7 +64,7 @@ func Test_Update_Bat_Cave_Settings_Request_Validate_When_Device_ID_Is_Not_Valid(
 		},
 		{
 			name: "DeviceID_Is_Not_A_Valid_Mac_Address",
-			req: UpdateBatCaveSettingsRequest{
+			req: UpdateBatCaveSettingRequest{
 				DeviceID:       "44cbagbe2e4f",
 				DeepSleepDelay: 15,
 			},
@@ -78,7 +78,7 @@ func Test_Update_Bat_Cave_Settings_Request_Validate_When_Device_ID_Is_Not_Valid(
 		},
 		{
 			name: "DeviceID_Is_Empty",
-			req: UpdateBatCaveSettingsRequest{
+			req: UpdateBatCaveSettingRequest{
 				DeviceID:       "",
 				DeepSleepDelay: 20,
 			},
@@ -101,15 +101,15 @@ func Test_Update_Bat_Cave_Settings_Request_Validate_When_Device_ID_Is_Not_Valid(
 	}
 }
 
-func Test_Update_Bat_Cave_Settings_Request_Validate_When_Deep_Sleep_Delay_Is_Not_Valid(t *testing.T) {
+func Test_Update_Bat_Cave_Setting_Request_Validate_When_Deep_Sleep_Delay_Is_Not_Valid(t *testing.T) {
 	testCases := []struct {
 		name           string
-		req            UpdateBatCaveSettingsRequest
+		req            UpdateBatCaveSettingRequest
 		expectedErrors map[string]interface{}
 	}{
 		{
 			name: "Deep_Sleep_Delay_Equals 0",
-			req: UpdateBatCaveSettingsRequest{
+			req: UpdateBatCaveSettingRequest{
 				DeviceID:       "123456789aae",
 				DeepSleepDelay: 0,
 			},
