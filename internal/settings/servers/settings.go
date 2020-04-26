@@ -24,10 +24,7 @@ func (s *SettingServer) CreateBatCaveSetting(ctx context.Context, req *settings_
 		DeepSleepDelay: req.DeepSleepDelay,
 	}
 
-	err := s.db.CreateBatCaveSetting(settings)
-	if err != nil {
-		return &settings_pb.CreateBatCaveSettingResponse{}, err
-	}
+	s.db.CreateBatCaveSetting(settings)
 
 	return &settings_pb.CreateBatCaveSettingResponse{
 		DeviceID:       req.DeviceID,

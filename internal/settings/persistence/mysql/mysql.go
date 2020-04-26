@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/url"
 
-	_ "github.com/go-sql-driver/mysql"
 	grom "github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 
 	"github.com/n7down/kuiper/internal/settings/persistence"
 )
@@ -82,6 +82,12 @@ func NewSettingsMySqlDB(dbConn string) (*SettingsMySqlDB, error) {
 	if err != nil {
 		return &SettingsMySqlDB{}, err
 	}
+
+	err = db.DB().Ping()
+	if err != nil {
+		return &SettingsMySqlDB{}, err
+	}
+
 	return &SettingsMySqlDB{
 		db: db,
 	}, nil
@@ -104,14 +110,18 @@ func NewSettingsMySqlDBWithURL(url *url.URL) (*SettingsMySqlDB, error) {
 		return &SettingsMySqlDB{}, err
 	}
 
+	err = db.DB().Ping()
+	if err != nil {
+		return &SettingsMySqlDB{}, err
+	}
+
 	return &SettingsMySqlDB{
 		db: db,
 	}, nil
 }
 
-func (s *SettingsMySqlDB) CreateBatCaveSetting(settings persistence.BatCaveSetting) error {
-	s.db.Create(settings)
-	return nil
+func (s *SettingsMySqlDB) CreateBatCaveSetting(settings persistence.BatCaveSetting) {
+	s.db.Create(&settings)
 }
 
 func (s *SettingsMySqlDB) GetBatCaveSetting(deviceID string) (persistence.BatCaveSetting, error) {
@@ -120,7 +130,6 @@ func (s *SettingsMySqlDB) GetBatCaveSetting(deviceID string) (persistence.BatCav
 	return settings, nil
 }
 
-func (s *SettingsMySqlDB) UpdateBatCaveSetting(settings persistence.BatCaveSetting) persistence.BatCaveSetting {
+func (s *SettingsMySqlDB) UpdateBatCaveSetting(settings persistence.BatCaveSetting) {
 	s.db.Model(&settings).Where("device_id = ?", settings.DeviceID).Updates(persistence.BatCaveSetting{DeepSleepDelay: settings.DeepSleepDelay})
-	return settings
 }
