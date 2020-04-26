@@ -2,6 +2,7 @@ package servers
 
 import (
 	"context"
+	"errors"
 
 	settings_pb "github.com/n7down/kuiper/internal/pb/settings"
 	"github.com/n7down/kuiper/internal/settings/persistence"
@@ -47,9 +48,9 @@ func (s *SettingServer) UpdateBatCaveSetting(ctx context.Context, req *settings_
 }
 
 func (s *SettingServer) GetBatCaveSetting(ctx context.Context, req *settings_pb.GetBatCaveSettingRequest) (*settings_pb.GetBatCaveSettingResponse, error) {
-	setting, err := s.db.GetBatCaveSetting(req.DeviceID)
-	if err != nil {
-		return &settings_pb.GetBatCaveSettingResponse{}, err
+	recordNotFound, setting := s.db.GetBatCaveSetting(req.DeviceID)
+	if recordNotFound {
+		return &settings_pb.GetBatCaveSettingResponse{}, errors.New("record not found")
 	}
 
 	return &settings_pb.GetBatCaveSettingResponse{

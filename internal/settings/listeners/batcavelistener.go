@@ -1,7 +1,6 @@
 package listeners
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/url"
@@ -75,8 +74,8 @@ func (e Env) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*L
 		} else {
 
 			// get the settings
-			settingInPersistence, err := e.db.GetBatCaveSetting(req.DeviceID)
-			if err == sql.ErrNoRows {
+			recordNotFound, settingInPersistence := e.db.GetBatCaveSetting(req.DeviceID)
+			if recordNotFound {
 
 				newSetting := persistence.BatCaveSetting{
 					DeviceID:       req.DeviceID,

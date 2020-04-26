@@ -124,10 +124,10 @@ func (s *SettingsMySqlDB) CreateBatCaveSetting(settings persistence.BatCaveSetti
 	s.db.Create(&settings)
 }
 
-func (s *SettingsMySqlDB) GetBatCaveSetting(deviceID string) (persistence.BatCaveSetting, error) {
+func (s *SettingsMySqlDB) GetBatCaveSetting(deviceID string) (bool, persistence.BatCaveSetting) {
 	var settings persistence.BatCaveSetting
-	s.db.Where("device_id=?", deviceID).First(&settings)
-	return settings, nil
+	recordNotFound := s.db.Where("device_id=?", deviceID).First(&settings).RecordNotFound()
+	return recordNotFound, settings
 }
 
 func (s *SettingsMySqlDB) UpdateBatCaveSetting(settings persistence.BatCaveSetting) {
