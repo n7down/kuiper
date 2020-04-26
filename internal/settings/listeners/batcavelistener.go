@@ -85,12 +85,9 @@ func (e Env) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*L
 				e.db.CreateBatCaveSetting(newSetting)
 			} else {
 
-				isEqual := req.IsEqual(settingInPersistence)
-				log.Infof("Is equal: %b", isEqual)
-
 				// check for the differences in the settings
+				isEqual := req.IsEqual(settingInPersistence)
 				if !isEqual {
-
 					settingsToSendToDevice := BatCaveSettingResponse{
 						DeepSleepDelay: settingInPersistence.DeepSleepDelay,
 					}
@@ -104,7 +101,7 @@ func (e Env) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*L
 						// send back to the device the new settings
 						deviceTopic := fmt.Sprintf("devices/%s", req.DeviceID)
 						log.Infof("Sending message %s to %s", jsonData, deviceTopic)
-						token := client.Publish(deviceTopic, 0, false, jsonData)
+						token := client.Publish(deviceTopic, 1, false, jsonData)
 						token.WaitTimeout(ONE_MINUTE)
 					}
 				}
