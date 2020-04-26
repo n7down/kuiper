@@ -10,7 +10,6 @@ import (
 	"github.com/n7down/kuiper/internal/settings/persistence/mysql"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -84,12 +83,13 @@ func (e Env) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*L
 
 				// create the new setting
 				e.db.CreateBatCaveSetting(newSetting)
-			} else if err != nil {
-				log.Error(err)
 			} else {
 
+				isEqual := req.IsEqual(settingInPersistence)
+				log.Infof("Is equal: %b", isEqual)
+
 				// check for the differences in the settings
-				if !req.IsEqual(settingInPersistence) {
+				if !isEqual {
 
 					settingsToSendToDevice := BatCaveSettingResponse{
 						DeepSleepDelay: settingInPersistence.DeepSleepDelay,
@@ -98,11 +98,12 @@ func (e Env) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*L
 					// marshal data to send back to the device
 					jsonData, err := json.Marshal(settingsToSendToDevice)
 					if err != nil {
-						logrus.Error(err)
+						log.Error(err)
 					} else {
 
 						// send back to the device the new settings
 						deviceTopic := fmt.Sprintf("devices/%s", req.DeviceID)
+						log.Infof("Sending message %s to %s", jsonData, deviceTopic)
 						token := client.Publish(deviceTopic, 0, false, jsonData)
 						token.WaitTimeout(ONE_MINUTE)
 					}
