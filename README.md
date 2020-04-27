@@ -1,17 +1,6 @@
 # Kuiper
 Kuiper is a project built for the collection and interaction of IOT devices.
 
-## Purpose
-1. Hardware will consist of a IOT device that send the following data
- - Location
- - Hardware version
- - Device number - each device gets a number (incremented value)
- - Temperature
- - Humidity
- - Battery Voltage
-2. Data will be sent to an Influx timeseries database
-3. Data will be visualized using a Grafana dashboard
-
 ## Hardware
 ### Parts
 - [ESP8266](https://learn.adafruit.com/adafruit-huzzah-esp8266-breakout)
