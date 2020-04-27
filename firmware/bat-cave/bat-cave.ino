@@ -17,22 +17,19 @@ const char dht22Topic[] = "sensor/dht22";
 const char statsTopic[] = "sensor/stats";
 const char settingsTopic[] = "bc/settings";
 
-char mac[12];
+char mac[13];
 
 // settings
 int deepSleepDelay = 15; // in min
 
+void callback(char* topic, byte* payload, unsigned int length);
+
 DHT dht22(DHTPIN, DHTTYPE);
 WiFiClient espClient;
-PubSubClient client(espClient); 
+//PubSubClient client(espClient);
+PubSubClient client(mqtt_server, 1883, callback, espClient);
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  // TODO: parse out binary message
-  // 2 types of settings
-  // 1. how often to send data
-  // 2. how often to send heartbeat - once/twice/three/four times a day - send back the voltage with the heartbeat
-  // when done sleeping - set the setting, send back a ack
-  // send back on 'bc/ack' with the type (SUCCESS or FAILURE) the device (bc1) and the command that was sent - send that to influx
   Serial.print("Message arrived: ");
   Serial.print(topic);
   Serial.print("- '");
@@ -52,11 +49,6 @@ void setupWifi(const char* ssid, const char* password)
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.print("...");
-    // if (count >= 10 && (digitalRead(SLEEPPIN) ) == LOW) {
-    //  Serial.println("Back to sleep, try again in 30 sec ");
-    //  count = 0;
-    //  ESP.deepSleep(30 * 1000000);
-    // }
   }
   Serial.print("Connected to ");
   Serial.println(ssid);
@@ -71,10 +63,8 @@ void setupWifi(const char* ssid, const char* password)
       macWithOutColons += currentChar;
     }
   }
-
   macWithOutColons.toLowerCase();
-  macWithOutColons.toCharArray(mac, 12);
-
+  macWithOutColons.toCharArray(mac, 13);
   Serial.print("MAC: ");
   Serial.println(mac);
 }
@@ -88,14 +78,6 @@ void reconnect() {
     // Attempt to connect
     if (client.connect(mqtt_server)) {
       Serial.println("connected");
-      
-      String topic = "devices/";
-      topic += mac;
-      char deviceTopic[20];
-      topic.toCharArray(deviceTopic, 20);
-      client.subscribe(deviceTopic);
-      Serial.print("Subscribed to topic: ");
-      Serial.println(deviceTopic);
     } else {
       Serial.print("Failed: ");
       Serial.print(client.state());
@@ -118,8 +100,8 @@ void setup() {
 
   setupWifi(ssid, password);
   
-  client.setServer(mqtt_server, 1883);
-  client.setCallback(callback);
+  //client.setServer(mqtt_server, 1883);
+  //client.setCallback(callback);
 }
 
 void loop() {
@@ -181,13 +163,31 @@ void loop() {
   Serial.print(settingsMessage);
   Serial.print(" - Result: ");
   Serial.println(result);
+      
+  String topic = "devices/";
+  topic += mac;
+  char deviceTopic[21];
+  topic.toCharArray(deviceTopic, 21);
+  result = client.subscribe(deviceTopic, 1);
+  Serial.print("Subscribed to topic: ");
+  Serial.print(deviceTopic);
+  Serial.print(" - Result: ");
+  Serial.println(result);
 
   delay(2 * 60 * 1000); // wait 2 mins for response
 
+  Serial.print("Unsubscribing to topic: ");
+  Serial.print(deviceTopic);
+  result = client.unsubscribe(deviceTopic);
+  Serial.print(" - Result: ");
+  Serial.println(result);
+
   Serial.println("Wifi disconnecting");
   client.disconnect();
+  //ESP.deepSleep(deepSleepDelay * 60 * 1000000);
+  
+  //client.loop();
 
-  ESP.deepSleep(deepSleepDelay * 60 * 1000000);
-  // client.loop();
+  delay(2 * 60 * 1000); // wait 2 mins for response
 }
   
