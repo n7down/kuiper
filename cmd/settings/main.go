@@ -11,6 +11,7 @@ import (
 	"github.com/n7down/kuiper/internal/settings/servers"
 	"google.golang.org/grpc"
 
+	commonServers "github.com/n7down/kuiper/internal/common/servers"
 	settings_pb "github.com/n7down/kuiper/internal/pb/settings"
 	log "github.com/sirupsen/logrus"
 )
@@ -47,8 +48,8 @@ func main() {
 		}
 		settingsServer := servers.NewSettingsServer(settingsDB)
 
-		env := listeners.NewEnv(settingsDB)
-		listenersServer := servers.NewListenersServer()
+		env := listeners.NewSettingsListenerEnv(settingsDB)
+		listenersServer := commonServers.NewListenersServer()
 		batCaveListener, err := env.NewBatCaveSettingsListener("bat_cave_listener", batCaveMQTTURL)
 		if err != nil {
 			log.Fatal(err)

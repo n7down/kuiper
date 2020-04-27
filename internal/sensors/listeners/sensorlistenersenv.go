@@ -4,12 +4,12 @@ import (
 	"github.com/n7down/kuiper/internal/sensors/persistence/influxdb"
 )
 
-type Env struct {
+type SensorsListenersEnv struct {
 	influxDB *influxdb.InfluxDB
 }
 
-func NewEnv(influxDB *influxdb.InfluxDB) *Env {
-	return &Env{
+func NewSensorsListenersEnv(influxDB *influxdb.InfluxDB) *SensorsListenersEnv {
+	return &SensorsListenersEnv{
 		influxDB: influxDB,
 	}
 }

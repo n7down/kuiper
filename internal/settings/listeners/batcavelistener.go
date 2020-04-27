@@ -6,10 +6,12 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/n7down/kuiper/internal/settings/listeners/request"
+	"github.com/n7down/kuiper/internal/settings/listeners/response"
 	"github.com/n7down/kuiper/internal/settings/persistence"
-	"github.com/n7down/kuiper/internal/settings/persistence/mysql"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	listeners "github.com/n7down/kuiper/internal/common/listeners"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -17,34 +19,8 @@ const (
 	ONE_MINUTE = 1 * time.Minute
 )
 
-type BatCaveSettingRequest struct {
-	DeviceID       string `json:"m"`
-	DeepSleepDelay int32  `json:"s"`
-}
-
-func (s *BatCaveSettingRequest) IsEqual(settings persistence.BatCaveSetting) bool {
-	if s.DeepSleepDelay == settings.DeepSleepDelay {
-		return true
-	}
-	return false
-}
-
-type BatCaveSettingResponse struct {
-	DeepSleepDelay int32 `json:"s"`
-}
-
-type Env struct {
-	db *mysql.SettingsMySqlDB
-}
-
-func NewEnv(db *mysql.SettingsMySqlDB) *Env {
-	return &Env{
-		db: db,
-	}
-}
-
-func (e Env) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*Listener, error) {
-	i := &Listener{}
+func (e SettingsListenerEnv) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*listeners.Listener, error) {
+	i := &listeners.Listener{}
 
 	u, err := url.Parse(mqttURL)
 	if err != nil {
@@ -66,7 +42,7 @@ func (e Env) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*L
 		log.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		req := &BatCaveSettingRequest{}
+		req := &request.BatCaveSettingRequest{}
 		err := json.Unmarshal([]byte(msg.Payload()), req)
 		if err != nil {
 			log.Error(err)
@@ -75,7 +51,6 @@ func (e Env) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*L
 			// get the settings
 			recordNotFound, settingInPersistence := e.db.GetBatCaveSetting(req.DeviceID)
 			if recordNotFound {
-
 				newSetting := persistence.BatCaveSetting{
 					DeviceID:       req.DeviceID,
 					DeepSleepDelay: req.DeepSleepDelay,
@@ -88,7 +63,7 @@ func (e Env) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*L
 				// check for the differences in the settings
 				isEqual := req.IsEqual(settingInPersistence)
 				if !isEqual {
-					settingsToSendToDevice := BatCaveSettingResponse{
+					settingsToSendToDevice := response.BatCaveSettingResponse{
 						DeepSleepDelay: settingInPersistence.DeepSleepDelay,
 					}
 
@@ -101,7 +76,8 @@ func (e Env) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*L
 						// send back to the device the new settings
 						deviceTopic := fmt.Sprintf("devices/%s", req.DeviceID)
 						log.Infof("Sending message %s to %s", jsonData, deviceTopic)
-						token := client.Publish(deviceTopic, 1, false, jsonData)
+						// token := client.Publish(deviceTopic, 1, false, jsonData)
+						token := client.Publish(deviceTopic, 0, false, jsonData)
 						token.WaitTimeout(ONE_MINUTE)
 					}
 				}
@@ -122,9 +98,9 @@ func (e Env) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*L
 		return i, err
 	}
 
-	i.mqttOptions = opts
-	i.listenerName = listenerName
-	i.listenerMQTTUrl = u
+	i.MqttOptions = opts
+	i.ListenerName = listenerName
+	i.ListenerMQTTUrl = u
 
 	return i, nil
 }

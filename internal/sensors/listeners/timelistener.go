@@ -6,8 +6,10 @@ import (
 	"net/url"
 	"time"
 
-	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/sirupsen/logrus"
+
+	mqtt "github.com/eclipse/paho.mqtt.golang"
+	listeners "github.com/n7down/kuiper/internal/common/listeners"
 )
 
 type Time struct {
@@ -32,8 +34,8 @@ func connectToMQTT(clientId string, uri *url.URL) mqtt.Client {
 	return client
 }
 
-func (e Env) NewTimeListener(listenerName string, timeMqttURL string) (*Listener, error) {
-	i := &Listener{}
+func (e SensorsListenersEnv) NewTimeListener(listenerName string, timeMqttURL string) (*listeners.Listener, error) {
+	i := &listeners.Listener{}
 
 	mqttUrl, err := url.Parse(timeMqttURL)
 	if err != nil {
@@ -85,9 +87,9 @@ func (e Env) NewTimeListener(listenerName string, timeMqttURL string) (*Listener
 		return i, err
 	}
 
-	i.mqttOptions = opts
-	i.listenerName = listenerName
-	i.listenerMQTTUrl = mqttUrl
+	i.MqttOptions = opts
+	i.ListenerName = listenerName
+	i.ListenerMQTTUrl = mqttUrl
 
 	return i, nil
 }

@@ -5,13 +5,15 @@ import (
 	"fmt"
 	"net/url"
 
-	mqtt "github.com/eclipse/paho.mqtt.golang"
-	sensors "github.com/n7down/kuiper/internal/sensors/devicesensors"
 	"github.com/sirupsen/logrus"
+
+	mqtt "github.com/eclipse/paho.mqtt.golang"
+	listeners "github.com/n7down/kuiper/internal/common/listeners"
+	sensors "github.com/n7down/kuiper/internal/sensors/devicesensors"
 )
 
-func (e Env) NewStatsListener(listenerName string, voltageMqttURL string) (*Listener, error) {
-	i := &Listener{}
+func (e SensorsListenersEnv) NewStatsListener(listenerName string, voltageMqttURL string) (*listeners.Listener, error) {
+	i := &listeners.Listener{}
 
 	mqttUrl, err := url.Parse(voltageMqttURL)
 	if err != nil {
@@ -61,9 +63,9 @@ func (e Env) NewStatsListener(listenerName string, voltageMqttURL string) (*List
 		return i, err
 	}
 
-	i.mqttOptions = opts
-	i.listenerName = listenerName
-	i.listenerMQTTUrl = mqttUrl
+	i.MqttOptions = opts
+	i.ListenerName = listenerName
+	i.ListenerMQTTUrl = mqttUrl
 
 	return i, nil
 }
