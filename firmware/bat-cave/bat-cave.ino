@@ -157,7 +157,8 @@ void loop() {
   Serial.print(settingsMessage);
   Serial.print(" - Result: ");
   Serial.println(result);
-      
+ 
+  // FIXME: topic should be created in setup
   String topic = "devices/";
   topic += mac;
   char deviceTopic[21];
