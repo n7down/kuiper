@@ -26,13 +26,12 @@ void callback(char* topic, byte* payload, unsigned int length);
 
 DHT dht22(DHTPIN, DHTTYPE);
 WiFiClient espClient;
-//PubSubClient client(espClient);
 PubSubClient client(mqtt_server, 1883, callback, espClient);
 
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived: ");
   Serial.print(topic);
-  Serial.print("- '");
+  Serial.print(" - '");
   for (int i=0;i<length;i++) {
     Serial.print((char)payload[i]);
   }
@@ -75,7 +74,7 @@ void reconnect() {
     Serial.print(mqtt_server);
     Serial.print(")... ");
     
-    // Attempt to connect
+    // attempt to connect
     if (client.connect(mqtt_server)) {
       Serial.println("connected");
     } else {
@@ -99,9 +98,6 @@ void setup() {
   dht22.begin();
 
   setupWifi(ssid, password);
-  
-  //client.setServer(mqtt_server, 1883);
-  //client.setCallback(callback);
 }
 
 void loop() {
@@ -149,8 +145,6 @@ void loop() {
   Serial.print(" - Result: ");
   Serial.println(result);
 
-  // TODO: send settings
-  // TODO: add a delay to wait for new settings to come back
   StaticJsonDocument<100> settingsRoot;
   settingsRoot["m"] = mac;
   settingsRoot["s"] = deepSleepDelay;
@@ -174,7 +168,13 @@ void loop() {
   Serial.print(" - Result: ");
   Serial.println(result);
 
-  delay(2 * 60 * 1000); // wait 2 mins for response
+  // run client.loop() for 2 mins to get messages
+  Serial.println("Waiting for messages for 2 mins");
+  unsigned long subscriptionStartTime = millis();
+  while ((millis() - subscriptionStartTime) < 1000 * 60 * 2) { // 2 mins
+    client.loop();
+  }
+  Serial.println("Finished waiting for messages");
 
   Serial.print("Unsubscribing to topic: ");
   Serial.print(deviceTopic);
@@ -184,10 +184,7 @@ void loop() {
 
   Serial.println("Wifi disconnecting");
   client.disconnect();
-  //ESP.deepSleep(deepSleepDelay * 60 * 1000000);
   
-  //client.loop();
-
-  delay(2 * 60 * 1000); // wait 2 mins for response
+  ESP.deepSleep(deepSleepDelay * 60 * 1000000); // deep sleep for 15 mins
 }
   
