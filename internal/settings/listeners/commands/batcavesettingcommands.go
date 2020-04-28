@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"strconv"
 )
 
 const (
@@ -14,6 +15,15 @@ type BatCaveSettingCommands struct {
 
 func (c *BatCaveSettingCommands) GetCommands() []string {
 	return c.commands
+}
+
+func (c *BatCaveSettingCommands) GetCommandsInt() []int {
+	commandsInt := []int{}
+	for _, command := range c.commands {
+		commandInt, _ := strconv.ParseInt(command, 16, 64)
+		commandsInt = append(commandsInt, int(commandInt))
+	}
+	return commandsInt
 }
 
 func (c *BatCaveSettingCommands) AddDeepSleepDelayCommand(d int32) {
