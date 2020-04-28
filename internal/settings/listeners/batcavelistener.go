@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/n7down/kuiper/internal/settings/listeners/request"
-	"github.com/n7down/kuiper/internal/settings/listeners/response"
 	"github.com/n7down/kuiper/internal/settings/persistence"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
@@ -61,23 +60,14 @@ func (e SettingsListenerEnv) NewBatCaveSettingsListener(listenerName string, mqt
 			} else {
 
 				// check for the differences in the settings
-				isEqual := req.IsEqual(settingInPersistence)
+				isEqual, commands := req.IsEqual(settingInPersistence)
 				if !isEqual {
-					settingsToSendToDevice := response.BatCaveSettingResponse{
-						DeepSleepDelay: settingInPersistence.DeepSleepDelay,
-					}
-
-					// marshal data to send back to the device
-					jsonData, err := json.Marshal(settingsToSendToDevice)
-					if err != nil {
-						log.Error(err)
-					} else {
+					for command := range commands {
 
 						// send back to the device the new settings
 						deviceTopic := fmt.Sprintf("devices/%s", req.DeviceID)
-						log.Infof("Sending message %s to %s", jsonData, deviceTopic)
-						// token := client.Publish(deviceTopic, 1, false, jsonData)
-						token := client.Publish(deviceTopic, 0, false, jsonData)
+						log.Infof("Sending message %s to %s", command, deviceTopic)
+						token := client.Publish(deviceTopic, 0, false, command)
 						token.WaitTimeout(ONE_MINUTE)
 					}
 				}
