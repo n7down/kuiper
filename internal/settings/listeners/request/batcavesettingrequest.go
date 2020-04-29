@@ -12,14 +12,14 @@ type BatCaveSettingRequest struct {
 
 func (s *BatCaveSettingRequest) IsEqual(settings persistence.BatCaveSetting) (bool, response.BatCaveSettingResponse) {
 	res := response.BatCaveSettingResponse{}
-	hasChanges := false
+	isEqual := true
 
 	if s.DeepSleepDelay != settings.DeepSleepDelay {
-		hasChanges = true
+		isEqual = false
 		res.DeepSleepDelay = settings.DeepSleepDelay
 	} else {
 		res.DeepSleepDelay = s.DeepSleepDelay
 	}
 
-	return hasChanges, res
+	return isEqual, res
 }
