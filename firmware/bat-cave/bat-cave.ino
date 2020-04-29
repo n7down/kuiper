@@ -30,13 +30,20 @@ PubSubClient client(mqtt_server, 1883, callback, espClient);
 
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived: ");
-  Serial.print(topic);
-  Serial.print(" - '");
+  char buf[30];
   for (int i=0;i<length;i++) {
-    Serial.print((char)payload[i]);
+      strcat(payload[i], buf);
   }
-  Serial.print("'");
-  Serial.println();
+  Serial.println(buf);
+
+  JsonObject& root = jsonBuffer.parseObject(buf);
+  if (!root.success()) {
+    Serial.println("Error: parseObject failed");
+    return;
+  }
+  deepSleepDelay = root["s"];
+  Serial.print("Deep sleep set to: ");
+  Serial.println(deepSleepDelay);
 }
 
 void setupWifi(const char* ssid, const char* password)

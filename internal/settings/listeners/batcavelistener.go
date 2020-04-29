@@ -60,14 +60,19 @@ func (e SettingsListenerEnv) NewBatCaveSettingsListener(listenerName string, mqt
 			} else {
 
 				// check for the differences in the settings
-				isEqual, commands := req.IsEqual(settingInPersistence)
+				isEqual, res := req.IsEqual(settingInPersistence)
 				if !isEqual {
-					for command := range commands {
+
+					json, err := json.Marshal(res)
+					if err != nil {
+						log.Error(err)
+
+					} else {
 
 						// send back to the device the new settings
 						deviceTopic := fmt.Sprintf("devices/%s", req.DeviceID)
-						log.Infof("Sending message %s to %s", command, deviceTopic)
-						token := client.Publish(deviceTopic, 0, false, command)
+						log.Infof("Sending message %s to %s", json, deviceTopic)
+						token := client.Publish(deviceTopic, 0, false, json)
 						token.WaitTimeout(ONE_MINUTE)
 					}
 				}

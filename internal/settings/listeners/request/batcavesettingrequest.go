@@ -1,7 +1,7 @@
 package request
 
 import (
-	"github.com/n7down/kuiper/internal/settings/listeners/commands"
+	"github.com/n7down/kuiper/internal/settings/listeners/response"
 	"github.com/n7down/kuiper/internal/settings/persistence"
 )
 
@@ -10,14 +10,16 @@ type BatCaveSettingRequest struct {
 	DeepSleepDelay int32  `json:"s"`
 }
 
-func (s *BatCaveSettingRequest) IsEqual(settings persistence.BatCaveSetting) (bool, []string) {
-	c := commands.BatCaveSettingCommands{}
+func (s *BatCaveSettingRequest) IsEqual(settings persistence.BatCaveSetting) (bool, response.BatCaveSettingResponse) {
+	res := response.BatCaveSettingResponse{}
 	hasChanges := false
 
 	if s.DeepSleepDelay != settings.DeepSleepDelay {
 		hasChanges = true
-		c.AddDeepSleepDelayCommand(settings.DeepSleepDelay)
+		res.DeepSleepDelay = settings.DeepSleepDelay
+	} else {
+		res.DeepSleepDelay = s.DeepSleepDelay
 	}
 
-	return hasChanges, c.GetCommands()
+	return hasChanges, res
 }
