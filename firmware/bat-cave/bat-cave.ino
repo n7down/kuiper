@@ -29,7 +29,7 @@ WiFiClient espClient;
 PubSubClient client(mqtt_server, 1883, callback, espClient);
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  //StaticJsonDocument<20> doc;
+  StaticJsonDocument<20> doc;
   Serial.print("Message arrived: ");
   String buf;
   for (int i=0;i<length;i++) {
@@ -37,15 +37,20 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
   Serial.println(buf);
 
-  //DeserializationError error = deserializeJson(doc, buf);
-  //if (error) {
-  //  Serial.print("Error:deserializeJson() failed - ");
-  //  Serial.println(error.c_str());
-  //  return;
-  //}
-  //deepSleepDelay = doc["s"];
-  //Serial.print("Deep sleep set to: ");
-  //Serial.println(deepSleepDelay);
+  char json[20];
+  buf.toCharArray(json, 20);
+  DeserializationError error = deserializeJson(doc, json);
+  if (error) {
+    Serial.print("Error: deserializeJson() failed - ");
+    Serial.println(error.c_str());
+    return;
+  }
+  
+  if (doc.containsKey("s")) {
+    deepSleepDelay = doc["s"];
+    Serial.print("Deep sleep set to: ");
+    Serial.println(deepSleepDelay);
+  }
 }
 
 void setupWifi(const char* ssid, const char* password)
