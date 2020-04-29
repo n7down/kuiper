@@ -61,7 +61,7 @@ func (e SettingsListenerEnv) NewBatCaveSettingsListener(listenerName string, mqt
 
 				// check for the differences in the settings
 				isEqual, res := req.IsEqual(settingInPersistence)
-				log.Infof("Settings are equal: %t - %s", isEqual, res)
+				log.Infof("Settings are equal: %t - %v %v", isEqual, settingInPersistence, res)
 				if !isEqual {
 
 					json, err := json.Marshal(res)
