@@ -29,19 +29,21 @@ WiFiClient espClient;
 PubSubClient client(mqtt_server, 1883, callback, espClient);
 
 void callback(char* topic, byte* payload, unsigned int length) {
+  StaticJsonDocument<30> doc;
   Serial.print("Message arrived: ");
   char buf[30];
   for (int i=0;i<length;i++) {
-      strcat(payload[i], buf);
+      strcat(buf, (char*)payload[i]);
   }
   Serial.println(buf);
 
-  JsonObject& root = jsonBuffer.parseObject(buf);
-  if (!root.success()) {
-    Serial.println("Error: parseObject failed");
+  DeserializationError error = deserializeJson(doc, buf);
+  if (error) {
+    Serial.print("Error:deserializeJson() failed - ");
+    Serial.println(error.c_str());
     return;
   }
-  deepSleepDelay = root["s"];
+  deepSleepDelay = doc["s"];
   Serial.print("Deep sleep set to: ");
   Serial.println(deepSleepDelay);
 }
