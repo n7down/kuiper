@@ -20,7 +20,7 @@ generate:
 	echo "done"
 
 .PHONY: test-unit
-testunit:
+test-unit:
 	echo "running unit tests..."
 	go test -tags=unit -v ./...
 	echo "done"
@@ -32,7 +32,7 @@ test-integrations:
 	echo "done"
 
 .PHONY: test
-testall: test-unit test-integrations
+test: test-unit
 
 .PHONY: lint
 lint:
