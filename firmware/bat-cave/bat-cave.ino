@@ -13,6 +13,17 @@
 #define SENDDATAPIN D6
 #define DHTTYPE DHT22
 
+struct {
+  uint32_t crc32; // 4 bytes - check sum
+  //uint32_t deepSleepSetting; // 4 bytes
+  //byte data[504];
+  struct settingData data;
+} rtcData
+
+struct {
+    uint32_t deepSleepSetting;
+} settingData;
+
 const char dht22Topic[] = "sensor/dht22";
 const char statsTopic[] = "sensor/stats";
 const char settingsTopic[] = "bc/settings";
@@ -27,6 +38,25 @@ void callback(char* topic, byte* payload, unsigned int length);
 DHT dht22(DHTPIN, DHTTYPE);
 WiFiClient espClient;
 PubSubClient client(mqtt_server, 1883, callback, espClient);
+
+// check sum of the data
+uint32_t calculateCRC32(const uint8_t *data, size_t length) {
+  uint32_t crc = 0xffffffff;
+  while (length--) {
+    uint8_t c = *data++;
+    for (uint32_t i = 0x80; i > 0; i >>= 1) {
+      bool bit = crc & 0x80000000;
+      if (c & i) {
+        bit = !bit;
+      }
+      crc <<= 1;
+      if (bit) {
+        crc ^= 0x04c11db7;
+      }
+    }
+  }
+  return crc;
+}
 
 void callback(char* topic, byte* payload, unsigned int length) {
   StaticJsonDocument<20> doc;
@@ -45,11 +75,17 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Serial.println(error.c_str());
     return;
   }
-  
+
+  bool hasChanges = false;
   if (doc.containsKey("s")) {
     deepSleepDelay = doc["s"];
     Serial.print("Deep sleep set to: ");
     Serial.println(deepSleepDelay);
+    hasChanges = true;
+  }
+
+  if hasChanages {
+    // FIXME: write data to rtc data
   }
 }
 
@@ -100,17 +136,12 @@ void reconnect() {
       delay(5000);
     }
   }
-  digitalWrite(LED_BUILTIN, HIGH); 
 }
 
 void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
-  
-  digitalWrite(LED_BUILTIN, LOW);
   Serial.begin(115200);
   Serial.println("Starting serial..");
   dht22.begin();
-
   setupWifi(ssid, password);
 }
 
@@ -199,7 +230,10 @@ void loop() {
 
   Serial.println("Wifi disconnecting");
   client.disconnect();
+
+  // FIXME: read from rtc data and use the setting
   
   ESP.deepSleep(deepSleepDelay * 60 * 1000000); // deep sleep for 15 mins
 }
+
   
