@@ -38,7 +38,7 @@ func (i InfluxDB) LogDHT22(sensor *sensors.DHT22Sensor) error {
 	}
 
 	point, err := client.NewPoint(
-		"dht22",
+		"dht22_listener",
 		tags,
 		fields,
 		time.Now().UTC(),

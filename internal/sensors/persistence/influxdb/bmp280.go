@@ -38,7 +38,7 @@ func (i InfluxDB) LogBMP280(sensor *sensors.BMP280Sensor) error {
 	}
 
 	point, err := client.NewPoint(
-		"bmp280",
+		"bmp280_listener",
 		tags,
 		fields,
 		time.Now().UTC(),

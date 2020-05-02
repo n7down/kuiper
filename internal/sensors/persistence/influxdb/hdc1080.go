@@ -38,7 +38,7 @@ func (i InfluxDB) LogHDC1080(sensor *sensors.HDC1080Sensor) error {
 	}
 
 	point, err := client.NewPoint(
-		"hdc1080",
+		"hdc1080_listener",
 		tags,
 		fields,
 		time.Now().UTC(),

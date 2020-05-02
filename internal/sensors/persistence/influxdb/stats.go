@@ -38,7 +38,7 @@ func (i InfluxDB) LogStats(sensor *sensors.StatsSensor) error {
 	}
 
 	point, err := client.NewPoint(
-		"stats",
+		"stats_listener",
 		tags,
 		fields,
 		time.Now().UTC(),

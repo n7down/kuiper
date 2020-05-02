@@ -32,7 +32,7 @@ func (i InfluxDB) LogVoltage(sensor *sensors.VoltageSensor) error {
 	}
 
 	point, err := client.NewPoint(
-		"voltage",
+		"voltage_listener",
 		tags,
 		fields,
 		time.Now().UTC(),
