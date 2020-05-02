@@ -41,7 +41,7 @@ services:
     influxdb:
         container_name: influxdb
         environment:
-            INFLUXDB_DB: iota 
+            INFLUXDB_DB: sensors
             INFLUXDB_ADMIN_USER: dbuser
             INFLUXDB_ADMIN_PASSWORD: password
             #INFLUXDB_HTTP_AUTH_ENABLED: "true"
