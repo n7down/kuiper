@@ -21,16 +21,17 @@ struct {
 } rtcData
 
 struct {
-    uint32_t deepSleepSetting;
+    uint32_t deepSleepDelay;
 } settingData;
 
 const char dht22Topic[] = "sensor/dht22";
 const char statsTopic[] = "sensor/stats";
 const char settingsTopic[] = "bc/settings";
+const int subscriptionWaitTime = 2; // in min
 
 char mac[13];
 
-// settings
+// default settings
 int deepSleepDelay = 15; // in min
 
 void callback(char* topic, byte* payload, unsigned int length);
@@ -78,14 +79,21 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   bool hasChanges = false;
   if (doc.containsKey("s")) {
-    deepSleepDelay = doc["s"];
+    //deepSleepDelay = doc["s"];
+    rtcData.data.deepSleepDelay = deepSleepDelay
     Serial.print("Deep sleep set to: ");
     Serial.println(deepSleepDelay);
     hasChanges = true;
   }
 
   if hasChanages {
+
+    // TODO: calcuate the crc32
+    rtcData.crcOfData = calculateCRC32((uint8_t*) &rtcData.data[0], sizeof(rtcData.data));
+
     // FIXME: write data to rtc data
+    ESP.rtcUserMemoryWrite(0, (uint32_t*) &rtcData, sizeof(rtcData))
+    Serial.println("Saved changes to RTC memeory");
   }
 }
 
@@ -215,9 +223,9 @@ void loop() {
   Serial.println(result);
 
   // run client.loop() for 2 mins to get messages
-  Serial.println("Waiting for messages for 2 mins");
+  Serial.println("Waiting for messages");
   unsigned long subscriptionStartTime = millis();
-  while ((millis() - subscriptionStartTime) < 1000 * 60 * 2) { // 2 mins
+  while ((millis() - subscriptionStartTime) < 1000 * 60 * subscriptionWaitTime) { // 2 mins
     client.loop();
   }
   Serial.println("Finished waiting for messages");
@@ -232,8 +240,16 @@ void loop() {
   client.disconnect();
 
   // FIXME: read from rtc data and use the setting
+  ESP.rtcUserMemoryRead(0, (uint32_t*) &rtcData, sizeof(rtcData));
+  uint32_t crcOfData = calculateCRC32((uint8_t*) &rtcData.data[0], sizeof(rtcData.data));
+  if (crcOfData != rtcData.crc32) {
+
+    // use default values
+    ESP.deepSleep(1000000 * 60 * deepSleepDelay); // deep sleep for 15 mins
+  } else {
+    ESP.deepSleep(1000000 * 60 * rtcData.data.deepSleepDelay); // deep sleep for 15 mins
+  }
   
-  ESP.deepSleep(deepSleepDelay * 60 * 1000000); // deep sleep for 15 mins
 }
 
   
