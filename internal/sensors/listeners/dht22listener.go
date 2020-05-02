@@ -42,7 +42,7 @@ func (e SensorsListenersEnv) NewDHT22Listener(listenerName string, dht22MqttURL 
 		}
 
 		if err == nil {
-			err = e.influxDB.LogDHT22(listenerName, sensor)
+			err = e.influxDB.LogDHT22(sensor)
 			logrus.Infof("Logged sensor: %v", sensor)
 			if err != nil {
 				logrus.Error(err.Error())

@@ -13,7 +13,7 @@ type SettingServer struct {
 	db *mysql.SettingsMySqlDB
 }
 
-func NewSettingsServer(db *mysql.SettingsMySqlDB) *SettingServer {
+func NewSettingServer(db *mysql.SettingsMySqlDB) *SettingServer {
 	return &SettingServer{
 		db: db,
 	}

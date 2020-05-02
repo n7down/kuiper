@@ -42,7 +42,7 @@ func (e SensorsListenersEnv) NewVoltageListener(listenerName string, statsMqttUR
 		}
 
 		if err == nil {
-			err = e.influxDB.LogVoltage(listenerName, sensors)
+			err = e.influxDB.LogVoltage(sensors)
 			logrus.Infof("Logged sensor: %v", sensors)
 			if err != nil {
 				logrus.Error(err.Error())

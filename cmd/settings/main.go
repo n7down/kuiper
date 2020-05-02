@@ -1,30 +1,105 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"net"
 	"os"
+	"time"
 
-	"github.com/n7down/kuiper/internal/settings/listeners"
+	"github.com/n7down/kuiper/internal/common/listeners"
+	"github.com/n7down/kuiper/internal/settings/listeners/request"
+	"github.com/n7down/kuiper/internal/settings/persistence"
 	"github.com/n7down/kuiper/internal/settings/persistence/mysql"
-	"github.com/n7down/kuiper/internal/settings/servers"
 	"google.golang.org/grpc"
 
+	mqtt "github.com/eclipse/paho.mqtt.golang"
 	commonServers "github.com/n7down/kuiper/internal/common/servers"
 	settings_pb "github.com/n7down/kuiper/internal/pb/settings"
+	settings "github.com/n7down/kuiper/internal/settings/servers"
 	log "github.com/sirupsen/logrus"
 )
 
+const (
+	ONE_MINUTE = 1 * time.Minute
+)
+
 var (
-	Version     string
-	Build       string
-	showVersion *bool
+	Version         string
+	Build           string
+	showVersion     *bool
+	listenersServer *commonServers.ListenersServer
+	port            string
+	server          *settings.SettingServer
 )
 
 func init() {
 	showVersion = flag.Bool("v", false, "show version and build")
 	flag.Parse()
+	if !*showVersion {
+		port = os.Getenv("PORT")
+		dbConn := os.Getenv("DB_CONN")
+		batCaveMQTTURL := os.Getenv("BAT_CAVE_MQTT_URL")
+
+		settingsDB, err := mysql.NewSettingsMySqlDB(dbConn)
+		if err != nil {
+			log.Fatal(err)
+		}
+		server = settings.NewSettingServer(settingsDB)
+
+		listenersServer := commonServers.NewListenersServer()
+
+		batCaveCallback := func(client mqtt.Client, msg mqtt.Message) {
+			log.Infof("Received message: %s\n", msg.Payload())
+
+			// unmashal payload
+			req := &request.BatCaveSettingRequest{}
+			err := json.Unmarshal([]byte(msg.Payload()), req)
+			if err != nil {
+				log.Error(err)
+			} else {
+
+				// get the settings
+				recordNotFound, settingInPersistence := settingsDB.GetBatCaveSetting(req.DeviceID)
+				if recordNotFound {
+					newSetting := persistence.BatCaveSetting{
+						DeviceID:       req.DeviceID,
+						DeepSleepDelay: req.DeepSleepDelay,
+					}
+
+					// create the new setting
+					settingsDB.CreateBatCaveSetting(newSetting)
+				} else {
+
+					// check for the differences in the settings
+					isEqual, res := req.IsEqual(settingInPersistence)
+					log.Infof("Settings are equal: %t - %v %v", isEqual, settingInPersistence, res)
+					if !isEqual {
+
+						json, err := json.Marshal(res)
+						if err != nil {
+							log.Error(err)
+
+						} else {
+
+							// send back to the device the new settings
+							deviceTopic := fmt.Sprintf("devices/%s", req.DeviceID)
+							log.Infof("Sending message %s to %s", json, deviceTopic)
+							token := client.Publish(deviceTopic, 0, false, json)
+							token.WaitTimeout(ONE_MINUTE)
+						}
+					}
+				}
+			}
+		}
+
+		batCaveListener, err := listeners.NewListener("bat_cave_listener", batCaveMQTTURL, batCaveCallback)
+		if err != nil {
+			log.Fatal(err)
+		}
+		listenersServer.AddListener(batCaveListener)
+	}
 }
 
 func main() {
@@ -33,33 +108,16 @@ func main() {
 	} else {
 		log.SetReportCaller(true)
 
-		port := os.Getenv("PORT")
-		dbConn := os.Getenv("DB_CONN")
-		batCaveMQTTURL := os.Getenv("BAT_CAVE_MQTT_URL")
-
 		lis, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		settingsDB, err := mysql.NewSettingsMySqlDB(dbConn)
-		if err != nil {
-			log.Fatal(err)
-		}
-		settingsServer := servers.NewSettingsServer(settingsDB)
-
-		env := listeners.NewSettingsListenerEnv(settingsDB)
-		listenersServer := commonServers.NewListenersServer()
-		batCaveListener, err := env.NewBatCaveSettingsListener("bat_cave_listener", batCaveMQTTURL)
-		if err != nil {
-			log.Fatal(err)
-		}
-		listenersServer.AddListener(batCaveListener)
 		listenersServer.Connect()
 
 		log.Infof("Listening on port: %s\n", port)
 		grpcServer := grpc.NewServer()
-		settings_pb.RegisterSettingsServiceServer(grpcServer, settingsServer)
+		settings_pb.RegisterSettingsServiceServer(grpcServer, server)
 		grpcServer.Serve(lis)
 	}
 }

@@ -7,7 +7,7 @@ import (
 	sensors "github.com/n7down/kuiper/internal/sensors/devicesensors"
 )
 
-func (i InfluxDB) LogBMP280(measurement string, sensor *sensors.BMP280Sensor) error {
+func (i InfluxDB) LogBMP280(sensor *sensors.BMP280Sensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",
@@ -33,12 +33,12 @@ func (i InfluxDB) LogBMP280(measurement string, sensor *sensors.BMP280Sensor) er
 
 	// not indexed
 	fields := map[string]interface{}{
-		"bmp280_pressure": pressureFloat,
-		"bmp280_temp":     temperatureFloat,
+		"pressure": pressureFloat,
+		"temp":     temperatureFloat,
 	}
 
 	point, err := client.NewPoint(
-		measurement,
+		"bmp280",
 		tags,
 		fields,
 		time.Now().UTC(),

@@ -7,7 +7,7 @@ import (
 	sensors "github.com/n7down/kuiper/internal/sensors/devicesensors"
 )
 
-func (i InfluxDB) LogDHT22(measurement string, sensor *sensors.DHT22Sensor) error {
+func (i InfluxDB) LogDHT22(sensor *sensors.DHT22Sensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",
@@ -33,12 +33,12 @@ func (i InfluxDB) LogDHT22(measurement string, sensor *sensors.DHT22Sensor) erro
 
 	// not indexed
 	fields := map[string]interface{}{
-		"dht22_humidity": humidityFloat,
-		"dht22_temp":     temperatureFloat,
+		"humidity": humidityFloat,
+		"temp":     temperatureFloat,
 	}
 
 	point, err := client.NewPoint(
-		measurement,
+		"dht22",
 		tags,
 		fields,
 		time.Now().UTC(),

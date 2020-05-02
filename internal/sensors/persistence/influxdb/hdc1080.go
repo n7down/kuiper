@@ -7,11 +7,21 @@ import (
 	sensors "github.com/n7down/kuiper/internal/sensors/devicesensors"
 )
 
-func (i InfluxDB) LogStats(sensor *sensors.StatsSensor) error {
+func (i InfluxDB) LogHDC1080(sensor *sensors.HDC1080Sensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",
 	})
+	if err != nil {
+		return err
+	}
+
+	humidityFloat, err := sensor.GetHumidityFloat()
+	if err != nil {
+		return err
+	}
+
+	temperatureFloat, err := sensor.GetTemperatureFloat()
 	if err != nil {
 		return err
 	}
@@ -21,24 +31,14 @@ func (i InfluxDB) LogStats(sensor *sensors.StatsSensor) error {
 		"mac": sensor.Mac,
 	}
 
-	voltageFloat, err := sensor.GetVoltageFloat()
-	if err != nil {
-		return err
-	}
-
-	connectionTimeFloat, err := sensor.GetConnectionTimeFloat()
-	if err != nil {
-		return err
-	}
-
 	// not indexed
 	fields := map[string]interface{}{
-		"voltage": voltageFloat,
-		"connect": connectionTimeFloat,
+		"humidity": humidityFloat,
+		"temp":     temperatureFloat,
 	}
 
 	point, err := client.NewPoint(
-		"stats",
+		"hdc1080",
 		tags,
 		fields,
 		time.Now().UTC(),

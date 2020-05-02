@@ -7,7 +7,7 @@ import (
 	sensors "github.com/n7down/kuiper/internal/sensors/devicesensors"
 )
 
-func (i InfluxDB) LogVoltage(measurement string, sensor *sensors.VoltageSensor) error {
+func (i InfluxDB) LogVoltage(sensor *sensors.VoltageSensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",
@@ -32,7 +32,7 @@ func (i InfluxDB) LogVoltage(measurement string, sensor *sensors.VoltageSensor) 
 	}
 
 	point, err := client.NewPoint(
-		measurement,
+		"voltage",
 		tags,
 		fields,
 		time.Now().UTC(),
