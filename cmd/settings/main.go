@@ -48,7 +48,7 @@ func init() {
 		}
 		server = settings.NewSettingServer(settingsDB)
 
-		listenersServer := commonServers.NewListenersServer()
+		listenersServer = commonServers.NewListenersServer()
 
 		batCaveCallback := func(client mqtt.Client, msg mqtt.Message) {
 			log.Infof("Received message: %s\n", msg.Payload())
