@@ -16,15 +16,15 @@ func (i InfluxDB) LogHDC1080(sensor *sensors.HDC1080Sensor) error {
 		return err
 	}
 
-	humidityFloat, err := sensor.GetHumidityFloat()
-	if err != nil {
-		return err
-	}
+	// humidityFloat, err := sensor.GetHumidityFloat()
+	// if err != nil {
+	// 	return err
+	// }
 
-	temperatureFloat, err := sensor.GetTemperatureFloat()
-	if err != nil {
-		return err
-	}
+	// temperatureFloat, err := sensor.GetTemperatureFloat()
+	// if err != nil {
+	// 	return err
+	// }
 
 	// indexed
 	tags := map[string]string{
@@ -33,8 +33,8 @@ func (i InfluxDB) LogHDC1080(sensor *sensors.HDC1080Sensor) error {
 
 	// not indexed
 	fields := map[string]interface{}{
-		"humidity": humidityFloat,
-		"temp":     temperatureFloat,
+		"humidity": sensor.Humidity,
+		"temp":     sensor.Temperature,
 	}
 
 	point, err := client.NewPoint(
