@@ -15,17 +15,15 @@
 
 struct {
   uint32_t deepSleepDelay;
+  byte data[508];
 } rtcData;
 
 const char dht22Topic[] = "sensor/dht22";
 const char statsTopic[] = "sensor/stats";
 const char settingsTopic[] = "bc/settings";
-const int subscriptionWaitTime = 2; // in min
+const int subscriptionWaitTime = 15; // in seconds
 
 char mac[13];
-
-// default settings
-int deepSleepDelay = 15; // in min
 
 void callback(char* topic, byte* payload, unsigned int length);
 
@@ -55,7 +53,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   if (doc.containsKey("s")) {
     rtcData.deepSleepDelay = doc["s"];
     Serial.print("Deep sleep set to: ");
-    Serial.println(deepSleepDelay);
+    Serial.println(rtcData.deepSleepDelay);
     hasChanges = true;
   }
   
@@ -124,6 +122,10 @@ void setup() {
 }
 
 void loop() {
+  
+  // read from rtc data and use the setting
+  ESP.rtcUserMemoryRead(0, (uint32_t*) &rtcData, sizeof(rtcData));
+  
   unsigned long startTime = millis();
 
   if (!client.connected()) {
@@ -170,7 +172,7 @@ void loop() {
 
   StaticJsonDocument<100> settingsRoot;
   settingsRoot["m"] = mac;
-  settingsRoot["s"] = deepSleepDelay;
+  settingsRoot["s"] = rtcData.deepSleepDelay;
 
   char settingsMessage[100];
   serializeJson(settingsRoot, settingsMessage); 
@@ -195,7 +197,7 @@ void loop() {
   // run client.loop() for 2 mins to get messages
   Serial.println("Waiting for messages");
   unsigned long subscriptionStartTime = millis();
-  while ((millis() - subscriptionStartTime) < 1000 * 60 * subscriptionWaitTime) { // 2 mins
+  while ((millis() - subscriptionStartTime) < 1000 * subscriptionWaitTime) { // 30 seconds
     client.loop();
   }
   Serial.println("Finished waiting for messages");
@@ -209,8 +211,6 @@ void loop() {
   Serial.println("Wifi disconnecting");
   client.disconnect();
 
-  // read from rtc data and use the setting
-  ESP.rtcUserMemoryRead(0, (uint32_t*) &rtcData, sizeof(rtcData));
   ESP.deepSleep(1000000 * 60 * rtcData.deepSleepDelay);
 }
 
