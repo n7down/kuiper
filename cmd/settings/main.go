@@ -69,16 +69,17 @@ func init() {
 			// get the settings
 			recordNotFound, settingInPersistence := settingsDB.GetBatCaveSetting(req.DeviceID)
 			if recordNotFound {
+
+				// send back default values
+				res = response.GetBatCaveSettingDefault()
+
 				newSetting := persistence.BatCaveSetting{
 					DeviceID:       req.DeviceID,
-					DeepSleepDelay: req.DeepSleepDelay,
+					DeepSleepDelay: res.DeepSleepDelay,
 				}
 
 				// create the new setting
 				settingsDB.CreateBatCaveSetting(newSetting)
-
-				// send back default values
-				res = response.GetBatCaveSettingDefault()
 
 			} else {
 
