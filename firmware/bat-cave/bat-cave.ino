@@ -14,15 +14,8 @@
 #define DHTTYPE DHT22
 
 struct {
-  uint32_t crc32; // 4 bytes - check sum
-  //uint32_t deepSleepSetting; // 4 bytes
-  //byte data[504];
-  struct settingData data;
-} rtcData
-
-struct {
-    uint32_t deepSleepDelay;
-} settingData;
+  uint32_t deepSleepDelay;
+} rtcData;
 
 const char dht22Topic[] = "sensor/dht22";
 const char statsTopic[] = "sensor/stats";
@@ -39,25 +32,6 @@ void callback(char* topic, byte* payload, unsigned int length);
 DHT dht22(DHTPIN, DHTTYPE);
 WiFiClient espClient;
 PubSubClient client(mqtt_server, 1883, callback, espClient);
-
-// check sum of the data
-uint32_t calculateCRC32(const uint8_t *data, size_t length) {
-  uint32_t crc = 0xffffffff;
-  while (length--) {
-    uint8_t c = *data++;
-    for (uint32_t i = 0x80; i > 0; i >>= 1) {
-      bool bit = crc & 0x80000000;
-      if (c & i) {
-        bit = !bit;
-      }
-      crc <<= 1;
-      if (bit) {
-        crc ^= 0x04c11db7;
-      }
-    }
-  }
-  return crc;
-}
 
 void callback(char* topic, byte* payload, unsigned int length) {
   StaticJsonDocument<20> doc;
@@ -79,20 +53,16 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   bool hasChanges = false;
   if (doc.containsKey("s")) {
-    //deepSleepDelay = doc["s"];
-    rtcData.data.deepSleepDelay = deepSleepDelay
+    rtcData.deepSleepDelay = doc["s"];
     Serial.print("Deep sleep set to: ");
     Serial.println(deepSleepDelay);
     hasChanges = true;
   }
+  
+  if (hasChanges) {
 
-  if hasChanages {
-
-    // TODO: calcuate the crc32
-    rtcData.crcOfData = calculateCRC32((uint8_t*) &rtcData.data[0], sizeof(rtcData.data));
-
-    // FIXME: write data to rtc data
-    ESP.rtcUserMemoryWrite(0, (uint32_t*) &rtcData, sizeof(rtcData))
+    // write data to rtc data
+    ESP.rtcUserMemoryWrite(0, (uint32_t*) &rtcData, sizeof(rtcData));
     Serial.println("Saved changes to RTC memeory");
   }
 }
@@ -239,17 +209,9 @@ void loop() {
   Serial.println("Wifi disconnecting");
   client.disconnect();
 
-  // FIXME: read from rtc data and use the setting
+  // read from rtc data and use the setting
   ESP.rtcUserMemoryRead(0, (uint32_t*) &rtcData, sizeof(rtcData));
-  uint32_t crcOfData = calculateCRC32((uint8_t*) &rtcData.data[0], sizeof(rtcData.data));
-  if (crcOfData != rtcData.crc32) {
-
-    // use default values
-    ESP.deepSleep(1000000 * 60 * deepSleepDelay); // deep sleep for 15 mins
-  } else {
-    ESP.deepSleep(1000000 * 60 * rtcData.data.deepSleepDelay); // deep sleep for 15 mins
-  }
-  
+  ESP.deepSleep(1000000 * 60 * rtcData.deepSleepDelay);
 }
 
   
