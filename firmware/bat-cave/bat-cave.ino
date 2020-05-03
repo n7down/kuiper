@@ -75,7 +75,7 @@ void setupWifi(const char* ssid, const char* password)
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
-    Serial.print("...");
+    Serial.print(".");
   }
   Serial.print("Connected to ");
   Serial.println(ssid);
