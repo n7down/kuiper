@@ -115,7 +115,7 @@ services:
     apigateway:
         container_name: apigateway
         environment:
-            PORT: "8080"
+            PORT: "9090"
             SETTINGS_HOST: "172.28.1.9:8081"
         build:
             context: .
@@ -123,7 +123,7 @@ services:
         depends_on:
             - settings
         ports:
-            - "8080:8080"
+            - "9090:9090"
         networks:
             iota_net:
                 ipv4_address: 172.28.1.10
