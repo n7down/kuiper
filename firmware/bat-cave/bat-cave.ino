@@ -15,7 +15,6 @@
 
 struct {
   uint32_t deepSleepDelay;
-  byte data[508];
 } rtcData;
 
 const char dht22Topic[] = "sensor/dht22";
@@ -49,19 +48,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
     return;
   }
 
-  bool hasChanges = false;
   if (doc.containsKey("s")) {
     rtcData.deepSleepDelay = doc["s"];
     Serial.print("Deep sleep set to: ");
     Serial.println(rtcData.deepSleepDelay);
-    hasChanges = true;
-  }
-  
-  if (hasChanges) {
-
-    // write data to rtc data
     ESP.rtcUserMemoryWrite(0, (uint32_t*) &rtcData, sizeof(rtcData));
-    Serial.println("Saved changes to RTC memeory");
+    Serial.println("Saved changes to RTC memory");
   }
 }
 
@@ -121,10 +113,13 @@ void setup() {
   setupWifi(ssid, password);
 }
 
-void loop() {
-  
-  // read from rtc data and use the setting
+void loop() { 
   ESP.rtcUserMemoryRead(0, (uint32_t*) &rtcData, sizeof(rtcData));
+
+  // check for faulty data
+  if (rtcData.deepSleepDelay > 44640) { // 44640 - 31 days then set to default values
+    rtcData.deepSleepDelay = 15;
+  }
   
   unsigned long startTime = millis();
 
@@ -142,8 +137,8 @@ void loop() {
 
   StaticJsonDocument<100> dht22Root;
   dht22Root["m"] = mac;
-  dht22Root["h"] = String(h); // % 
-  dht22Root["t"] = String(t); // %
+  dht22Root["h"] = h; // % 
+  dht22Root["t"] = t; // %
 
   char dht22Message[100];
   serializeJson(dht22Root, dht22Message); 
@@ -154,13 +149,15 @@ void loop() {
   Serial.print(" - Result: ");
   Serial.println(result);
   
-  char elapsedTimeString[40];
-  sprintf(elapsedTimeString, "%u", elapsedTime);
+  //char elapsedTimeString[40];
+  //sprintf(elapsedTimeString, "%u", elapsedTime);
   StaticJsonDocument<100> statsRoot;
   statsRoot["m"] = mac;
-  statsRoot["v"] = String(battV);
-  statsRoot["c"] = String(elapsedTimeString);
-
+  //statsRoot["v"] = String(battV);
+  //statsRoot["c"] = String(elapsedTimeString);
+  statsRoot["v"] = battV;
+  statsRoot["c"] = elapsedTime;
+  
   char statsMessage[100];
   serializeJson(statsRoot, statsMessage); 
   
@@ -210,7 +207,7 @@ void loop() {
 
   Serial.println("Wifi disconnecting");
   client.disconnect();
-
+  
   ESP.deepSleep(1000000 * 60 * rtcData.deepSleepDelay);
 }
 
