@@ -6,12 +6,12 @@ package settings_pb;
 
 message CreateBatCaveSettingRequest {
     string DeviceID = 1;
-    int32 DeepSleepDelay = 2;
+    uint32 DeepSleepDelay = 2;
 }
 
 message CreateBatCaveSettingResponse {
     string DeviceID = 1;
-    int32 DeepSleepDelay = 2;
+    uint32 DeepSleepDelay = 2;
 }
 
 message GetBatCaveSettingRequest {
@@ -20,17 +20,17 @@ message GetBatCaveSettingRequest {
 
 message GetBatCaveSettingResponse {
     string DeviceID = 1;
-    int32 DeepSleepDelay = 2;
+    uint32 DeepSleepDelay = 2;
 }
 
 message UpdateBatCaveSettingRequest {
     string DeviceID = 1;
-    int32 DeepSleepDelay = 2;
+    uint32 DeepSleepDelay = 2;
 }
 
 message UpdateBatCaveSettingResponse {
     string DeviceID = 1;
-    int32 DeepSleepDelay = 2;
+    uint32 DeepSleepDelay = 2;
 }
 
 service SettingsService {

@@ -26,7 +26,7 @@ func (c *BatCaveSettingCommands) GetCommandsInt() []int {
 	return commandsInt
 }
 
-func (c *BatCaveSettingCommands) AddDeepSleepDelayCommand(d int32) {
+func (c *BatCaveSettingCommands) AddDeepSleepDelayCommand(d uint32) {
 	h := fmt.Sprintf("%04x%04x", DEEP_SLEEP_DELAY_COMMAND, d)
 	c.commands = append(c.commands, h)
 }

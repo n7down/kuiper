@@ -21,20 +21,20 @@ func (i InfluxDB) LogStats(sensor *sensors.StatsSensor) error {
 		"mac": sensor.Mac,
 	}
 
-	voltageFloat, err := sensor.GetVoltageFloat()
-	if err != nil {
-		return err
-	}
+	// voltageFloat, err := sensor.GetVoltageFloat()
+	// if err != nil {
+	// 	return err
+	// }
 
-	connectionTimeFloat, err := sensor.GetConnectionTimeFloat()
-	if err != nil {
-		return err
-	}
+	// connectionTimeFloat, err := sensor.GetConnectionTimeFloat()
+	// if err != nil {
+	// 	return err
+	// }
 
 	// not indexed
 	fields := map[string]interface{}{
-		"voltage": voltageFloat,
-		"connect": connectionTimeFloat,
+		"voltage": sensor.Voltage,
+		"connect": sensor.ConnectionTime,
 	}
 
 	point, err := client.NewPoint(

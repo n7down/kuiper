@@ -8,7 +8,7 @@ import (
 
 type BatCaveSettingRequest struct {
 	DeviceID       string `json:"m"`
-	DeepSleepDelay int32  `json:"s"`
+	DeepSleepDelay uint32 `json:"s"`
 }
 
 func (s *BatCaveSettingRequest) IsEqual(settings persistence.BatCaveSetting) (bool, response.BatCaveSettingResponse) {
