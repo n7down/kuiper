@@ -114,7 +114,11 @@ void setup() {
 }
 
 void loop() { 
-  ESP.rtcUserMemoryRead(0, (uint32_t*) &rtcData, sizeof(rtcData));
+  if(ESP.rtcUserMemoryRead(0, (uint32_t*) &rtcData, sizeof(rtcData))) {
+      Serial.println("Sucess - Read in user memory")
+  } else {
+      serial.println("Error: unable to read user memory")
+  }
 
   // check for faulty data
   if (rtcData.deepSleepDelay > 44640) { // 44640 - 31 days then set to default values
