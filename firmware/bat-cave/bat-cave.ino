@@ -17,6 +17,9 @@ struct {
   uint32_t deepSleepDelay;
 } rtcData;
 
+// default settings
+const int defaultDeepSleepDelay = 15;
+
 const char dht22Topic[] = "sensor/dht22";
 const char statsTopic[] = "sensor/stats";
 const char settingsTopic[] = "bc/settings";
@@ -114,15 +117,11 @@ void setup() {
 }
 
 void loop() { 
-  if(ESP.rtcUserMemoryRead(0, (uint32_t*) &rtcData, sizeof(rtcData))) {
-      Serial.println("Sucess - Read in user memory")
-  } else {
-      serial.println("Error: unable to read user memory")
-  }
-
+  ESP.rtcUserMemoryRead(0, (uint32_t*) &rtcData, sizeof(rtcData));
+ 
   // check for faulty data
   if (rtcData.deepSleepDelay > 44640) { // 44640 - 31 days then set to default values
-    rtcData.deepSleepDelay = 15;
+    rtcData.deepSleepDelay = defaultDeepSleepDelay;
   }
   
   unsigned long startTime = millis();
