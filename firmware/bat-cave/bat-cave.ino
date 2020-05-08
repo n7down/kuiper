@@ -6,6 +6,7 @@
 #include <Wire.h>
 #include <SPI.h>
 #include <PubSubClient.h>
+#include <ClosedCube_HDC1080.h>
 #include <Adafruit_Sensor.h>
 #include <ArduinoJson.h>
  
@@ -22,6 +23,7 @@ const int defaultDeepSleepDelay = 15;
 
 const char dht22Topic[] = "sensor/dht22";
 const char statsTopic[] = "sensor/stats";
+const char hdc1080Topic[] = "sensor/hdc1080";
 const char settingsTopic[] = "bc/settings";
 const int subscriptionWaitTime = 15; // in seconds
 
@@ -30,6 +32,7 @@ char mac[13];
 void callback(char* topic, byte* payload, unsigned int length);
 
 DHT dht22(DHTPIN, DHTTYPE);
+ClosedCube_HDC1080 hdc1080;
 WiFiClient espClient;
 PubSubClient client(mqtt_server, 1883, callback, espClient);
 
@@ -113,6 +116,7 @@ void setup() {
   Serial.begin(115200);
   Serial.println("Starting serial..");
   dht22.begin();
+  hdc1080.begin(0x40);
   setupWifi(ssid, password);
 }
 
@@ -170,6 +174,23 @@ void loop() {
   Serial.print(" - Result: ");
   Serial.println(result);
 
+  float hdc1080Humidity = hdc1080.readHumidity();
+  float hdc1080Temp = hdc1080.readTemperature();
+
+  StaticJsonDocument<100> hdc1080Root;
+  hdc1080Root["m"] = mac;
+  hdc1080Root["h"] = hdc1080Humidity;
+  hdc1080Root["t"] = hdc1080Temp;
+
+  char hdc1080Message[100];
+  serializeJson(hdc1080Root, hdc1080Message); 
+  
+  result = client.publish(hdc1080Topic, hdc1080Message);
+  Serial.print("Sent message: ");
+  Serial.print(hdc1080Message);
+  Serial.print(" - Result: ");
+  Serial.println(result);
+  
   StaticJsonDocument<100> settingsRoot;
   settingsRoot["m"] = mac;
   settingsRoot["s"] = rtcData.deepSleepDelay;
