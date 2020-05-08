@@ -1,0 +1,3 @@
+const char ssid[] = "skynet";
+const char password[] = "w4isb9swuqqppw";
+const char mqtt_server[] = "192.168.0.42";
