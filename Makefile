@@ -72,8 +72,13 @@ build-settings:
 	echo "done"
 
 .PHONY: build-all
-buildall: build-apigateway build-sensors build-settings
+build-all: build-apigateway build-sensors build-settings
 
+.PHONY: up
+up: 
+	docker-compose up -d "$(PROJECTNAME)"/apigateway:"$(VERSION)"
+	docker-compose up -d "$(PROJECTNAME)"/sensors:"$(VERSION)"
+	docker-compose up -d "$(PROJECTNAME)"/settings:"$(VERSION)"
 
 .PHONY: help
 help:

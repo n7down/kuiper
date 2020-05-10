@@ -7,7 +7,7 @@ import (
 
 type UpdateBatCaveSettingRequest struct {
 	DeviceID       string `json:"-"`
-	DeepSleepDelay int32  `json:"deepSleepDelay" binding:"required"`
+	DeepSleepDelay uint32 `json:"deepSleepDelay" binding:"required"`
 }
 
 func (r *UpdateBatCaveSettingRequest) Validate() url.Values {
