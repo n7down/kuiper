@@ -17,6 +17,7 @@ get:
 generate:
 	echo "generating dependency files..."
 	protoc --go_out=plugins=grpc:internal/pb/settings internal/pb/settings/settings.proto
+	go generate ./...
 	echo "done"
 
 .PHONY: test-unit
@@ -25,14 +26,20 @@ test-unit:
 	go test -tags=unit -v ./...
 	echo "done"
 
-.PHONY: test-integrations
-test-integrations:
+.PHONY: test-integration
+test-integration:
 	echo "running integrations test"
-	go test -tags=integrations -v ./...
+	go test -tags=integration -v ./...
+	echo "done"
+
+.PHONY: test-benchmark
+test-benchmark:
+	echo "running benchmark test"
+	go test -tags=benchmark -v ./...
 	echo "done"
 
 .PHONY: test
-test: test-unit
+test: test-unit test-integration test-benchmark
 
 .PHONY: lint
 lint:

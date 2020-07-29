@@ -1,13 +1,19 @@
 package listeners
 
-import "github.com/n7down/kuiper/internal/settings/persistence/mysql"
+import (
+	"github.com/n7down/kuiper/internal/settings/persistence"
+
+	logger "github.com/n7down/kuiper/internal/logger"
+)
 
 type SettingsListenersEnv struct {
-	db *mysql.SettingsMySqlDB
+	persistence persistence.Persistence
+	logger      logger.Logger
 }
 
-func NewSettingsListenersEnv(db *mysql.SettingsMySqlDB) *SettingsListenersEnv {
+func NewSettingsListenersEnv(persistence persistence.Persistence, logger logger.Logger) *SettingsListenersEnv {
 	return &SettingsListenersEnv{
-		db: db,
+		persistence: persistence,
+		logger:      logger,
 	}
 }

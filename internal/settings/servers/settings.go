@@ -6,16 +6,15 @@ import (
 
 	settings_pb "github.com/n7down/kuiper/internal/pb/settings"
 	"github.com/n7down/kuiper/internal/settings/persistence"
-	"github.com/n7down/kuiper/internal/settings/persistence/mysql"
 )
 
 type SettingServer struct {
-	db *mysql.SettingsMySqlDB
+	persistence persistence.Persistence
 }
 
-func NewSettingServer(db *mysql.SettingsMySqlDB) *SettingServer {
+func NewSettingServer(persistence persistence.Persistence) *SettingServer {
 	return &SettingServer{
-		db: db,
+		persistence: persistence,
 	}
 }
 
@@ -25,7 +24,7 @@ func (s *SettingServer) CreateBatCaveSetting(ctx context.Context, req *settings_
 		DeepSleepDelay: req.DeepSleepDelay,
 	}
 
-	s.db.CreateBatCaveSetting(settings)
+	s.persistence.CreateBatCaveSetting(settings)
 
 	return &settings_pb.CreateBatCaveSettingResponse{
 		DeviceID:       req.DeviceID,
@@ -39,7 +38,7 @@ func (s *SettingServer) UpdateBatCaveSetting(ctx context.Context, req *settings_
 		DeepSleepDelay: req.DeepSleepDelay,
 	}
 
-	s.db.UpdateBatCaveSetting(setting)
+	s.persistence.UpdateBatCaveSetting(setting)
 
 	return &settings_pb.UpdateBatCaveSettingResponse{
 		DeviceID:       setting.DeviceID,
@@ -48,7 +47,7 @@ func (s *SettingServer) UpdateBatCaveSetting(ctx context.Context, req *settings_
 }
 
 func (s *SettingServer) GetBatCaveSetting(ctx context.Context, req *settings_pb.GetBatCaveSettingRequest) (*settings_pb.GetBatCaveSettingResponse, error) {
-	recordNotFound, setting := s.db.GetBatCaveSetting(req.DeviceID)
+	recordNotFound, setting := s.persistence.GetBatCaveSetting(req.DeviceID)
 	if recordNotFound {
 		return &settings_pb.GetBatCaveSettingResponse{}, errors.New("record not found")
 	}

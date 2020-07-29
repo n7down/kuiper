@@ -12,14 +12,69 @@ import (
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	listeners "github.com/n7down/kuiper/internal/common/listeners"
-	log "github.com/sirupsen/logrus"
 )
 
 const (
 	ONE_MINUTE = 1 * time.Minute
 )
 
-func (e SettingsListenersEnv) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*listeners.Listener, error) {
+func (e *SettingsListenersEnv) BatCaveSettingsListenerMessageHandler(client mqtt.Client, msg mqtt.Message) {
+	e.logger.Infof("Received message: %s\n", msg.Payload())
+
+	// unmashal payload
+	var (
+		req request.BatCaveSettingRequest
+		res response.BatCaveSettingResponse
+	)
+
+	err := json.Unmarshal([]byte(msg.Payload()), &req)
+	if err != nil {
+		e.logger.Error(err)
+		return
+	}
+
+	// get the settings
+	recordNotFound, settingInPersistence := e.persistence.GetBatCaveSetting(req.DeviceID)
+	if recordNotFound {
+
+		// send back default values
+		res = response.GetBatCaveSettingDefault()
+
+		newSetting := persistence.BatCaveSetting{
+			DeviceID:       req.DeviceID,
+			DeepSleepDelay: res.DeepSleepDelay,
+		}
+
+		// create the new setting
+		e.persistence.CreateBatCaveSetting(newSetting)
+
+	} else {
+
+		// check for the differences in the settings
+		var isEqual bool
+		isEqual, res = req.IsEqual(settingInPersistence)
+		e.logger.Infof("Settings are equal: %t - %v %v", isEqual, settingInPersistence, res)
+		if isEqual {
+
+			// settings are the same on the device and in persistence - return
+			return
+		}
+	}
+
+	json, err := json.Marshal(res)
+	if err != nil {
+		e.logger.Error(err)
+		return
+	}
+
+	// send back to the device the new settings
+	deviceTopic := fmt.Sprintf("devices/%s", req.DeviceID)
+	e.logger.Infof("Sending message %s to %s", json, deviceTopic)
+	token := client.Publish(deviceTopic, 0, false, json)
+	token.WaitTimeout(ONE_MINUTE)
+}
+
+func (e *SettingsListenersEnv) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*listeners.Listener, error) {
 	i := &listeners.Listener{}
 
 	u, err := url.Parse(mqttURL)
@@ -38,61 +93,7 @@ func (e SettingsListenersEnv) NewBatCaveSettingsListener(listenerName string, mq
 	opts.SetPassword(password)
 	opts.SetClientID(listenerName)
 
-	var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
-		log.Infof("Received message: %s\n", msg.Payload())
-
-		// unmashal payload
-		var (
-			req request.BatCaveSettingRequest
-			res response.BatCaveSettingResponse
-		)
-
-		err := json.Unmarshal([]byte(msg.Payload()), &req)
-		if err != nil {
-			log.Error(err)
-			return
-		}
-
-		// get the settings
-		recordNotFound, settingInPersistence := e.db.GetBatCaveSetting(req.DeviceID)
-		if recordNotFound {
-
-			// send back default values
-			res = response.GetBatCaveSettingDefault()
-
-			newSetting := persistence.BatCaveSetting{
-				DeviceID:       req.DeviceID,
-				DeepSleepDelay: res.DeepSleepDelay,
-			}
-
-			// create the new setting
-			e.db.CreateBatCaveSetting(newSetting)
-
-		} else {
-
-			// check for the differences in the settings
-			var isEqual bool
-			isEqual, res = req.IsEqual(settingInPersistence)
-			log.Infof("Settings are equal: %t - %v %v", isEqual, settingInPersistence, res)
-			if isEqual {
-
-				// settings are the same on the device and in persistence - return
-				return
-			}
-		}
-
-		json, err := json.Marshal(res)
-		if err != nil {
-			log.Error(err)
-			return
-		}
-
-		// send back to the device the new settings
-		deviceTopic := fmt.Sprintf("devices/%s", req.DeviceID)
-		log.Infof("Sending message %s to %s", json, deviceTopic)
-		token := client.Publish(deviceTopic, 0, false, json)
-		token.WaitTimeout(ONE_MINUTE)
-	}
+	var f mqtt.MessageHandler = e.BatCaveSettingsListenerMessageHandler
 
 	opts.SetDefaultPublishHandler(f)
 
