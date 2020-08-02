@@ -34,6 +34,13 @@ func NewSettingsClient(serverEnv string) (*SettingsClient, error) {
 	return client, nil
 }
 
+func NewSettingsClientWithMock(mockSettingsServiceClient settings_pb.SettingsServiceClient) *SettingsClient {
+	client := &SettingsClient{
+		settingsClient: mockSettingsServiceClient,
+	}
+	return client
+}
+
 func (client *SettingsClient) CreateBatCaveSetting(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c, FIVE_MINUTES)
 	defer cancel()

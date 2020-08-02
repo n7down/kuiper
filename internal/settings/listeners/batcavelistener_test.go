@@ -1,5 +1,3 @@
-//+build unit
-
 package listeners
 
 import (
@@ -9,13 +7,12 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/n7down/kuiper/internal/logger/blanklogger"
-	"github.com/n7down/kuiper/internal/settings/listeners"
 	"github.com/n7down/kuiper/internal/settings/persistence"
 	"github.com/n7down/kuiper/internal/settings/persistence/mock"
 	"github.com/stretchr/testify/assert"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	mockobject "github.com/n7down/kuiper/internal/settings/mock"
+	mockobject "github.com/n7down/kuiper/internal/mock"
 )
 
 func Test_BatCaveSettingsListenerMessageHandler_Should_Return_When_Message_And_Persistence_Settings_Are_The_Same(t *testing.T) {
@@ -155,11 +152,11 @@ func Test_BatCaveSettingsListenerMessageHandler_Should_Publish_Changes_When_Mess
 	}
 
 	log := blanklogger.NewBlankLogger()
-	settingsListenersEnv := listeners.NewSettingsListenersEnv(mockPersistence, log)
+	settingsListenersEnv := NewSettingsListenersEnv(mockPersistence, log)
 	settingsListenersEnv.BatCaveSettingsListenerMessageHandler(mockClient, mockMessage)
 
-	publishedDataExpected := []byte(`{"s":30}`)
 	publishedDataActual := publishedData
+	publishedDataExpected := []byte(`{"s":30}`)
 
 	publishedCalledExpected := true
 	publishedCalledActual := publishedCalled

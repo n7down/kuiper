@@ -1,5 +1,3 @@
-// +build unit
-
 package request
 
 import (
@@ -10,39 +8,27 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Get_Bat_Cave_Setting_Request_Validate(t *testing.T) {
-	testCases := []struct {
-		name           string
-		req            GetBatCaveSettingRequest
-		expectedErrors int
-	}{
-		{
-			name: "Valid_Fields_In_Request",
-			req: GetBatCaveSettingRequest{
-				DeviceID: "34ee5c9a4411",
-			},
-			expectedErrors: 0,
-		},
-	}
-
-	for _, testCase := range testCases {
-		t.Run(testCase.name, func(t *testing.T) {
-			validationErrors := testCase.req.Validate()
-			errs := map[string]interface{}{"validationError": validationErrors}
-			errorMessage := fmt.Sprintf("should have no errors: %v", errs)
-			assert.Equal(t, testCase.expectedErrors, len(validationErrors), errorMessage)
-		})
-	}
-}
-
-func Test_Get_Bat_Cave_Setting_Request_Validate_When_Device_ID_Is_Not_Valid(t *testing.T) {
+func Test_GetBatCaveSettingRequest_Should_Return_Error_When_DeviceID_Field_Is_Not_Valid(t *testing.T) {
 	testCases := []struct {
 		name           string
 		req            GetBatCaveSettingRequest
 		expectedErrors map[string]interface{}
 	}{
 		{
-			name: "DeviceID_Length_Is_Not_12_Characters_Long",
+			name: "DeviceID_Length_Is_Greater_Then_12_Characters_Long",
+			req: GetBatCaveSettingRequest{
+				DeviceID: "34e5c9a441111",
+			},
+			expectedErrors: map[string]interface{}{
+				"validationError": url.Values{
+					"deviceID": []string{
+						"The deviceID field needs to be a valid mac!",
+					},
+				},
+			},
+		},
+		{
+			name: "DeviceID_Length_Is_Less_Then_12_Characters_Long",
 			req: GetBatCaveSettingRequest{
 				DeviceID: "34e5c9a4411",
 			},
@@ -55,7 +41,7 @@ func Test_Get_Bat_Cave_Setting_Request_Validate_When_Device_ID_Is_Not_Valid(t *t
 			},
 		},
 		{
-			name: "DeviceID_Is_Not_A_Valid_Mac_Address",
+			name: "DeviceID_Contains_An_Invalid_Mac_Address_Character",
 			req: GetBatCaveSettingRequest{
 				DeviceID: "44cbagbe2e4f",
 			},

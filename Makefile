@@ -17,6 +17,7 @@ get:
 generate:
 	echo "generating dependency files..."
 	protoc --go_out=plugins=grpc:internal/pb/settings internal/pb/settings/settings.proto
+	mockgen -source internal/pb/settings/settings.pb.go -destination=internal/mock/mocksettingsserviceclient.go -package=mock
 	go generate ./...
 	echo "done"
 
@@ -39,7 +40,13 @@ test-benchmark:
 	echo "done"
 
 .PHONY: test
-test: test-unit test-integration test-benchmark
+test:
+	go test -v ./...
+# test: test-unit test-integration test-benchmark
+
+.PHONY: cover
+cover:
+	go test -v ./... -coverprofile c.out; go tool cover -func c.out
 
 .PHONY: lint
 lint:

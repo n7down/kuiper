@@ -1,5 +1,3 @@
-//+build unit
-
 package commands
 
 import (
@@ -8,21 +6,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Get_Bat_Cave_Setting_Commands_Get_Commands(t *testing.T) {
+func Test_BatCaveSettingCommands_GetCommands_Should_Set_Commands_When_DeepSleepDelay_Values_Are_Added(t *testing.T) {
 	testCases := []struct {
 		name           string
-		deepSleepDelay int32
+		deepSleepDelay uint32
 		expectedValue  []string
 	}{
 		{
-			name:           "Deep_Sleep_Delay_Set_To_1",
+			name:           "DeepSleepDelay_Set_To_1",
 			deepSleepDelay: 1,
 			expectedValue: []string{
 				"00000001",
 			},
 		},
 		{
-			name:           "Deep_Sleep_Delay_Set_To_65535",
+			name:           "DeepSleepDelay_Set_To_65535",
 			deepSleepDelay: 65535,
 			expectedValue: []string{
 				"0000ffff",
@@ -40,21 +38,21 @@ func Test_Get_Bat_Cave_Setting_Commands_Get_Commands(t *testing.T) {
 	}
 }
 
-func Test_Get_Bat_Cave_Setting_Commands_Get_Commands_Int(t *testing.T) {
+func Test_BatCaveSettingCommands_GetCommandsInt_Should_Set_Commands_When_DeepSleepDelay_Values_Are_Added(t *testing.T) {
 	testCases := []struct {
 		name           string
-		deepSleepDelay int32
+		deepSleepDelay uint32
 		expectedValue  []int
 	}{
 		{
-			name:           "Deep_Sleep_Delay_Set_To_1",
+			name:           "DeepSleepDelay_Set_To_1",
 			deepSleepDelay: 1,
 			expectedValue: []int{
 				1,
 			},
 		},
 		{
-			name:           "Deep_Sleep_Delay_Set_To_65535",
+			name:           "DeepSleepDelay_Set_To_65535",
 			deepSleepDelay: 65535,
 			expectedValue: []int{
 				65535,

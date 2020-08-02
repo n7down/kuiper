@@ -1,51 +1,81 @@
-//+build unit
-
 package settings
 
 import (
-	"context"
+	"fmt"
+	"log"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
+	"github.com/gin-gonic/gin"
+	"github.com/golang/mock/gomock"
+	"github.com/n7down/kuiper/internal/mock"
 	"github.com/stretchr/testify/assert"
-	"google.golang.org/grpc"
 
 	settings_pb "github.com/n7down/kuiper/internal/pb/settings"
 )
 
-// TODO: add test cases
-// func TestGetResourceById(t *testing.T) {
-//     w := httptest.NewRecorder()
-//     c, _ := gin.CreateTestContext(w)
-//     GetResourceById(c)
-//     assert.Equal(t, 200, w.Code) // or what value you need it to be
-
-//     var got gin.H
-//     err := json.Unmarshal(&got, w.Body().Bytes())
-//     if err != nil {
-//         t.Fatal(err)
-//     }
-//     assert.Equal(t, want, got) // want is a gin.H that contains the wanted map.
-// }
-
-type MockSettingsServiceClient struct {
-	MockCreateBatCaveSetting func(ctx context.Context, in *settings_pb.CreateBatCaveSettingRequest, opts ...grpc.CallOption) (*settings_pb.CreateBatCaveSettingResponse, error)
-	MockGetBatCaveSetting    func(ctx context.Context, in *settings_pb.GetBatCaveSettingRequest, opts ...grpc.CallOption) (*settings_pb.GetBatCaveSettingResponse, error)
-	MockUpdateBatCaveSetting func(ctx context.Context, in *settings_pb.UpdateBatCaveSettingRequest, opts ...grpc.CallOption) (*settings_pb.UpdateBatCaveSettingResponse, error)
-}
-
-func (s *MockSettingsServiceClient) CreateBatCaveSetting(ctx context.Context, in *settings_pb.CreateBatCaveSettingRequest, opts ...grpc.CallOption) (*settings_pb.CreateBatCaveSettingResponse, error) {
-	return s.MockCreateBatCaveSetting(ctx, in, opts...)
-}
-
-func (s *MockSettingsServiceClient) GetBatCaveSetting(ctx context.Context, in *settings_pb.GetBatCaveSettingRequest, opts ...grpc.CallOption) (*settings_pb.GetBatCaveSettingResponse, error) {
-	return s.MockGetBatCaveSetting(ctx, in, opts...)
-}
-
-func (s *MockSettingsServiceClient) UpdateBatCaveSetting(ctx context.Context, in *settings_pb.UpdateBatCaveSettingRequest, opts ...grpc.CallOption) (*settings_pb.UpdateBatCaveSettingResponse, error) {
-	return s.UpdateBatCaveSetting(ctx, in, opts...)
-}
-
 func Test_CreateBatCaveSetting(t *testing.T) {
+	var (
+		deviceID       string = "001100110011"
+		deepSleepDelay uint32 = 15
+		expectedCode          = http.StatusOK
+		// got          gin.H
+		// want         = make(map[string]interface{})
+	)
+
+	gin.SetMode(gin.TestMode)
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+
+	c.Params = gin.Params{
+		gin.Param{
+			Key: "DeviceID", Value: deviceID,
+		},
+		gin.Param{
+			Key: "DeepSleepDelay", Value: fmt.Sprint(deepSleepDelay),
+		},
+	}
+
+	mockCtrl := gomock.NewController(t)
+	mockSettingsServiceClient := mock.NewMockSettingsServiceClient(mockCtrl)
+
+	settingsClient := NewSettingsClientWithMock(mockSettingsServiceClient)
+
+	mockSettingsServiceClient.EXPECT().CreateBatCaveSetting(
+		c,
+		&settings_pb.CreateBatCaveSettingRequest{
+			DeviceID:       deviceID,
+			DeepSleepDelay: deepSleepDelay,
+		},
+	).Return(
+		&settings_pb.CreateBatCaveSettingResponse{
+			DeviceID:       deviceID,
+			DeepSleepDelay: deepSleepDelay,
+		}, nil,
+	)
+
+	settingsClient.CreateBatCaveSetting(c)
+
+	// router.POST("/bc", settingsClient.CreateBatCaveSetting)
+
+	// reqParam := fmt.Sprintf(`{"deviceID":"%s","deepSleepDelay":%d}`, deviceID, deepSleepDelay)
+
+	// req, err := http.NewRequest("POST", "/bc", strings.NewReader(string(reqParam)))
+	// assert.NoError(t, err)
+
+	// router.ServeHTTP(w, req)
+
+	assert.Equal(t, expectedCode, w.Code)
+
+	log.Print(string(w.Body.Bytes()))
+
+	// err = json.Unmarshal(w.Body.Bytes(), &got)
+	// if err != nil {
+	// 	t.Fatal(err)
+	// }
+
+	// assert.Equal(t, want, got)
 	assert.Fail(t, "not implemented")
 }
 
