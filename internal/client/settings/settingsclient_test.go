@@ -2,9 +2,9 @@ package settings
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -15,27 +15,20 @@ import (
 	settings_pb "github.com/n7down/kuiper/internal/pb/settings"
 )
 
-func Test_CreateBatCaveSetting(t *testing.T) {
+func Test_CreateBatCaveSetting_Should_Change_DeviceID_To_Lower_Case_When_DeviceID_Has_Upper_Case_Characters_In_Request(t *testing.T) {
 	var (
-		deviceID       string = "001100110011"
-		deepSleepDelay uint32 = 15
-		expectedCode          = http.StatusOK
-		// got          gin.H
-		// want         = make(map[string]interface{})
+		deviceIDUpperCase string = "0011001100FF"
+		deviceIDLowerCase string = "0011001100ff"
+		deepSleepDelay    uint32 = 15
+		expectedCode             = http.StatusOK
+		reqParam                 = fmt.Sprintf(`{"deviceID":"%s","deepSleepDelay":%d}`, deviceIDUpperCase, deepSleepDelay)
+		expectedRes              = fmt.Sprintf(`{"deviceID":"%s","deepSleepDelay":%d}`, deviceIDLowerCase, deepSleepDelay)
+		err               error
 	)
 
 	gin.SetMode(gin.TestMode)
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
-
-	c.Params = gin.Params{
-		gin.Param{
-			Key: "DeviceID", Value: deviceID,
-		},
-		gin.Param{
-			Key: "DeepSleepDelay", Value: fmt.Sprint(deepSleepDelay),
-		},
-	}
+	c, r := gin.CreateTestContext(w)
 
 	mockCtrl := gomock.NewController(t)
 	mockSettingsServiceClient := mock.NewMockSettingsServiceClient(mockCtrl)
@@ -43,46 +36,44 @@ func Test_CreateBatCaveSetting(t *testing.T) {
 	settingsClient := NewSettingsClientWithMock(mockSettingsServiceClient)
 
 	mockSettingsServiceClient.EXPECT().CreateBatCaveSetting(
-		c,
+		gomock.Any(),
 		&settings_pb.CreateBatCaveSettingRequest{
-			DeviceID:       deviceID,
+			DeviceID:       deviceIDLowerCase,
 			DeepSleepDelay: deepSleepDelay,
 		},
 	).Return(
 		&settings_pb.CreateBatCaveSettingResponse{
-			DeviceID:       deviceID,
+			DeviceID:       deviceIDLowerCase,
 			DeepSleepDelay: deepSleepDelay,
 		}, nil,
 	)
 
-	settingsClient.CreateBatCaveSetting(c)
+	r.POST("/bc", settingsClient.CreateBatCaveSetting)
 
-	// router.POST("/bc", settingsClient.CreateBatCaveSetting)
+	c.Request, err = http.NewRequest("POST", "/bc", strings.NewReader(string(reqParam)))
+	assert.NoError(t, err)
 
-	// reqParam := fmt.Sprintf(`{"deviceID":"%s","deepSleepDelay":%d}`, deviceID, deepSleepDelay)
+	r.ServeHTTP(w, c.Request)
 
-	// req, err := http.NewRequest("POST", "/bc", strings.NewReader(string(reqParam)))
-	// assert.NoError(t, err)
+	actualCode := w.Code
+	assert.Equal(t, expectedCode, actualCode)
 
-	// router.ServeHTTP(w, req)
+	actualRes := w.Body.String()
+	assert.Equal(t, expectedRes, actualRes)
+}
 
-	assert.Equal(t, expectedCode, w.Code)
-
-	log.Print(string(w.Body.Bytes()))
-
-	// err = json.Unmarshal(w.Body.Bytes(), &got)
-	// if err != nil {
-	// 	t.Fatal(err)
-	// }
-
-	// assert.Equal(t, want, got)
+func Test_GetBatCaveSetting_Should_Change_DeviceID_To_Lower_Case_When_DeviceID_Has_Upper_Case_Characters_In_Request(t *testing.T) {
 	assert.Fail(t, "not implemented")
 }
 
-func Test_GetBatCaveSetting(t *testing.T) {
+func Test_GetBatCaveSetting_Should_Return_StatusNoContent_When_DeviceID_Is_Empty(t *testing.T) {
 	assert.Fail(t, "not implemented")
 }
 
-func Test_UpdateBatCaveSetting(t *testing.T) {
+func Test_UpdateBatCaveSetting_Should_Change_DeviceID_To_Lower_Case_When_DeviceID_Has_Upper_Case_Characters_In_Request(t *testing.T) {
+	assert.Fail(t, "not implemented")
+}
+
+func Test_UpdateBatCaveSetting_Should_Return_StatusNoContent_When_DeviceID_Is_Empty(t *testing.T) {
 	assert.Fail(t, "not implemented")
 }
