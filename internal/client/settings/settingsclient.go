@@ -100,7 +100,7 @@ func (client *SettingsClient) GetBatCaveSetting(c *gin.Context) {
 		return
 	}
 
-	r, err := client.settingsClient.GetBatCaveSetting(ctx, &settings_pb.GetBatCaveSettingRequest{DeviceID: deviceID})
+	r, err := client.settingsClient.GetBatCaveSetting(ctx, &settings_pb.GetBatCaveSettingRequest{DeviceID: req.DeviceID})
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		return
