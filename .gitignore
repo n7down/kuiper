@@ -1,5 +1,8 @@
 *.swp
 *.swo
+
 /bin
+
+c.out
 
 firmware/bat-cave/config.h

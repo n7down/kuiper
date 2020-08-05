@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Create_BatCaveSettingRequest_Validate_Should_Return_Error_When_DeviceID_Field_Is_Not_Valid(t *testing.T) {
+func Test_CreateBatCaveSettingRequest_Validate_Should_Return_Error_When_DeviceID_Field_Is_Not_Valid(t *testing.T) {
 	testCases := []struct {
 		name           string
 		req            CreateBatCaveSettingRequest
