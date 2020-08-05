@@ -24,19 +24,13 @@ generate:
 .PHONY: test-unit
 test-unit:
 	echo "running unit tests..."
-	go test -tags=unit -v ./...
+	go test --tags unit -v ./...
 	echo "done"
 
 .PHONY: test-integration
 test-integration:
 	echo "running integrations test"
-	go test -tags=integration -v ./...
-	echo "done"
-
-.PHONY: test-benchmark
-test-benchmark:
-	echo "running benchmark test"
-	go test -tags=benchmark -v ./...
+	go test --tags integration -v ./...
 	echo "done"
 
 .PHONY: test
@@ -44,9 +38,13 @@ test:
 	go test -v ./...
 # test: test-unit test-integration test-benchmark
 
-.PHONY: cover
-cover:
-	go test -v ./... -coverprofile c.out; go tool cover -func c.out
+.PHONY: cover-unit
+cover-unit:
+	go test --tags unit -v ./... -coverprofile c.out; go tool cover -func c.out
+
+.PHONY: cover-unit-html
+cover-unit-html:
+	go test --tags unit -v ./... -coverprofile c.out; go tool cover -html c.out
 
 .PHONY: lint
 lint:
