@@ -1,13 +1,13 @@
-package influxdb
+package influxpersistence
 
 import (
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
-	sensors "github.com/n7down/kuiper/internal/sensors/devicesensors"
+	sensors "github.com/n7down/kuiper/internal/sensors/persistence/devicesensors"
 )
 
-func (i InfluxDB) LogBMP280(sensor *sensors.BMP280Sensor) error {
+func (i InfluxPersistence) LogHDC1080(sensor *sensors.HDC1080Sensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",
@@ -16,15 +16,15 @@ func (i InfluxDB) LogBMP280(sensor *sensors.BMP280Sensor) error {
 		return err
 	}
 
-	pressureFloat, err := sensor.GetPressureFloat()
-	if err != nil {
-		return err
-	}
+	// humidityFloat, err := sensor.GetHumidityFloat()
+	// if err != nil {
+	// 	return err
+	// }
 
-	temperatureFloat, err := sensor.GetTemperatureFloat()
-	if err != nil {
-		return err
-	}
+	// temperatureFloat, err := sensor.GetTemperatureFloat()
+	// if err != nil {
+	// 	return err
+	// }
 
 	// indexed
 	tags := map[string]string{
@@ -33,12 +33,12 @@ func (i InfluxDB) LogBMP280(sensor *sensors.BMP280Sensor) error {
 
 	// not indexed
 	fields := map[string]interface{}{
-		"pressure": pressureFloat,
-		"temp":     temperatureFloat,
+		"humidity": sensor.Humidity,
+		"temp":     sensor.Temperature,
 	}
 
 	point, err := client.NewPoint(
-		"bmp280_listene,",
+		"hdc1080_listener",
 		tags,
 		fields,
 		time.Now().UTC(),

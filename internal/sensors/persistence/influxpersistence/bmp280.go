@@ -1,13 +1,13 @@
-package influxdb
+package influxpersistence
 
 import (
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
-	sensors "github.com/n7down/kuiper/internal/sensors/devicesensors"
+	sensors "github.com/n7down/kuiper/internal/sensors/persistence/devicesensors"
 )
 
-func (i InfluxDB) LogVoltage(sensor *sensors.VoltageSensor) error {
+func (i InfluxPersistence) LogBMP280(sensor *sensors.BMP280Sensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",
@@ -16,7 +16,12 @@ func (i InfluxDB) LogVoltage(sensor *sensors.VoltageSensor) error {
 		return err
 	}
 
-	voltageFloat, err := sensor.GetVoltageFloat()
+	pressureFloat, err := sensor.GetPressureFloat()
+	if err != nil {
+		return err
+	}
+
+	temperatureFloat, err := sensor.GetTemperatureFloat()
 	if err != nil {
 		return err
 	}
@@ -28,11 +33,12 @@ func (i InfluxDB) LogVoltage(sensor *sensors.VoltageSensor) error {
 
 	// not indexed
 	fields := map[string]interface{}{
-		"voltage": voltageFloat,
+		"pressure": pressureFloat,
+		"temp":     temperatureFloat,
 	}
 
 	point, err := client.NewPoint(
-		"voltage_listener",
+		"bmp280_listene,",
 		tags,
 		fields,
 		time.Now().UTC(),

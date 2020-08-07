@@ -1,13 +1,13 @@
-package influxdb
+package influxpersistence
 
 import (
 	"time"
 
 	client "github.com/influxdata/influxdb1-client/v2"
-	sensors "github.com/n7down/kuiper/internal/sensors/devicesensors"
+	sensors "github.com/n7down/kuiper/internal/sensors/persistence/devicesensors"
 )
 
-func (i InfluxDB) LogStats(sensor *sensors.StatsSensor) error {
+func (i InfluxPersistence) LogDHT22(sensor *sensors.DHT22Sensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",
@@ -16,29 +16,29 @@ func (i InfluxDB) LogStats(sensor *sensors.StatsSensor) error {
 		return err
 	}
 
+	// humidityFloat, err := sensor.GetHumidityFloat()
+	// if err != nil {
+	// 	return err
+	// }
+
+	// temperatureFloat, err := sensor.GetTemperatureFloat()
+	// if err != nil {
+	// 	return err
+	// }
+
 	// indexed
 	tags := map[string]string{
 		"mac": sensor.Mac,
 	}
 
-	// voltageFloat, err := sensor.GetVoltageFloat()
-	// if err != nil {
-	// 	return err
-	// }
-
-	// connectionTimeFloat, err := sensor.GetConnectionTimeFloat()
-	// if err != nil {
-	// 	return err
-	// }
-
 	// not indexed
 	fields := map[string]interface{}{
-		"voltage": sensor.Voltage,
-		"connect": sensor.ConnectionTime,
+		"humidity": sensor.Humidity,
+		"temp":     sensor.Temperature,
 	}
 
 	point, err := client.NewPoint(
-		"stats_listener",
+		"dht22_listener",
 		tags,
 		fields,
 		time.Now().UTC(),

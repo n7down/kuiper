@@ -7,8 +7,7 @@ import (
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	listeners "github.com/n7down/kuiper/internal/common/listeners"
-	sensors "github.com/n7down/kuiper/internal/sensors/devicesensors"
-	"github.com/sirupsen/logrus"
+	sensors "github.com/n7down/kuiper/internal/sensors/persistence/devicesensors"
 )
 
 func (e SensorsListenersEnv) NewHDC1080Listener(listenerName string, urlString string) (*listeners.Listener, error) {
@@ -31,18 +30,18 @@ func (e SensorsListenersEnv) NewHDC1080Listener(listenerName string, urlString s
 	opts.SetClientID(listenerName)
 
 	var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
-		logrus.Infof("Received message: %s\n", msg.Payload())
+		e.logger.Infof("Received message: %s\n", msg.Payload())
 		sensor := &sensors.HDC1080Sensor{}
 		err := json.Unmarshal([]byte(msg.Payload()), sensor)
 		if err != nil {
-			logrus.Error(err.Error())
+			e.logger.Error(err.Error())
 		}
 
 		if err == nil {
-			err = e.influxDB.LogHDC1080(sensor)
-			logrus.Infof("Logged sensor: %v", sensor)
+			err = e.persistence.LogHDC1080(sensor)
+			e.logger.Infof("Logged sensor: %v", sensor)
 			if err != nil {
-				logrus.Error(err.Error())
+				e.logger.Error(err.Error())
 			}
 		}
 	}

@@ -1,15 +1,18 @@
 package listeners
 
 import (
-	"github.com/n7down/kuiper/internal/sensors/persistence/influxdb"
+	"github.com/n7down/kuiper/internal/logger"
+	"github.com/n7down/kuiper/internal/sensors/persistence"
 )
 
 type SensorsListenersEnv struct {
-	influxDB *influxdb.InfluxDB
+	persistence persistence.Persistence
+	logger      logger.Logger
 }
 
-func NewSensorsListenersEnv(influxDB *influxdb.InfluxDB) *SensorsListenersEnv {
+func NewSensorsListenersEnv(persistence persistence.Persistence, logger logger.Logger) *SensorsListenersEnv {
 	return &SensorsListenersEnv{
-		influxDB: influxDB,
+		persistence: persistence,
+		logger:      logger,
 	}
 }

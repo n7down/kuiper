@@ -8,11 +8,11 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/n7down/kuiper/internal/logger/logruslogger"
 	"github.com/n7down/kuiper/internal/sensors/listeners"
-	"github.com/n7down/kuiper/internal/sensors/persistence/influxdb"
+	"github.com/n7down/kuiper/internal/sensors/persistence/influxpersistence"
 
 	commonServers "github.com/n7down/kuiper/internal/common/servers"
-	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -26,43 +26,43 @@ func init() {
 	showVersion = flag.Bool("v", false, "show version and build")
 	flag.Parse()
 	if !*showVersion {
-		log.SetReportCaller(true)
+		logger := logruslogger.NewLogrusLogger(true)
 
 		influxURL := os.Getenv("INFLUX_URL")
 		influxUrl, err := url.Parse(influxURL)
 		if err != nil {
-			log.Fatal(err.Error())
+			logger.Fatal(err.Error())
 		}
 
-		influxDB, err := influxdb.NewInfluxDB(influxUrl)
+		persistence, err := influxpersistence.NewInfluxPersistence(influxUrl)
 		if err != nil {
-			log.Fatal(err.Error())
+			logger.Fatal(err.Error())
 		}
 
-		sensorsListenersEnv := listeners.NewSensorsListenersEnv(influxDB)
+		sensorsListenersEnv := listeners.NewSensorsListenersEnv(persistence, logger)
 		listenersServer = commonServers.NewListenersServer()
 
 		dht22Listener, err := sensorsListenersEnv.NewDHT22Listener("dht22_listener", os.Getenv("DHT22_MQTT_URL"))
 		if err != nil {
-			log.Fatal(err)
+			logger.Fatal(err)
 		}
 		listenersServer.AddListener(dht22Listener)
 
 		voltageListener, err := sensorsListenersEnv.NewVoltageListener("voltage_listener", os.Getenv("VOLTAGE_MQTT_URL"))
 		if err != nil {
-			log.Fatal(err)
+			logger.Fatal(err)
 		}
 		listenersServer.AddListener(voltageListener)
 
 		statsListener, err := sensorsListenersEnv.NewStatsListener("stats_listener", os.Getenv("STATS_MQTT_URL"))
 		if err != nil {
-			log.Fatal(err)
+			logger.Fatal(err)
 		}
 		listenersServer.AddListener(statsListener)
 
 		hdc1080Listener, err := sensorsListenersEnv.NewHDC1080Listener("hdc1080_listener", os.Getenv("HDC1080_MQTT_URL"))
 		if err != nil {
-			log.Fatal(err)
+			logger.Fatal(err)
 		}
 		listenersServer.AddListener(hdc1080Listener)
 	}

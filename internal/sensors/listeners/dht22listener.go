@@ -5,11 +5,9 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/sirupsen/logrus"
-
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	listeners "github.com/n7down/kuiper/internal/common/listeners"
-	sensors "github.com/n7down/kuiper/internal/sensors/devicesensors"
+	sensors "github.com/n7down/kuiper/internal/sensors/persistence/devicesensors"
 )
 
 func (e SensorsListenersEnv) NewDHT22Listener(listenerName string, dht22MqttURL string) (*listeners.Listener, error) {
@@ -32,20 +30,20 @@ func (e SensorsListenersEnv) NewDHT22Listener(listenerName string, dht22MqttURL 
 	opts.SetClientID(listenerName)
 
 	var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
-		logrus.Infof("Received message: %s\n", msg.Payload())
+		e.logger.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
 		sensor := &sensors.DHT22Sensor{}
 		err := json.Unmarshal([]byte(msg.Payload()), sensor)
 		if err != nil {
-			logrus.Error(err.Error())
+			e.logger.Error(err.Error())
 		}
 
 		if err == nil {
-			err = e.influxDB.LogDHT22(sensor)
-			logrus.Infof("Logged sensor: %v", sensor)
+			err = e.persistence.LogDHT22(sensor)
+			e.logger.Infof("Logged sensor: %v", sensor)
 			if err != nil {
-				logrus.Error(err.Error())
+				e.logger.Error(err.Error())
 			}
 		}
 	}
