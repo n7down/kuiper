@@ -27,15 +27,11 @@ test-unit:
 	go test --tags unit -v ./...
 	echo "done"
 
-.PHONY: test-integration
-test-integration:
-	echo "running integrations test"
-	go test --tags integration -v ./...
-	echo "done"
+# .PHONY: test-integration
+# test-integration: build-test start-test wait-test run-test wait-test stop-test
 
-.PHONY: test
-test:
-	go test -v ./...
+# .PHONY: test
+# test:
 # test: test-unit test-integration test-benchmark
 
 .PHONY: cover-unit
@@ -64,6 +60,42 @@ rm:
 
 .PHONY: clean
 clean: stop rm
+
+.PHONY: clean-images
+clean-images:
+	echo "cleaning docker images"
+	docker rmi $(docker images -aq)
+	echo "done"
+
+.PHONY: clean-containers
+clean-containers:
+	echo "cleaning docker containers"
+	docker rm $(docker ps -a -f status=exited -q)
+	echo "done"
+
+.PHONY: test-build
+test-build:
+	echo "building test db..."
+	docker build -t "$(PROJECTNAME)"/test-db:"$(VERSION)" --label "version"="$(VERSION)" --label "build"="$(BUILD)" -f build/dockerfiles/db/Dockerfile.test build/dockerfiles/db/.
+	echo "done"
+
+.PHONY: test-start
+test-start:
+	echo "start test db..."
+	docker run -it --name test-db -p 3306:3306 -d "$(PROJECTNAME)"/test-db:"$(VERSION)"
+	echo "done"
+
+.PHONY: test-run
+test-run:
+	DB_CONN="root:password@tcp(127.0.0.1:3306)/device_settings?charset=utf8&parseTime=True&loc=Local" go test --tags integration -v ./...
+	echo "done"
+
+.PHONY: test-clean
+test-clean:
+	echo "cleaning test db..."
+	docker rm -f test-db 
+	docker rmi "$(PROJECTNAME)"/test-db:"$(VERSION)"
+	echo "done"
 
 .PHONY: build-apigeteway
 build-apigateway:
