@@ -41,7 +41,7 @@ func Test_GetBatCaveSetting(t *testing.T) {
 			UpdatedAt:      nil,
 			DeletedAt:      nil,
 		}
-		recordNotFoundExpected = true
+		recordNotFoundExpected = false
 	)
 
 	recordNotFoundActual, settingActual := db.GetBatCaveSetting(deviceID)
@@ -78,7 +78,8 @@ func Test_UpdateBatCaveSetting(t *testing.T) {
 
 	recordNotFoundActual, settingActual := db.GetBatCaveSetting(deviceID)
 	assert.Equal(t, recordNotFoundExpected, recordNotFoundActual)
-	assert.True(t, settingExpected.Equal(settingActual))
+	assert.Equal(t, settingExpected.DeviceID, settingActual.DeviceID)
+	assert.Equal(t, settingExpected.DeepSleepDelay, settingActual.DeepSleepDelay)
 }
 
 func TestMain(m *testing.M) {
