@@ -20,3 +20,4 @@ Kuiper is a project built for the collection and interaction of IOT devices.
 - [Solar Powered WiFi Weather Station V2.0](https://www.instructables.com/id/Solar-Powered-WiFi-Weather-Station-V20/)
 - [Battery powered raspberry pi](https://github.com/NeonHorizon/lipopi)
 - [Analog Inputs for Raspberry Pi Using the MCP3008](https://learn.adafruit.com/reading-a-analog-in-and-controlling-audio-volume-with-the-raspberry-pi/overview)
+- [ESP8266 Pro Tips](https://www.instructables.com/id/ESP8266-Pro-Tips)
