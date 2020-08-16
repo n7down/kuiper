@@ -2,6 +2,7 @@ package mosquitto
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/url"
 	"time"
@@ -11,7 +12,6 @@ import (
 	"github.com/n7down/kuiper/internal/settings/persistence"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	listeners "github.com/n7down/kuiper/internal/common/listeners"
 )
 
 const (
@@ -74,22 +74,20 @@ func (p MosquittoPubSub) BatCaveSettingsListenerMessageHandler(client mqtt.Clien
 	token.WaitTimeout(ONE_MINUTE)
 }
 
-func (p MosquittoPubSub) NewBatCaveSettingsListener(listenerName string, mqttURL string) (*listeners.Listener, error) {
-	i := &listeners.Listener{}
-
-	u, err := url.Parse(mqttURL)
+func (p MosquittoPubSub) NewBatCaveSettingsListener(listenerName string, mqttURL string) error {
+	mqttUrl, err := url.Parse(mqttURL)
 	if err != nil {
-		return i, err
+		return err
 	}
 
-	topic := u.Path[1:len(u.Path)]
+	topic := mqttUrl.Path[1:len(mqttUrl.Path)]
 	if topic == "" {
 		topic = "test"
 	}
 
-	opts := mqtt.NewClientOptions().AddBroker(fmt.Sprintf("tcp://%s", u.Host))
-	opts.SetUsername(u.User.Username())
-	password, _ := u.User.Password()
+	opts := mqtt.NewClientOptions().AddBroker(fmt.Sprintf("tcp://%s", mqttUrl.Host))
+	opts.SetUsername(mqttUrl.User.Username())
+	password, _ := mqttUrl.User.Password()
 	opts.SetPassword(password)
 	opts.SetClientID(listenerName)
 
@@ -105,12 +103,14 @@ func (p MosquittoPubSub) NewBatCaveSettingsListener(listenerName string, mqttURL
 	}
 
 	if err != nil {
-		return i, err
+		return err
 	}
 
-	i.MqttOptions = opts
-	i.ListenerName = listenerName
-	i.ListenerMQTTUrl = u
+	mqttClient := mqtt.NewClient(opts)
+	if token := mqttClient.Connect(); token.Wait() && token.Error() != nil {
+		return errors.New(fmt.Sprintf("Error with %s: %s", listenerName, token.Error()))
+	}
+	fmt.Println(fmt.Sprintf("%s on %s is connected", listenerName, mqttUrl.String()))
 
-	return i, nil
+	return nil
 }

@@ -4,8 +4,9 @@ import (
 	"context"
 	"errors"
 
-	settings_pb "github.com/n7down/kuiper/internal/pb/settings"
 	"github.com/n7down/kuiper/internal/settings/persistence"
+
+	settings_pb "github.com/n7down/kuiper/internal/pb/settings"
 )
 
 type SettingServer struct {

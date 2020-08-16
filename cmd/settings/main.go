@@ -9,11 +9,10 @@ import (
 
 	"github.com/n7down/kuiper/internal/logger"
 	"github.com/n7down/kuiper/internal/logger/logruslogger"
-	"github.com/n7down/kuiper/internal/settings/listeners"
 	"github.com/n7down/kuiper/internal/settings/persistence/mysql"
+	"github.com/n7down/kuiper/internal/settings/pubsub/mosquitto"
 	"google.golang.org/grpc"
 
-	commonServers "github.com/n7down/kuiper/internal/common/servers"
 	settings_pb "github.com/n7down/kuiper/internal/pb/settings"
 	settings "github.com/n7down/kuiper/internal/settings/servers"
 )
@@ -23,13 +22,12 @@ const (
 )
 
 var (
-	Version         string
-	Build           string
-	showVersion     *bool
-	listenersServer *commonServers.ListenersServer
-	port            string
-	server          *settings.SettingServer
-	log             logger.Logger
+	Version     string
+	Build       string
+	showVersion *bool
+	port        string
+	log         logger.Logger
+	server      *settings.SettingServer
 )
 
 func init() {
@@ -47,14 +45,11 @@ func init() {
 		}
 
 		server = settings.NewSettingServer(persistence)
-		listenersServer = commonServers.NewListenersServer()
-		settingsListenersEnv := listeners.NewSettingsListenersEnv(persistence, log)
-
-		batCaveListener, err := settingsListenersEnv.NewBatCaveSettingsListener("bat_cave_listener", batCaveMQTTURL)
+		pubSub := mosquitto.NewMosquittoPubSub(persistence, log)
+		err = pubSub.NewBatCaveSettingsListener("bat_cave_listener", batCaveMQTTURL)
 		if err != nil {
 			log.Fatal(err)
 		}
-		listenersServer.AddListener(batCaveListener)
 	}
 }
 
@@ -66,8 +61,6 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		listenersServer.Connect()
 
 		log.Infof("Listening on port: %s\n", port)
 		grpcServer := grpc.NewServer()
