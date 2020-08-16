@@ -34,9 +34,11 @@ func (m *MockPersistence) EXPECT() *MockPersistenceMockRecorder {
 }
 
 // CreateBatCaveSetting mocks base method.
-func (m *MockPersistence) CreateBatCaveSetting(settings persistence.BatCaveSetting) {
+func (m *MockPersistence) CreateBatCaveSetting(settings persistence.BatCaveSetting) int64 {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "CreateBatCaveSetting", settings)
+	ret := m.ctrl.Call(m, "CreateBatCaveSetting", settings)
+	ret0, _ := ret[0].(int64)
+	return ret0
 }
 
 // CreateBatCaveSetting indicates an expected call of CreateBatCaveSetting.
@@ -61,9 +63,11 @@ func (mr *MockPersistenceMockRecorder) GetBatCaveSetting(deviceID interface{}) *
 }
 
 // UpdateBatCaveSetting mocks base method.
-func (m *MockPersistence) UpdateBatCaveSetting(settings persistence.BatCaveSetting) {
+func (m *MockPersistence) UpdateBatCaveSetting(settings persistence.BatCaveSetting) int64 {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "UpdateBatCaveSetting", settings)
+	ret := m.ctrl.Call(m, "UpdateBatCaveSetting", settings)
+	ret0, _ := ret[0].(int64)
+	return ret0
 }
 
 // UpdateBatCaveSetting indicates an expected call of UpdateBatCaveSetting.

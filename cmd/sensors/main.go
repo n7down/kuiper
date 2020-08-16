@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"net/url"
@@ -9,62 +10,55 @@ import (
 	"syscall"
 
 	"github.com/n7down/kuiper/internal/logger/logruslogger"
-	"github.com/n7down/kuiper/internal/sensors/listeners"
 	"github.com/n7down/kuiper/internal/sensors/persistence/influxpersistence"
-
-	commonServers "github.com/n7down/kuiper/internal/common/servers"
+	"github.com/n7down/kuiper/internal/sensors/pubsub/mosquitto"
 )
 
 var (
-	Version         string
-	Build           string
-	showVersion     *bool
-	listenersServer *commonServers.ListenersServer
+	Version     string
+	Build       string
+	showVersion *bool
 )
 
 func init() {
 	showVersion = flag.Bool("v", false, "show version and build")
 	flag.Parse()
 	if !*showVersion {
-		logger := logruslogger.NewLogrusLogger(true)
+		ctx := context.Background()
+		log := logruslogger.NewLogrusLogger(true)
 
 		influxURL := os.Getenv("INFLUX_URL")
 		influxUrl, err := url.Parse(influxURL)
 		if err != nil {
-			logger.Fatal(err.Error())
+			log.Fatal(err.Error())
 		}
 
 		persistence, err := influxpersistence.NewInfluxPersistence(influxUrl)
 		if err != nil {
-			logger.Fatal(err.Error())
+			log.Fatal(err.Error())
 		}
 
-		sensorsListenersEnv := listeners.NewSensorsListenersEnv(persistence, logger)
-		listenersServer = commonServers.NewListenersServer()
+		pubSub := mosquitto.NewMosquittoPubSub(persistence, log)
 
-		dht22Listener, err := sensorsListenersEnv.NewDHT22Listener("dht22_listener", os.Getenv("DHT22_MQTT_URL"))
+		err = pubSub.NewDHT22Listener(ctx, "dht22_listener", os.Getenv("DHT22_MQTT_URL"))
 		if err != nil {
-			logger.Fatal(err)
+			log.Fatal(err)
 		}
-		listenersServer.AddListener(dht22Listener)
 
-		voltageListener, err := sensorsListenersEnv.NewVoltageListener("voltage_listener", os.Getenv("VOLTAGE_MQTT_URL"))
+		err = pubSub.NewVoltageListener(ctx, "voltage_listener", os.Getenv("VOLTAGE_MQTT_URL"))
 		if err != nil {
-			logger.Fatal(err)
+			log.Fatal(err)
 		}
-		listenersServer.AddListener(voltageListener)
 
-		statsListener, err := sensorsListenersEnv.NewStatsListener("stats_listener", os.Getenv("STATS_MQTT_URL"))
+		err = pubSub.NewStatsListener(ctx, "stats_listener", os.Getenv("STATS_MQTT_URL"))
 		if err != nil {
-			logger.Fatal(err)
+			log.Fatal(err)
 		}
-		listenersServer.AddListener(statsListener)
 
-		hdc1080Listener, err := sensorsListenersEnv.NewHDC1080Listener("hdc1080_listener", os.Getenv("HDC1080_MQTT_URL"))
+		err = pubSub.NewHDC1080Listener(ctx, "hdc1080_listener", os.Getenv("HDC1080_MQTT_URL"))
 		if err != nil {
-			logger.Fatal(err)
+			log.Fatal(err)
 		}
-		listenersServer.AddListener(hdc1080Listener)
 	}
 }
 
@@ -74,9 +68,6 @@ func main() {
 	} else {
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-
-		listenersServer.Connect()
-
 		<-c
 	}
 }

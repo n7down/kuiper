@@ -7,7 +7,7 @@ import (
 	sensors "github.com/n7down/kuiper/internal/sensors/persistence/devicesensors"
 )
 
-func (i InfluxPersistence) LogVoltage(sensor *sensors.VoltageSensor) error {
+func (i InfluxPersistence) CreateVoltage(sensor *sensors.VoltageSensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",

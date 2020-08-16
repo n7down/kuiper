@@ -7,7 +7,7 @@ import (
 	sensors "github.com/n7down/kuiper/internal/sensors/persistence/devicesensors"
 )
 
-func (i InfluxPersistence) LogDHT22(sensor *sensors.DHT22Sensor) error {
+func (i InfluxPersistence) CreateDHT22(sensor *sensors.DHT22Sensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",

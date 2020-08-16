@@ -42,7 +42,7 @@ func (e SensorsListenersEnv) NewBMP280Listener(listenerName string, bmp280MqttUR
 		}
 
 		if err == nil {
-			err = e.persistence.LogBMP280(sensor)
+			err = e.persistence.CreateBMP280(sensor)
 			logrus.Infof("Logged sensor: %v", sensor)
 			if err != nil {
 				logrus.Error(err.Error())

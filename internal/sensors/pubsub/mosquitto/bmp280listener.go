@@ -1,21 +1,20 @@
-package listeners
+package mosquitto
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/url"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	listeners "github.com/n7down/kuiper/internal/common/listeners"
 	sensors "github.com/n7down/kuiper/internal/sensors/persistence/devicesensors"
 )
 
-func (e SensorsListenersEnv) NewDHT22Listener(listenerName string, dht22MqttURL string) (*listeners.Listener, error) {
-	i := &listeners.Listener{}
-
-	mqttUrl, err := url.Parse(dht22MqttURL)
+func (p MosquittoPubSub) NewBMP280Listener(ctx context.Context, listenerName string, subscription string) error {
+	mqttUrl, err := url.Parse(subscription)
 	if err != nil {
-		return i, err
+		return err
 	}
 
 	topic := mqttUrl.Path[1:len(mqttUrl.Path)]
@@ -30,20 +29,20 @@ func (e SensorsListenersEnv) NewDHT22Listener(listenerName string, dht22MqttURL 
 	opts.SetClientID(listenerName)
 
 	var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
-		e.logger.Infof("Received message: %s\n", msg.Payload())
+		p.logger.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensor := &sensors.DHT22Sensor{}
+		sensor := &sensors.BMP280Sensor{}
 		err := json.Unmarshal([]byte(msg.Payload()), sensor)
 		if err != nil {
-			e.logger.Error(err.Error())
+			p.logger.Error(err.Error())
 		}
 
 		if err == nil {
-			err = e.persistence.CreateDHT22(sensor)
-			e.logger.Infof("Logged sensor: %v", sensor)
+			err = p.persistence.CreateBMP280(sensor)
+			p.logger.Infof("Logged sensor: %v", sensor)
 			if err != nil {
-				e.logger.Error(err.Error())
+				p.logger.Error(err.Error())
 			}
 		}
 	}
@@ -58,12 +57,14 @@ func (e SensorsListenersEnv) NewDHT22Listener(listenerName string, dht22MqttURL 
 	}
 
 	if err != nil {
-		return i, err
+		return err
 	}
 
-	i.MqttOptions = opts
-	i.ListenerName = listenerName
-	i.ListenerMQTTUrl = mqttUrl
+	mqttClient := mqtt.NewClient(opts)
+	if token := mqttClient.Connect(); token.Wait() && token.Error() != nil {
+		return errors.New(fmt.Sprintf("Error with %s: %s", listenerName, token.Error()))
+	}
+	fmt.Println(fmt.Sprintf("%s on %s is connected", listenerName, mqttUrl.String()))
 
-	return i, nil
+	return nil
 }

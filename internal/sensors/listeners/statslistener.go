@@ -40,7 +40,7 @@ func (e SensorsListenersEnv) NewStatsListener(listenerName string, voltageMqttUR
 		}
 
 		if err == nil {
-			err = e.persistence.LogStats(sensors)
+			err = e.persistence.CreateStats(sensors)
 			e.logger.Infof("Logged sensor: %v", sensors)
 			if err != nil {
 				e.logger.Error(err.Error())

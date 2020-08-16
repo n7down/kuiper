@@ -7,7 +7,7 @@ import (
 	sensors "github.com/n7down/kuiper/internal/sensors/persistence/devicesensors"
 )
 
-func (i InfluxPersistence) LogHDC1080(sensor *sensors.HDC1080Sensor) error {
+func (i InfluxPersistence) CreateHDC1080(sensor *sensors.HDC1080Sensor) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  i.Database,
 		Precision: "s",

@@ -38,7 +38,7 @@ func (e SensorsListenersEnv) NewHDC1080Listener(listenerName string, urlString s
 		}
 
 		if err == nil {
-			err = e.persistence.LogHDC1080(sensor)
+			err = e.persistence.CreateHDC1080(sensor)
 			e.logger.Infof("Logged sensor: %v", sensor)
 			if err != nil {
 				e.logger.Error(err.Error())
