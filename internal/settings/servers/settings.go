@@ -11,6 +11,7 @@ import (
 
 type SettingServer struct {
 	persistence persistence.Persistence
+	settings_pb.UnimplementedSettingsServiceServer
 }
 
 func NewSettingServer(persistence persistence.Persistence) *SettingServer {

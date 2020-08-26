@@ -16,14 +16,14 @@ message GetVoltageResponse {
   repeated float Voltage = 1;
 }
 
-message GetPressureRequest {
+message GetHumidityRequest {
   string DeviceID = 1;
   google.protobuf.Timestamp StartTime = 2;
   google.protobuf.Timestamp EndTime = 3;
 }
 
-message GetPressureResponse {
-  repeated float Pressure = 1;
+message GetHumidityResponse {
+  repeated float Humidity = 1;
 }
 
 message GetTemperatureRequest {
@@ -38,6 +38,6 @@ message GetTemperatureResponse {
 
 service SensorService {
    rpc GetVoltage(GetVoltageRequest) returns (GetVoltageResponse);
-   rpc GetPressure(GetPressureRequest) returns (GetPressureResponse);
+   rpc GetHumidity(GetHumidityRequest) returns (GetHumidityResponse);
    rpc GetTemperature(GetTemperatureRequest) returns (GetTemperatureResponse);
 }
