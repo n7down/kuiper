@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package sensors_pb;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = ".;sensors_pb";
+
+message GetVoltageRequest {
+  string DeviceID = 1;
+  google.protobuf.Timestamp StartTime = 2;
+  google.protobuf.Timestamp EndTime = 3;
+}
+
+message GetVoltageResponse {
+  repeated float Voltage = 1;
+}
+
+message GetPressureRequest {
+  string DeviceID = 1;
+  google.protobuf.Timestamp StartTime = 2;
+  google.protobuf.Timestamp EndTime = 3;
+}
+
+message GetPressureResponse {
+  repeated float Pressure = 1;
+}
+
+message GetTemperatureRequest {
+  string DeviceID = 1;
+  google.protobuf.Timestamp StartTime = 2;
+  google.protobuf.Timestamp EndTime = 3;
+}
+
+message GetTemperatureResponse {
+  repeated float Temperature = 1;
+}
+
+service SensorService {
+   rpc GetVoltage(GetVoltageRequest) returns (GetVoltageResponse);
+   rpc GetPressure(GetPressureRequest) returns (GetPressureResponse);
+   rpc GetTemperature(GetTemperatureRequest) returns (GetTemperatureResponse);
+}

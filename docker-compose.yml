@@ -18,7 +18,7 @@ services:
             - mosquitto
             - influxdb
         networks:
-            iota_net:
+            kuiper_net:
                 ipv4_address: 172.28.1.2
 
     mosquitto:
@@ -36,7 +36,7 @@ services:
         volumes:
             - ./build/dockerfiles/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
         networks:
-            iota_net:
+            kuiper_net:
                 ipv4_address: 172.28.1.3
 
     influxdb:
@@ -54,7 +54,7 @@ services:
         volumes:
             - /tmp/influxdb:/var/lib/influxdb
         networks:
-            iota_net:
+            kuiper_net:
                 ipv4_address: 172.28.1.4
 
     grafana:
@@ -73,7 +73,7 @@ services:
             - influxdb
             - smtp
         networks:
-            iota_net:
+            kuiper_net:
                 ipv4_address: 172.28.1.5
 
     smtp:
@@ -82,7 +82,7 @@ services:
         ports:
             - "25:25"
         networks:
-            iota_net:
+            kuiper_net:
                 ipv4_address: 172.28.1.7
 
     mysql:
@@ -93,7 +93,7 @@ services:
         ports:
             - "3306:3306"
         networks:
-            iota_net:
+            kuiper_net:
                 ipv4_address: 172.28.1.8
 
     settings:
@@ -117,7 +117,7 @@ services:
         ports:
             - "8081:8081"
         networks:
-            iota_net:
+            kuiper_net:
                 ipv4_address: 172.28.1.9
 
     apigateway:
@@ -134,11 +134,11 @@ services:
         ports:
             - "9090:9090"
         networks:
-            iota_net:
+            kuiper_net:
                 ipv4_address: 172.28.1.10
 
 networks:
-    iota_net:
+    kuiper_net:
         ipam:
             driver: default
             config:
