@@ -41,7 +41,7 @@ func init() {
 			log.Fatal(err.Error())
 		}
 
-		persistence, err := influxpersistence.NewInfluxPersistence(influxUrl, log)
+		persistence, err := influxpersistence.NewInfluxPersistence(influxUrl)
 		if err != nil {
 			log.Fatal(err.Error())
 		}

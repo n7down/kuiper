@@ -56,8 +56,7 @@ func (i InfluxPersistence) GetHDC1080TemperatureMeasurements(mac string, startTi
 		return sensors.HDC1080TemperatureMeasurements{}, response.Error()
 	}
 
-	// fmt.Println(response.Results)
-	i.logger.Info(response.Results)
+	fmt.Println(response.Results)
 
 	return sensors.HDC1080TemperatureMeasurements{}, nil
 }
@@ -73,8 +72,7 @@ func (i InfluxPersistence) GetHDC1080HumidityMeasurements(mac string, startTime,
 		return sensors.HDC1080HumidityMeasurements{}, response.Error()
 	}
 
-	// fmt.Println(response.Results)
-	i.logger.Info(response.Results)
+	fmt.Println(response.Results)
 
 	return sensors.HDC1080HumidityMeasurements{}, nil
 }
