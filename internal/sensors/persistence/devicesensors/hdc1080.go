@@ -1,23 +1,29 @@
 package sensors
 
-type HDC1080Sensor struct {
+import "time"
+
+type HDC1080Measurement struct {
 	Mac         string  `json:"m"`
 	Humidity    float64 `json:"h"`
 	Temperature float64 `json:"t"`
 }
 
-// func (s HDC1080Sensor) GetHumidityFloat() (float64, error) {
-// 	humidityFloat, err := strconv.ParseFloat(s.Humidity, 64)
-// 	if err != nil {
-// 		return 0, err
-// 	}
-// 	return humidityFloat, nil
-// }
+type HDC1080TemperatureMeasurement struct {
+	timestamp   time.Time
+	Temperature float64
+}
 
-// func (s HDC1080Sensor) GetTemperatureFloat() (float64, error) {
-// 	temperatureFloat, err := strconv.ParseFloat(s.Temperature, 64)
-// 	if err != nil {
-// 		return 0, err
-// 	}
-// 	return temperatureFloat, nil
-// }
+type HDC1080TemperatureMeasurements struct {
+	Mac                     string
+	TemperatureMeasurements []HDC1080TemperatureMeasurement
+}
+
+type HDC1080HumidityMeasurement struct {
+	timestamp time.Time
+	Humidity  float64
+}
+
+type HDC1080HumidityMeasurements struct {
+	Mac                  string
+	HumidityMeasurements []HDC1080HumidityMeasurement
+}

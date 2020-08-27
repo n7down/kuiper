@@ -32,14 +32,14 @@ func (p MosquittoPubSub) NewVoltageListener(ctx context.Context, listenerName st
 		p.logger.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensors := &sensors.VoltageSensor{}
+		sensors := &sensors.VoltageMeasurement{}
 		err := json.Unmarshal([]byte(msg.Payload()), sensors)
 		if err != nil {
 			p.logger.Error(err.Error())
 		}
 
 		if err == nil {
-			err = p.persistence.CreateVoltage(sensors)
+			err = p.persistence.CreateVoltageMeasurement(sensors)
 			p.logger.Infof("Logged sensor: %v", sensors)
 			if err != nil {
 				p.logger.Error(err.Error())

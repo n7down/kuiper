@@ -4,15 +4,18 @@ import (
 	"fmt"
 	"net/url"
 
+	"github.com/n7down/kuiper/internal/logger"
+
 	client "github.com/influxdata/influxdb1-client/v2"
 )
 
 type InfluxPersistence struct {
-	Client   client.Client
-	Database string
+	client   client.Client
+	database string
+	logger   logger.Logger
 }
 
-func NewInfluxPersistence(url *url.URL) (*InfluxPersistence, error) {
+func NewInfluxPersistence(url *url.URL, logger logger.Logger) (*InfluxPersistence, error) {
 	i := &InfluxPersistence{}
 	username := url.User.Username()
 	password, _ := url.User.Password()
@@ -33,8 +36,9 @@ func NewInfluxPersistence(url *url.URL) (*InfluxPersistence, error) {
 	}
 
 	i = &InfluxPersistence{
-		Client:   influxClient,
-		Database: database,
+		client:   influxClient,
+		database: database,
+		logger:   logger,
 	}
 
 	return i, nil

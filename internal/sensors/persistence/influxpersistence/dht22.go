@@ -7,24 +7,14 @@ import (
 	sensors "github.com/n7down/kuiper/internal/sensors/persistence/devicesensors"
 )
 
-func (i InfluxPersistence) CreateDHT22(sensor *sensors.DHT22Sensor) error {
+func (i InfluxPersistence) CreateDHT22Measurement(sensor *sensors.DHT22Measurement) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
-		Database:  i.Database,
+		Database:  i.database,
 		Precision: "s",
 	})
 	if err != nil {
 		return err
 	}
-
-	// humidityFloat, err := sensor.GetHumidityFloat()
-	// if err != nil {
-	// 	return err
-	// }
-
-	// temperatureFloat, err := sensor.GetTemperatureFloat()
-	// if err != nil {
-	// 	return err
-	// }
 
 	// indexed
 	tags := map[string]string{
@@ -46,7 +36,7 @@ func (i InfluxPersistence) CreateDHT22(sensor *sensors.DHT22Sensor) error {
 
 	bp.AddPoint(point)
 
-	err = i.Client.Write(bp)
+	err = i.client.Write(bp)
 	if err != nil {
 		return err
 	}

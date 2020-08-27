@@ -32,14 +32,14 @@ func (p MosquittoPubSub) NewStatsListener(ctx context.Context, listenerName stri
 		p.logger.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensors := &sensors.StatsSensor{}
+		sensors := &sensors.StatsMeasurement{}
 		err := json.Unmarshal([]byte(msg.Payload()), sensors)
 		if err != nil {
 			p.logger.Error(err.Error())
 		}
 
 		if err == nil {
-			err = p.persistence.CreateStats(sensors)
+			err = p.persistence.CreateStatsMeasurement(sensors)
 			p.logger.Infof("Logged sensor: %v", sensors)
 			if err != nil {
 				p.logger.Error(err.Error())

@@ -7,9 +7,9 @@ import (
 	sensors "github.com/n7down/kuiper/internal/sensors/persistence/devicesensors"
 )
 
-func (i InfluxPersistence) CreateVoltage(sensor *sensors.VoltageSensor) error {
+func (i InfluxPersistence) CreateVoltageMeasurement(sensor *sensors.VoltageMeasurement) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
-		Database:  i.Database,
+		Database:  i.database,
 		Precision: "s",
 	})
 	if err != nil {
@@ -40,7 +40,7 @@ func (i InfluxPersistence) CreateVoltage(sensor *sensors.VoltageSensor) error {
 
 	bp.AddPoint(point)
 
-	err = i.Client.Write(bp)
+	err = i.client.Write(bp)
 	if err != nil {
 		return err
 	}

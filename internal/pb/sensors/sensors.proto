@@ -6,38 +6,41 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = ".;sensors_pb";
 
-message GetVoltageRequest {
+message GetVoltageMeasurementsRequest {
   string DeviceID = 1;
   google.protobuf.Timestamp StartTime = 2;
   google.protobuf.Timestamp EndTime = 3;
 }
 
-message GetVoltageResponse {
+message GetVoltageMeasurementsResponse {
+  // FIXME: send back the timestamp
   repeated float Voltage = 1;
 }
 
-message GetHumidityRequest {
+message GetHumidityMeasurementsRequest {
   string DeviceID = 1;
   google.protobuf.Timestamp StartTime = 2;
   google.protobuf.Timestamp EndTime = 3;
 }
 
-message GetHumidityResponse {
+message GetHumidityMeasurementsResponse {
+  // FIXME: send back the timestamp
   repeated float Humidity = 1;
 }
 
-message GetTemperatureRequest {
+message GetTemperatureMeasurementsRequest {
   string DeviceID = 1;
   google.protobuf.Timestamp StartTime = 2;
   google.protobuf.Timestamp EndTime = 3;
 }
 
-message GetTemperatureResponse {
+message GetTemperatureMeasurementsResponse {
+  // FIXME: send back the timestamp
   repeated float Temperature = 1;
 }
 
-service SensorService {
-   rpc GetVoltage(GetVoltageRequest) returns (GetVoltageResponse);
-   rpc GetHumidity(GetHumidityRequest) returns (GetHumidityResponse);
-   rpc GetTemperature(GetTemperatureRequest) returns (GetTemperatureResponse);
+service SensorsService {
+   rpc GetVoltageMeasurements(GetVoltageMeasurementsRequest) returns (GetVoltageMeasurementsResponse);
+   rpc GetHumidityMeasurements(GetHumidityMeasurementsRequest) returns (GetHumidityMeasurementsResponse);
+   rpc GetTemperatureMeasurements(GetTemperatureMeasurementsRequest) returns (GetTemperatureMeasurementsResponse);
 }

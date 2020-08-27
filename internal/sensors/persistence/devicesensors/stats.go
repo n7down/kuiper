@@ -1,6 +1,6 @@
 package sensors
 
-type StatsSensor struct {
+type StatsMeasurement struct {
 	Mac            string  `json:"m"`
 	Voltage        float64 `json:"v"`
 	ConnectionTime int32   `json:"c"`

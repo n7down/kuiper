@@ -32,14 +32,14 @@ func (p MosquittoPubSub) NewBMP280Listener(ctx context.Context, listenerName str
 		p.logger.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensor := &sensors.BMP280Sensor{}
+		sensor := &sensors.BMP280Measurement{}
 		err := json.Unmarshal([]byte(msg.Payload()), sensor)
 		if err != nil {
 			p.logger.Error(err.Error())
 		}
 
 		if err == nil {
-			err = p.persistence.CreateBMP280(sensor)
+			err = p.persistence.CreateBMP280Measurement(sensor)
 			p.logger.Infof("Logged sensor: %v", sensor)
 			if err != nil {
 				p.logger.Error(err.Error())

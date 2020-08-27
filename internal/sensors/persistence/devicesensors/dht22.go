@@ -1,6 +1,6 @@
 package sensors
 
-type DHT22Sensor struct {
+type DHT22Measurement struct {
 	Mac         string  `json:"m"`
 	Humidity    float64 `json:"h"`
 	Temperature float64 `json:"t"`

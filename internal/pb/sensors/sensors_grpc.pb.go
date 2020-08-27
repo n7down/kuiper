@@ -13,148 +13,148 @@ import (
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion6
 
-// SensorServiceClient is the client API for SensorService service.
+// SensorsServiceClient is the client API for SensorsService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type SensorServiceClient interface {
-	GetVoltage(ctx context.Context, in *GetVoltageRequest, opts ...grpc.CallOption) (*GetVoltageResponse, error)
-	GetHumidity(ctx context.Context, in *GetHumidityRequest, opts ...grpc.CallOption) (*GetHumidityResponse, error)
-	GetTemperature(ctx context.Context, in *GetTemperatureRequest, opts ...grpc.CallOption) (*GetTemperatureResponse, error)
+type SensorsServiceClient interface {
+	GetVoltageMeasurements(ctx context.Context, in *GetVoltageMeasurementsRequest, opts ...grpc.CallOption) (*GetVoltageMeasurementsResponse, error)
+	GetHumidityMeasurements(ctx context.Context, in *GetHumidityMeasurementsRequest, opts ...grpc.CallOption) (*GetHumidityMeasurementsResponse, error)
+	GetTemperatureMeasurements(ctx context.Context, in *GetTemperatureMeasurementsRequest, opts ...grpc.CallOption) (*GetTemperatureMeasurementsResponse, error)
 }
 
-type sensorServiceClient struct {
+type sensorsServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewSensorServiceClient(cc grpc.ClientConnInterface) SensorServiceClient {
-	return &sensorServiceClient{cc}
+func NewSensorsServiceClient(cc grpc.ClientConnInterface) SensorsServiceClient {
+	return &sensorsServiceClient{cc}
 }
 
-func (c *sensorServiceClient) GetVoltage(ctx context.Context, in *GetVoltageRequest, opts ...grpc.CallOption) (*GetVoltageResponse, error) {
-	out := new(GetVoltageResponse)
-	err := c.cc.Invoke(ctx, "/sensors_pb.SensorService/GetVoltage", in, out, opts...)
+func (c *sensorsServiceClient) GetVoltageMeasurements(ctx context.Context, in *GetVoltageMeasurementsRequest, opts ...grpc.CallOption) (*GetVoltageMeasurementsResponse, error) {
+	out := new(GetVoltageMeasurementsResponse)
+	err := c.cc.Invoke(ctx, "/sensors_pb.SensorsService/GetVoltageMeasurements", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *sensorServiceClient) GetHumidity(ctx context.Context, in *GetHumidityRequest, opts ...grpc.CallOption) (*GetHumidityResponse, error) {
-	out := new(GetHumidityResponse)
-	err := c.cc.Invoke(ctx, "/sensors_pb.SensorService/GetHumidity", in, out, opts...)
+func (c *sensorsServiceClient) GetHumidityMeasurements(ctx context.Context, in *GetHumidityMeasurementsRequest, opts ...grpc.CallOption) (*GetHumidityMeasurementsResponse, error) {
+	out := new(GetHumidityMeasurementsResponse)
+	err := c.cc.Invoke(ctx, "/sensors_pb.SensorsService/GetHumidityMeasurements", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *sensorServiceClient) GetTemperature(ctx context.Context, in *GetTemperatureRequest, opts ...grpc.CallOption) (*GetTemperatureResponse, error) {
-	out := new(GetTemperatureResponse)
-	err := c.cc.Invoke(ctx, "/sensors_pb.SensorService/GetTemperature", in, out, opts...)
+func (c *sensorsServiceClient) GetTemperatureMeasurements(ctx context.Context, in *GetTemperatureMeasurementsRequest, opts ...grpc.CallOption) (*GetTemperatureMeasurementsResponse, error) {
+	out := new(GetTemperatureMeasurementsResponse)
+	err := c.cc.Invoke(ctx, "/sensors_pb.SensorsService/GetTemperatureMeasurements", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// SensorServiceServer is the server API for SensorService service.
-// All implementations must embed UnimplementedSensorServiceServer
+// SensorsServiceServer is the server API for SensorsService service.
+// All implementations must embed UnimplementedSensorsServiceServer
 // for forward compatibility
-type SensorServiceServer interface {
-	GetVoltage(context.Context, *GetVoltageRequest) (*GetVoltageResponse, error)
-	GetHumidity(context.Context, *GetHumidityRequest) (*GetHumidityResponse, error)
-	GetTemperature(context.Context, *GetTemperatureRequest) (*GetTemperatureResponse, error)
-	mustEmbedUnimplementedSensorServiceServer()
+type SensorsServiceServer interface {
+	GetVoltageMeasurements(context.Context, *GetVoltageMeasurementsRequest) (*GetVoltageMeasurementsResponse, error)
+	GetHumidityMeasurements(context.Context, *GetHumidityMeasurementsRequest) (*GetHumidityMeasurementsResponse, error)
+	GetTemperatureMeasurements(context.Context, *GetTemperatureMeasurementsRequest) (*GetTemperatureMeasurementsResponse, error)
+	mustEmbedUnimplementedSensorsServiceServer()
 }
 
-// UnimplementedSensorServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedSensorServiceServer struct {
+// UnimplementedSensorsServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedSensorsServiceServer struct {
 }
 
-func (*UnimplementedSensorServiceServer) GetVoltage(context.Context, *GetVoltageRequest) (*GetVoltageResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetVoltage not implemented")
+func (*UnimplementedSensorsServiceServer) GetVoltageMeasurements(context.Context, *GetVoltageMeasurementsRequest) (*GetVoltageMeasurementsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetVoltageMeasurements not implemented")
 }
-func (*UnimplementedSensorServiceServer) GetHumidity(context.Context, *GetHumidityRequest) (*GetHumidityResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetHumidity not implemented")
+func (*UnimplementedSensorsServiceServer) GetHumidityMeasurements(context.Context, *GetHumidityMeasurementsRequest) (*GetHumidityMeasurementsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetHumidityMeasurements not implemented")
 }
-func (*UnimplementedSensorServiceServer) GetTemperature(context.Context, *GetTemperatureRequest) (*GetTemperatureResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTemperature not implemented")
+func (*UnimplementedSensorsServiceServer) GetTemperatureMeasurements(context.Context, *GetTemperatureMeasurementsRequest) (*GetTemperatureMeasurementsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTemperatureMeasurements not implemented")
 }
-func (*UnimplementedSensorServiceServer) mustEmbedUnimplementedSensorServiceServer() {}
+func (*UnimplementedSensorsServiceServer) mustEmbedUnimplementedSensorsServiceServer() {}
 
-func RegisterSensorServiceServer(s *grpc.Server, srv SensorServiceServer) {
-	s.RegisterService(&_SensorService_serviceDesc, srv)
+func RegisterSensorsServiceServer(s *grpc.Server, srv SensorsServiceServer) {
+	s.RegisterService(&_SensorsService_serviceDesc, srv)
 }
 
-func _SensorService_GetVoltage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetVoltageRequest)
+func _SensorsService_GetVoltageMeasurements_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetVoltageMeasurementsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SensorServiceServer).GetVoltage(ctx, in)
+		return srv.(SensorsServiceServer).GetVoltageMeasurements(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sensors_pb.SensorService/GetVoltage",
+		FullMethod: "/sensors_pb.SensorsService/GetVoltageMeasurements",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SensorServiceServer).GetVoltage(ctx, req.(*GetVoltageRequest))
+		return srv.(SensorsServiceServer).GetVoltageMeasurements(ctx, req.(*GetVoltageMeasurementsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SensorService_GetHumidity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetHumidityRequest)
+func _SensorsService_GetHumidityMeasurements_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetHumidityMeasurementsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SensorServiceServer).GetHumidity(ctx, in)
+		return srv.(SensorsServiceServer).GetHumidityMeasurements(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sensors_pb.SensorService/GetHumidity",
+		FullMethod: "/sensors_pb.SensorsService/GetHumidityMeasurements",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SensorServiceServer).GetHumidity(ctx, req.(*GetHumidityRequest))
+		return srv.(SensorsServiceServer).GetHumidityMeasurements(ctx, req.(*GetHumidityMeasurementsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SensorService_GetTemperature_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTemperatureRequest)
+func _SensorsService_GetTemperatureMeasurements_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTemperatureMeasurementsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SensorServiceServer).GetTemperature(ctx, in)
+		return srv.(SensorsServiceServer).GetTemperatureMeasurements(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sensors_pb.SensorService/GetTemperature",
+		FullMethod: "/sensors_pb.SensorsService/GetTemperatureMeasurements",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SensorServiceServer).GetTemperature(ctx, req.(*GetTemperatureRequest))
+		return srv.(SensorsServiceServer).GetTemperatureMeasurements(ctx, req.(*GetTemperatureMeasurementsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _SensorService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "sensors_pb.SensorService",
-	HandlerType: (*SensorServiceServer)(nil),
+var _SensorsService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "sensors_pb.SensorsService",
+	HandlerType: (*SensorsServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetVoltage",
-			Handler:    _SensorService_GetVoltage_Handler,
+			MethodName: "GetVoltageMeasurements",
+			Handler:    _SensorsService_GetVoltageMeasurements_Handler,
 		},
 		{
-			MethodName: "GetHumidity",
-			Handler:    _SensorService_GetHumidity_Handler,
+			MethodName: "GetHumidityMeasurements",
+			Handler:    _SensorsService_GetHumidityMeasurements_Handler,
 		},
 		{
-			MethodName: "GetTemperature",
-			Handler:    _SensorService_GetTemperature_Handler,
+			MethodName: "GetTemperatureMeasurements",
+			Handler:    _SensorsService_GetTemperatureMeasurements_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

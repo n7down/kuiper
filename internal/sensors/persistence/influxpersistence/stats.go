@@ -7,9 +7,9 @@ import (
 	sensors "github.com/n7down/kuiper/internal/sensors/persistence/devicesensors"
 )
 
-func (i InfluxPersistence) CreateStats(sensor *sensors.StatsSensor) error {
+func (i InfluxPersistence) CreateStatsMeasurement(sensor *sensors.StatsMeasurement) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
-		Database:  i.Database,
+		Database:  i.database,
 		Precision: "s",
 	})
 	if err != nil {
@@ -20,16 +20,6 @@ func (i InfluxPersistence) CreateStats(sensor *sensors.StatsSensor) error {
 	tags := map[string]string{
 		"mac": sensor.Mac,
 	}
-
-	// voltageFloat, err := sensor.GetVoltageFloat()
-	// if err != nil {
-	// 	return err
-	// }
-
-	// connectionTimeFloat, err := sensor.GetConnectionTimeFloat()
-	// if err != nil {
-	// 	return err
-	// }
 
 	// not indexed
 	fields := map[string]interface{}{
@@ -46,7 +36,7 @@ func (i InfluxPersistence) CreateStats(sensor *sensors.StatsSensor) error {
 
 	bp.AddPoint(point)
 
-	err = i.Client.Write(bp)
+	err = i.client.Write(bp)
 	if err != nil {
 		return err
 	}

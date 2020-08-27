@@ -4,28 +4,36 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"net"
 	"net/url"
 	"os"
-	"os/signal"
-	"syscall"
 
+	"github.com/n7down/kuiper/internal/logger"
 	"github.com/n7down/kuiper/internal/logger/logruslogger"
 	"github.com/n7down/kuiper/internal/sensors/persistence/influxpersistence"
 	"github.com/n7down/kuiper/internal/sensors/pubsub/mosquitto"
+	"google.golang.org/grpc"
+
+	sensors_pb "github.com/n7down/kuiper/internal/pb/sensors"
+	sensors "github.com/n7down/kuiper/internal/sensors/servers"
 )
 
 var (
 	Version     string
 	Build       string
 	showVersion *bool
+	port        string
+	log         logger.Logger
+	server      *sensors.SensorsServer
 )
 
 func init() {
 	showVersion = flag.Bool("v", false, "show version and build")
 	flag.Parse()
 	if !*showVersion {
+		port = os.Getenv("PORT")
 		ctx := context.Background()
-		log := logruslogger.NewLogrusLogger(true)
+		log = logruslogger.NewLogrusLogger(true)
 
 		influxURL := os.Getenv("INFLUX_URL")
 		influxUrl, err := url.Parse(influxURL)
@@ -33,7 +41,7 @@ func init() {
 			log.Fatal(err.Error())
 		}
 
-		persistence, err := influxpersistence.NewInfluxPersistence(influxUrl)
+		persistence, err := influxpersistence.NewInfluxPersistence(influxUrl, log)
 		if err != nil {
 			log.Fatal(err.Error())
 		}
@@ -59,6 +67,8 @@ func init() {
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		server = sensors.NewSensorsServer(persistence)
 	}
 }
 
@@ -66,8 +76,14 @@ func main() {
 	if *showVersion {
 		fmt.Printf("sensors server: version %s build %s", Version, Build)
 	} else {
-		c := make(chan os.Signal, 1)
-		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-		<-c
+		lis, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		log.Infof("Listening on port: %s\n", port)
+		grpcServer := grpc.NewServer()
+		sensors_pb.RegisterSensorsServiceServer(grpcServer, server)
+		grpcServer.Serve(lis)
 	}
 }

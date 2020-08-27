@@ -32,14 +32,14 @@ func (p MosquittoPubSub) NewDHT22Listener(ctx context.Context, listenerName stri
 		p.logger.Infof("Received message: %s\n", msg.Payload())
 
 		// unmashal payload
-		sensor := &sensors.DHT22Sensor{}
+		sensor := &sensors.DHT22Measurement{}
 		err := json.Unmarshal([]byte(msg.Payload()), sensor)
 		if err != nil {
 			p.logger.Error(err.Error())
 		}
 
 		if err == nil {
-			err = p.persistence.CreateDHT22(sensor)
+			err = p.persistence.CreateDHT22Measurement(sensor)
 			p.logger.Infof("Logged sensor: %v", sensor)
 			if err != nil {
 				p.logger.Error(err.Error())

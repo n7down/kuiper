@@ -7,9 +7,9 @@ import (
 	sensors "github.com/n7down/kuiper/internal/sensors/persistence/devicesensors"
 )
 
-func (i InfluxPersistence) CreateBMP280(sensor *sensors.BMP280Sensor) error {
+func (i InfluxPersistence) CreateBMP280Measurement(sensor *sensors.BMP280Measurement) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
-		Database:  i.Database,
+		Database:  i.database,
 		Precision: "s",
 	})
 	if err != nil {
@@ -46,7 +46,7 @@ func (i InfluxPersistence) CreateBMP280(sensor *sensors.BMP280Sensor) error {
 
 	bp.AddPoint(point)
 
-	err = i.Client.Write(bp)
+	err = i.client.Write(bp)
 	if err != nil {
 		return err
 	}
