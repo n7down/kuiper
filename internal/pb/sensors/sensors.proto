@@ -13,8 +13,8 @@ message GetVoltageMeasurementsRequest {
 }
 
 message GetVoltageMeasurementsResponse {
-  // FIXME: send back the timestamp
-  repeated float Voltage = 1;
+  google.protobuf.Timestamp StartTime = 1;
+  float Voltage = 2;
 }
 
 message GetHumidityMeasurementsRequest {
@@ -24,8 +24,8 @@ message GetHumidityMeasurementsRequest {
 }
 
 message GetHumidityMeasurementsResponse {
-  // FIXME: send back the timestamp
-  repeated float Humidity = 1;
+  google.protobuf.Timestamp StartTime = 1;
+  float Humidity = 2;
 }
 
 message GetTemperatureMeasurementsRequest {
@@ -35,12 +35,12 @@ message GetTemperatureMeasurementsRequest {
 }
 
 message GetTemperatureMeasurementsResponse {
-  // FIXME: send back the timestamp
-  repeated float Temperature = 1;
+  google.protobuf.Timestamp StartTime = 1;
+  float Temperature = 2;
 }
 
 service SensorsService {
-   rpc GetVoltageMeasurements(GetVoltageMeasurementsRequest) returns (GetVoltageMeasurementsResponse);
-   rpc GetHumidityMeasurements(GetHumidityMeasurementsRequest) returns (GetHumidityMeasurementsResponse);
-   rpc GetTemperatureMeasurements(GetTemperatureMeasurementsRequest) returns (GetTemperatureMeasurementsResponse);
+   rpc GetVoltageMeasurements(GetVoltageMeasurementsRequest) returns (stream GetVoltageMeasurementsResponse);
+   rpc GetHumidityMeasurements(GetHumidityMeasurementsRequest) returns (stream GetHumidityMeasurementsResponse);
+   rpc GetTemperatureMeasurements(GetTemperatureMeasurementsRequest) returns (stream GetTemperatureMeasurementsResponse);
 }

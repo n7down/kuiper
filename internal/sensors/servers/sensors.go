@@ -1,8 +1,6 @@
 package servers
 
 import (
-	"context"
-
 	"github.com/n7down/kuiper/internal/sensors/persistence"
 
 	sensors_pb "github.com/n7down/kuiper/internal/pb/sensors"
@@ -19,14 +17,30 @@ func NewSensorsServer(persistence persistence.Persistence) *SensorsServer {
 	}
 }
 
-func (s *SensorsServer) GetVoltageMeasurements(context.Context, *sensors_pb.GetVoltageMeasurementsRequest) (*sensors_pb.GetVoltageMeasurementsResponse, error) {
-	return &sensors_pb.GetVoltageMeasurementsResponse{}, nil
+// func (s *SensorsServer) GetVoltageMeasurements(context.Context, *sensors_pb.GetVoltageMeasurementsRequest) (*sensors_pb.SensorsService_GetVoltageMeasurementsServer, error) {
+// 	return &sensors_pb.SensorsService_GetVoltageMeasurementsServer{}, nil
+// }
+
+// func (s *SensorsServer) GetHumidityMeasurements(context.Context, *sensors_pb.GetHumidityMeasurementsRequest) (*sensors_pb.SensorsService_GetHumidityMeasurementsServer, error) {
+// 	return &sensors_pb.SensorsService_GetHumidityMeasurementsServer{}, nil
+// }
+
+// func (s *SensorsServer) GetTemperatureMeasurements(context.Context, *sensors_pb.GetTemperatureMeasurementsRequest) (*sensors_pb.SensorsService_GetTemperatureMeasurementsServer, error) {
+// 	return &sensors_pb.SensorsService_GetTemperatureMeasurementsServer{}, nil
+// }
+
+func (s *SensorsServer) GetVoltageMeasurements(*sensors_pb.GetVoltageMeasurementsRequest, sensors_pb.SensorsService_GetVoltageMeasurementsServer) error {
+	return nil
 }
 
-func (s *SensorsServer) GetHumidityMeasurements(context.Context, *sensors_pb.GetHumidityMeasurementsRequest) (*sensors_pb.GetHumidityMeasurementsResponse, error) {
-	return &sensors_pb.GetHumidityMeasurementsResponse{}, nil
+func (s *SensorsServer) GetHumidityMeasurements(*sensors_pb.GetHumidityMeasurementsRequest, sensors_pb.SensorsService_GetHumidityMeasurementsServer) error {
+	return nil
 }
 
-func (s *SensorsServer) GetTemperatureMeasurements(context.Context, *sensors_pb.GetTemperatureMeasurementsRequest) (*sensors_pb.GetTemperatureMeasurementsResponse, error) {
-	return &sensors_pb.GetTemperatureMeasurementsResponse{}, nil
+// func (s *SensorsServer) GetTemperatureMeasurements(*sensors_pb.GetTemperatureMeasurementsRequest, sensors_pb.SensorsService_GetTemperatureMeasurementsServer) error {
+// 	return nil
+// }
+
+func (s *SensorsServer) GetTemperatureMeasurements(*sensors_pb.GetTemperatureMeasurementsRequest, sensors_pb.SensorsService_GetTemperatureMeasurementsServer) error {
+	return nil
 }
