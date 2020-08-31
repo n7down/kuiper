@@ -56,6 +56,7 @@ func (i InfluxPersistence) GetHDC1080TemperatureMeasurements(mac string, startTi
 		return sensors.HDC1080TemperatureMeasurements{}, response.Error()
 	}
 
+	// FIXME: iterate through each series/row
 	fmt.Println(response.Results)
 
 	return sensors.HDC1080TemperatureMeasurements{}, nil
